@@ -31,7 +31,7 @@ export default function Rooms() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const res = await fetch('http://localhost:5186/api/Rooms', {
+				const res = await fetch('https://localhost:7140/api/Rooms', {
 					method: 'GET',
 					headers: {
 						accept: 'text/plain',
@@ -48,7 +48,7 @@ export default function Rooms() {
 
 	const handleEdit = async (id, newName) => {
 		try {
-			const res = await fetch(`http://localhost:5186/api/Rooms/${id}`, {
+			const res = await fetch(`https://localhost:7140/api/Rooms/${id}`, {
 				method: 'PUT',
 				headers: {
 					accept: 'text/plain',
@@ -75,7 +75,7 @@ export default function Rooms() {
 
 	const handleDelete = async (id) => {
 		try {
-			const res = await fetch(`http://localhost:5186/api/Rooms/${id}`, {
+			const res = await fetch(`https://localhost:7140/api/Rooms/${id}`, {
 				method: 'DELETE',
 				headers: {
 					accept: 'text/plain',
@@ -94,7 +94,7 @@ export default function Rooms() {
 
 	const handleAdd = async (newRoomName) => {
 		try {
-			const res = await fetch(`http://localhost:5186/api/Rooms`, {
+			const res = await fetch(`https://localhost:7140/api/Rooms`, {
 				method: 'POST',
 				headers: {
 					accept: 'text/plain',
