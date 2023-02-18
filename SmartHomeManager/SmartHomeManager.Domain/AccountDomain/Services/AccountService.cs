@@ -91,19 +91,12 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             
             if (account != null)
 			{
-                string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-																password: login.Password,
-																salt: account.AccountId.ToByteArray(),
-																prf: KeyDerivationPrf.HMACSHA256,
-																iterationCount: 100000,
-																numBytesRequested: 256 / 8));
-
-                login.Password = hashedPassword;
+				login.Password = GetHashedPassword(account.AccountId, login.Password);
 
                 if (account.Password == login.Password)
 				{
 					// account exists and password is correct
-					//return 1;
+					// return 1;
 					return account.AccountId;
 				}
 			}
@@ -117,11 +110,56 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             Account? account = await _accountRepository.GetByIdAsync(id);
             if (account != null)
             {
-                Console.WriteLine("account exists");
                 return true;
             }
-            Console.WriteLine("account noooo  exists");
             return false;
+        }
+
+        public async Task<bool> UpdateAccount(Guid accountId, AccountWebRequest accountWebRequest)
+        {
+            Account tempAcc = new()
+            {
+                AccountId = accountId,
+                Email = accountWebRequest.Email,
+                Username = accountWebRequest.Username,
+                Address = accountWebRequest.Address,
+                Timezone = accountWebRequest.Timezone,
+                Password = GetHashedPassword(accountId, accountWebRequest.Password),
+                DevicesOnboarded = accountWebRequest.DevicesOnboarded
+            };
+
+            bool updateResponse = _accountRepository.Update(tempAcc);
+            if (updateResponse)
+            {
+                await _accountRepository.SaveAsync();
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> DeleteAccount(Account account)
+        {
+			bool deleteResponse = _accountRepository.Delete(account);
+			if (deleteResponse)
+			{
+				await _accountRepository.SaveAsync();
+				return true;
+			}
+
+			return false;
+        }
+
+		public string GetHashedPassword(Guid accountId, string unhashedPassword)
+		{
+			string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+				password: unhashedPassword,
+				salt: accountId.ToByteArray(),
+				prf: KeyDerivationPrf.HMACSHA256,
+				iterationCount: 100000,
+				numBytesRequested: 256 / 8));
+
+			return hashedPassword;
         }
     }
 }

@@ -23,5 +23,8 @@ namespace SmartHomeManager.Domain.AccountDomain.DTOs
 
         [Required]
         public string Password { get; set; }
+
+        [Required]
+        public int DevicesOnboarded { get; set; }
     }
 }
