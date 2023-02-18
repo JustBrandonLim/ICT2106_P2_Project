@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using SmartHomeManager.DataSource;
 using SmartHomeManager.DataSource.AccountDataSource;
 using SmartHomeManager.Domain.AccountDomain.DTOs;
@@ -32,16 +33,11 @@ namespace SmartHomeManager.API.Controllers.AccountController
             _emailService = emailService;
         }
 
-        /*private readonly AccountRepository _accountRepository;
-        
-        public AccountsController(AccountRepository accountRepository)
-        {
-            _accountRepository = accountRepository;
-        }*/
-
         /* 
          * GET: api/Accounts
-         * Returns: 
+         * Return: 
+         * Ok(accounts) - IEnumerable of accounts
+         * NotFound(1) - No accounts in DB
         */
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
@@ -50,24 +46,29 @@ namespace SmartHomeManager.API.Controllers.AccountController
 
             if (accounts == null)
             {
-                return NotFound();
+                return NotFound(1);
             }
 
             return Ok(accounts);
         }
 
-        // GET: api/Accounts/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Account>> GetAccountByAccountId(Guid id)
+        /* 
+         * GET: api/Accounts/11111111-1111-1111-1111-111111111111
+         * Return: 
+         * Ok(account) - Account as requested
+         * NotFound(1) - Account does not exist
+        */
+        [HttpGet("{accountId}")]
+        public async Task<ActionResult<Account>> GetAccountByAccountId(Guid accountId)
         {
-            var account = await _accountService.GetAccountByAccountId(id);
+            Account? account = await _accountService.GetAccountByAccountId(accountId);
 
             if (account == null)
             {
-                return NotFound();
+                return NotFound(1);
             }
 
-            return account;
+            return Ok(account);
         }
 
 
@@ -79,16 +80,16 @@ namespace SmartHomeManager.API.Controllers.AccountController
          * NotFound(1) - Account does not exist
          * 
         */
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAccount(Guid id, [FromBody] AccountWebRequest accountWebRequest)
+        [HttpPut("{accountId}")]
+        public async Task<IActionResult> PutAccount(Guid accountId, [FromBody] AccountWebRequest accountWebRequest)
         {
-            var account = await _accountService.GetAccountByAccountId(id);
+            Account? account = await _accountService.GetAccountByAccountId(accountId);
             if (account == null)
             {
                 return NotFound(1);
             }
 
-            if (await _accountService.UpdateAccount(id, accountWebRequest))
+            if (await _accountService.UpdateAccount(accountId, accountWebRequest))
             {
                 return Ok(1);
             }
@@ -99,9 +100,9 @@ namespace SmartHomeManager.API.Controllers.AccountController
         /* 
          * POST: api/Accounts
          * Return:
-         * Ok(1) - Account Created & Email Sent
-         * Ok(2) - Account Created but Email Not Sent
-         * BadRequest(1) - Account Not Created
+         * Ok(1) - Account created & email Sent
+         * Ok(2) - Account created but email not sent
+         * BadRequest(1) - Account failed to create
          * BadRequest(2) - Email already exists
          * 
         */
@@ -142,9 +143,9 @@ namespace SmartHomeManager.API.Controllers.AccountController
         /*
          * POST: api/Accounts/login
          * Return:
-         * Ok(1) - Login Successful
-         * BadRequest(1) - Login Unsuccessful, wrong password
-         * BadRequest(2) - Login Unsuccessful, account does not exist
+         * Ok(1) - Login successful
+         * BadRequest(1) - Login unsuccessful, wrong password
+         * BadRequest(2) - Login unsuccessful, account does not exist
          */
 
         [HttpPost("login")]
@@ -172,11 +173,11 @@ namespace SmartHomeManager.API.Controllers.AccountController
          * NotFound(1) - Account does not exist
          * 
         */
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAccount(Guid id)
+        [HttpDelete("{accountId}")]
+        public async Task<IActionResult> DeleteAccount(Guid accountId)
         {
 
-            var account = await _accountService.GetAccountByAccountId(id);
+            Account? account = await _accountService.GetAccountByAccountId(accountId);
             if (account == null)
             {
                 return NotFound(1);

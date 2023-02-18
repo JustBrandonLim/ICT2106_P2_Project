@@ -39,12 +39,12 @@ namespace SmartHomeManager.DataSource.ProfileDataSource
 
         public async Task<IEnumerable<Profile>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbContext.Profiles.ToListAsync();
         }
 
         public async Task<Profile?> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Profiles.FindAsync(id);
         }
 
         public async Task<int> SaveAsync()
@@ -59,31 +59,26 @@ namespace SmartHomeManager.DataSource.ProfileDataSource
             throw new NotImplementedException();
         }
 
+        public async Task<IEnumerable<Profile>> GetProfilesByAccountId(Guid accountId)
+        {
+            List<Profile> profiles = (await _dbContext.Profiles.ToListAsync())
+                .Where(p => p.AccountId == accountId).Select(p => p).ToList();
+
+            if (profiles.Count >= 0)
+                return profiles;
+
+            return Enumerable.Empty<Profile>();
+        }
+
         public async Task<IEnumerable<Guid>> GetDevicesByProfileId(Guid profileId)
         {
-            /*return new List<Guid>();*/
+            List<Guid> deviceGuids = (await _dbContext.DeviceProfiles.ToListAsync())
+                .Where(p => p.ProfileId == profileId).Select(p => p.DeviceId).ToList();
 
-            var a = (await _dbContext.DeviceProfiles.ToListAsync()).Where(p => p.ProfileId == profileId).Select(p => p.DeviceId).ToList();
-            if (a.Count >= 0)
-                return a;
-            /*Profile? test = await _dbContext.Profiles.Where(profile => profile.ProfileId == profileId).FirstOrDefaultAsync() as Profile;
-            if (test != null) {
-                return test.DeviceProfiles.Select(deviceProfile => deviceProfile.DeviceId).ToList();
-            }*/
-
+            if (deviceGuids.Count >= 0)
+                return deviceGuids;
 
             return Enumerable.Empty<Guid>();
-
-            // var test = _dbContext.DeviceProfile.ToList().Where(o => o.ProfilesProfileId == profileId);
-            /*IEnumerable<Guid> array = Enumerable.Empty<Guid>();*/
-            /*            foreach (var t in test)
-                        {
-                            array.Append<Guid>(t.DevicesDeviceId);
-                        }
-
-            //_dbContext.DeviceProfile.Where(deviceProfile => deviceProfile == profileId);
-
-            return Array<Guid>.Empty.ToList();*/
         }
     }
 }
