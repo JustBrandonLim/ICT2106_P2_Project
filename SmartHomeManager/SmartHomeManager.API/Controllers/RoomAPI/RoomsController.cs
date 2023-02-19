@@ -57,6 +57,8 @@ public class RoomsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<GetRoomWebResponse>> PostRoom(PostRoomWebRequest roomWebRequest)
     {
+        if (roomWebRequest.AccountId == Guid.Empty) return BadRequest("AccountId cannot be empty");
+
         var resp = await _roomWriteService.AddRoom(roomWebRequest.Name, roomWebRequest.AccountId);
 
         // the route values specifies the action to be called and the route values to be used for that action
@@ -93,11 +95,5 @@ public class RoomsController : ControllerBase
         if (!result.Any()) return NotFound();
 
         return Ok(result);
-    }
-
-    private async Task<bool> RoomExists(Guid id)
-    {
-        var result = await _roomReadService.GetRoomById(id);
-        return result == null;
     }
 }

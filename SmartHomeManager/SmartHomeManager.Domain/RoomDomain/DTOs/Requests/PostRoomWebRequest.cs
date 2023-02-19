@@ -1,7 +1,10 @@
-﻿namespace SmartHomeManager.Domain.RoomDomain.DTOs.Requests;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SmartHomeManager.Domain.RoomDomain.DTOs.Requests;
 
 public class PostRoomWebRequest
 {
-    public string Name { get; set; }
-    public Guid AccountId { get; set; }
+    [Required] public string Name { get; set; }
+
+    [Required] public Guid AccountId { get; set; }
 }
