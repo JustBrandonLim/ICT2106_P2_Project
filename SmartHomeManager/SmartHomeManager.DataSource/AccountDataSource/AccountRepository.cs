@@ -30,7 +30,7 @@ namespace SmartHomeManager.DataSource.AccountDataSource
 
         public bool Update(Account account)
         {
-            _dbContext.ChangeTracker.Clear();
+            _dbContext.Entry(account).State = EntityState.Modified;
             _dbContext.Accounts.Update(account);
             return true;
         }
