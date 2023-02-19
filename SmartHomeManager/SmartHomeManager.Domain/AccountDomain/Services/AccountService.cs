@@ -116,14 +116,13 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             return false;
         }
 
-        public async Task<bool> UpdateAccount(Account account, Guid accountId, AccountWebRequest accountWebRequest)
+        public async Task<bool> UpdateAccount(Account account, AccountWebRequest accountWebRequest)
         {
-			account.AccountId = accountId;
             account.Email = accountWebRequest.Email;
             account.Username = accountWebRequest.Username;
             account.Address = accountWebRequest.Address;
             account.Timezone = accountWebRequest.Timezone;
-            account.Password = GetHashedPassword(accountId, accountWebRequest.Password);
+            account.Password = GetHashedPassword(account.AccountId, accountWebRequest.Password);
             account.DevicesOnboarded = accountWebRequest.DevicesOnboarded;
 
             int updateResponse = await _accountRepository.Update(account);
