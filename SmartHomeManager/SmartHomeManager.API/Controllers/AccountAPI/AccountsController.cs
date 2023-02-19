@@ -16,7 +16,7 @@ using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.AccountDomain.Services;
 
 
-namespace SmartHomeManager.API.Controllers.AccountController
+namespace SmartHomeManager.API.Controllers.AccountAPI
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -44,7 +44,7 @@ namespace SmartHomeManager.API.Controllers.AccountController
         {
             IEnumerable<Account> accounts = await _accountService.GetAccounts();
 
-            if (accounts == null)
+            if (!accounts.Any())
             {
                 return NotFound(1);
             }

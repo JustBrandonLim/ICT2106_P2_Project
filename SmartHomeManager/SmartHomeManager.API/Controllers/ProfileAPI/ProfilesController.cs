@@ -12,7 +12,7 @@ using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.AccountDomain.Services;
 
-namespace SmartHomeManager.API.Controllers.ProfileController
+namespace SmartHomeManager.API.Controllers.ProfileAPI
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -36,7 +36,7 @@ namespace SmartHomeManager.API.Controllers.ProfileController
         {
             IEnumerable<Profile> profiles = await _profileService.GetProfiles();
 
-            if (profiles == null)
+            if (!profiles.Any())
                 return NotFound();
            
             return Ok(profiles);
