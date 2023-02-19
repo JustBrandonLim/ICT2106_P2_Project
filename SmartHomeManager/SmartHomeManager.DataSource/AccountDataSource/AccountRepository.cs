@@ -28,11 +28,10 @@ namespace SmartHomeManager.DataSource.AccountDataSource
             return true;
         }
 
-        public bool Update(Account account)
+        public async Task<int> Update(Account account)
         {
             _dbContext.Entry(account).State = EntityState.Modified;
-            _dbContext.Accounts.Update(account);
-            return true;
+            return await _dbContext.SaveChangesAsync();
         }
 
         public bool Delete(Account account)

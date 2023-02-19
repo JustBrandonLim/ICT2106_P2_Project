@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using SmartHomeManager.Domain.AccountDomain.DTOs;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Interfaces;
+using System.Net;
 
 namespace SmartHomeManager.Domain.AccountDomain.Services
 {
@@ -115,24 +116,20 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             return false;
         }
 
-        public async Task<bool> UpdateAccount(Guid accountId, AccountWebRequest accountWebRequest)
+        public async Task<bool> UpdateAccount(Account account, Guid accountId, AccountWebRequest accountWebRequest)
         {
-            Account tempAcc = new()
-            {
-                AccountId = accountId,
-                Email = accountWebRequest.Email,
-                Username = accountWebRequest.Username,
-                Address = accountWebRequest.Address,
-                Timezone = accountWebRequest.Timezone,
-                Password = GetHashedPassword(accountId, accountWebRequest.Password),
-                DevicesOnboarded = accountWebRequest.DevicesOnboarded
-            };
+			account.AccountId = accountId;
+            account.Email = accountWebRequest.Email;
+            account.Username = accountWebRequest.Username;
+            account.Address = accountWebRequest.Address;
+            account.Timezone = accountWebRequest.Timezone;
+            account.Password = GetHashedPassword(accountId, accountWebRequest.Password);
+            account.DevicesOnboarded = accountWebRequest.DevicesOnboarded;
 
-            bool updateResponse = _accountRepository.Update(tempAcc);
-            if (updateResponse)
+            int updateResponse = await _accountRepository.Update(account);
+            if (updateResponse == 1)
             {
-                await _accountRepository.SaveAsync();
-                return true;
+				return true;
             }
 
             return false;

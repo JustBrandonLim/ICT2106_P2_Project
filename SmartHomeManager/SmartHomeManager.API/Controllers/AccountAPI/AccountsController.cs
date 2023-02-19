@@ -89,7 +89,7 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
                 return NotFound(1);
             }
 
-            if (await _accountService.UpdateAccount(accountId, accountWebRequest))
+            if (await _accountService.UpdateAccount(account, accountId, accountWebRequest))
             {
                 return Ok(1);
             }
