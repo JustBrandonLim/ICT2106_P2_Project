@@ -51,7 +51,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
         {
             IEnumerable<Profile> profiles = await _profileRepository.GetAllAsync();
 
-            if (profiles == null)
+            if (!profiles.Any())
             {
                 return Enumerable.Empty<Profile>();
             }
