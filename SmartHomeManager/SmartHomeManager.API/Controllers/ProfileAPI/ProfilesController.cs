@@ -12,7 +12,7 @@ using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.AccountDomain.Services;
 
-namespace SmartHomeManager.API.Controllers.ProfileController
+namespace SmartHomeManager.API.Controllers.ProfileAPI
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -25,70 +25,82 @@ namespace SmartHomeManager.API.Controllers.ProfileController
             _profileService = profileService ?? throw new ArgumentNullException("profile service null");
         }
 
-        /*// GET: api/Profiles
+        /* 
+         * GET: api/Profiles
+         * Return: 
+         * Ok(profiles) - IEnumerable of Profiles
+         * NotFound(1) - No Profiles in DB
+        */
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Profile>>> GetProfiles()
         {
-            *//*if (_context.Profiles == null)
-            {
+            IEnumerable<Profile> profiles = await _profileService.GetProfiles();
+
+            if (!profiles.Any())
                 return NotFound();
-            }
-            return await _context.Profiles.ToListAsync();*//*
-            return NoContent();
+           
+            return Ok(profiles);
         }
 
-        // GET: api/Profiles/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Profile>> GetProfile(Guid id)
+        /* 
+         * GET: api/Profiles/22222222-2222-2222-2222-222222222222
+         * Return: 
+         * Ok(profile) - Profile as requested
+         * NotFound(1) - Profile does not exist
+        */
+        [HttpGet("{profileId}")]
+        public async Task<ActionResult<Profile>> GetProfileByProfileId(Guid profileId)
         {
-            *//*if (_context.Profiles == null)
-            {
-                return NotFound();
-            }
-            var profile = await _context.Profiles.FindAsync(id);
+            Profile? profile = await _profileService.GetProfileByProfileId(profileId);
 
             if (profile == null)
-            {
                 return NotFound();
-            }
 
-            return profile;*//*
-            return NoContent();
+            return Ok(profile);
         }
 
-        // PUT: api/Profiles/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProfile(Guid id, Profile profile)
+        /* 
+         * GET: api/Profiles/get-profiles/11111111-1111-1111-1111-111111111111
+         * Return: 
+         * Ok(profiles) - IEnumerable of Profiles
+         * NotFound(1) - No Profiles in DB
+        */
+        [HttpGet("get-profiles/{accountId}")]
+        public async Task<ActionResult<IEnumerable<Profile>>> GetProfilesByAccountId(Guid accountId)
         {
-            *//*if (id != profile.ProfileId)
-            {
-                return BadRequest();
-            }
+            IEnumerable<Profile> profiles = (await _profileService.GetProfilesByAccountId(accountId))!;
 
-            _context.Entry(profile).State = EntityState.Modified;
+            if (profiles == null)
+                return NotFound(1);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProfileExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }*//*
-
-            return NoContent();
+            return Ok(profiles);
         }
-*/
-        // POST: api/Profiles
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
+        /* 
+         * GET: api/Profiles/get-device-ids/22222222-2222-2222-2222-222222222222
+         * Return: 
+         * Ok(listOfDeviceIds) - IEnumerable of Device Ids
+         * NotFound(1) - No Device/Profile in DeviceProfile r/s table in DB
+        */
+        [HttpGet("get-device-ids/{profileId}")]
+        public async Task<ActionResult<IEnumerable<Guid>>> GetDevicesByProfileId(Guid profileId)
+        {
+            IEnumerable<Guid> listOfDeviceIds = (await _profileService.GetDevicesByProfileId(profileId))!;
+
+            if (listOfDeviceIds == null)
+            {
+                return NotFound(1);
+            }
+
+            return Ok(listOfDeviceIds);
+        }
+
+        /*
+         * POST: api/Profiles
+         * Return:
+         * Ok(1) - Profile created successfully
+         * BadRequest(1) - Profile failed to create
+         */
         [HttpPost]
         public async Task<ActionResult> PostProfile([FromBody] Profile profile)
         {
@@ -101,41 +113,5 @@ namespace SmartHomeManager.API.Controllers.ProfileController
 
             return BadRequest(1);
         }
-
-        // POST: api/Profiles
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpGet("{profileId}")]
-        public async Task<ActionResult<IEnumerable<Guid>>> GetDevicesByProfileId(Guid profileId)
-        {
-            IEnumerable<Guid> listOfDeviceIds = (await _profileService.GetDevicesByProfileId(profileId))!;
-
-            return Ok(listOfDeviceIds);
-        }
-
-        /*// DELETE: api/Profiles/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProfile(Guid id) 
-        {
-            *//*if (_context.Profiles == null)
-            {
-                return NotFound();
-            }
-            var profile = await _context.Profiles.FindAsync(id);
-            if (profile == null)
-            {
-                return NotFound();
-            }
-
-            _context.Profiles.Remove(profile);
-            await _context.SaveChangesAsync();*//*
-
-            return NoContent();
-        }
-
-        private bool ProfileExists(Guid id)
-        {
-            *//*return (_context.Profiles?.Any(e => e.ProfileId == id)).GetValueOrDefault();*//*
-            return true;
-        }*/
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using SmartHomeManager.DataSource;
 using SmartHomeManager.DataSource.AccountDataSource;
 using SmartHomeManager.Domain.AccountDomain.DTOs;
@@ -15,7 +16,7 @@ using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.AccountDomain.Services;
 
 
-namespace SmartHomeManager.API.Controllers.AccountController
+namespace SmartHomeManager.API.Controllers.AccountAPI
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -32,86 +33,76 @@ namespace SmartHomeManager.API.Controllers.AccountController
             _emailService = emailService;
         }
 
-        /*private readonly AccountRepository _accountRepository;
-        
-        public AccountsController(AccountRepository accountRepository)
-        {
-            _accountRepository = accountRepository;
-        }*/
-
         /* 
          * GET: api/Accounts
-         * Returns: 
+         * Return: 
+         * Ok(accounts) - IEnumerable of accounts
+         * NotFound(1) - No accounts in DB
         */
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
         {
             IEnumerable<Account> accounts = await _accountService.GetAccounts();
 
-            if (accounts == null)
+            if (!accounts.Any())
             {
-                return NotFound();
+                return NotFound(1);
             }
 
             return Ok(accounts);
         }
 
-        // GET: api/Accounts/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Account>> GetAccountByAccountId(Guid id)
+        /* 
+         * GET: api/Accounts/11111111-1111-1111-1111-111111111111
+         * Return: 
+         * Ok(account) - Account as requested
+         * NotFound(1) - Account does not exist
+        */
+        [HttpGet("{accountId}")]
+        public async Task<ActionResult<Account>> GetAccountByAccountId(Guid accountId)
         {
-            var account = await _accountService.GetAccountByAccountId(id);
+            Account? account = await _accountService.GetAccountByAccountId(accountId);
 
             if (account == null)
             {
-                return NotFound();
+                return NotFound(1);
             }
 
-            return account;
+            return Ok(account);
         }
 
-        
 
-
-        // PUT: api/Accounts/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAccount(Guid id, Account account)
+        /* 
+         * PUT: api/Accounts/11111111-1111-1111-1111-111111111111
+         * Return:
+         * Ok(1) - Account successfully updated
+         * BadRequest(1) - Account failed to update
+         * NotFound(1) - Account does not exist
+         * 
+        */
+        [HttpPut("{accountId}")]
+        public async Task<IActionResult> PutAccount(Guid accountId, [FromBody] AccountWebRequest accountWebRequest)
         {
-           /* if (id != account.AccountId)
+            Account? account = await _accountService.GetAccountByAccountId(accountId);
+            if (account == null)
             {
-                return BadRequest();
+                return NotFound(1);
             }
 
-            _context.Entry(account).State = EntityState.Modified;
-
-            try
+            if (await _accountService.UpdateAccount(account, accountWebRequest))
             {
-                await _context.SaveChangesAsync();
+                return Ok(1);
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AccountExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }*/
 
-            return NoContent();
+            return BadRequest(1);
         }
-
-        // this is an API endpoint
 
         /* 
          * POST: api/Accounts
          * Return:
-         * Ok(1) - Account Created & Email Sent
-         * Ok(2) - Account Created but Email Not Sent
-         * BadRequest(1) - Account Not Created
+         * Ok(1) - Account created & email Sent
+         * Ok(2) - Account created but email not sent
+         * BadRequest(1) - Account failed to create
          * BadRequest(2) - Email already exists
          * 
         */
@@ -152,9 +143,9 @@ namespace SmartHomeManager.API.Controllers.AccountController
         /*
          * POST: api/Accounts/login
          * Return:
-         * Ok(1) - Login Successful
-         * BadRequest(1) - Login Unsuccessful, wrong password
-         * BadRequest(2) - Login Unsuccessful, account does not exist
+         * Ok(1) - Login successful
+         * BadRequest(1) - Login unsuccessful, wrong password
+         * BadRequest(2) - Login unsuccessful, account does not exist
          */
 
         [HttpPost("login")]
@@ -174,34 +165,30 @@ namespace SmartHomeManager.API.Controllers.AccountController
         }
 
 
-
-
-        // DELETE: api/Accounts/5
-        /*[HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAccount(Guid id)
+        /* 
+         * DELETE: api/Accounts/11111111-1111-1111-1111-111111111111
+         * Return:
+         * Ok(1) - Account successfully deleted
+         * BadRequest(1) - Account failed to delete
+         * NotFound(1) - Account does not exist
+         * 
+        */
+        [HttpDelete("{accountId}")]
+        public async Task<IActionResult> DeleteAccount(Guid accountId)
         {
-            if (_accountRepository.GetAllAsync() == null)
-            {
-                return NotFound();
-            }
-            var account = await _accountRepository.GetByIdAsync(id);
+
+            Account? account = await _accountService.GetAccountByAccountId(accountId);
             if (account == null)
             {
-                return NotFound();
+                return NotFound(1);
             }
 
-            await _accountRepository.DeleteAsync(account);
-            await _accountRepository.SaveAsync();
+            if (await _accountService.DeleteAccount(account))
+            {
+                return Ok(1);
+            }
 
-            *//*_context.Accounts.Remove(account);
-            await _context.SaveChangesAsync();*//*
-
-            return NoContent();
-        }*/
-
-        /*private bool AccountExists(Guid id)
-        {
-            return (_context.Accounts?.Any(e => e.AccountId == id)).GetValueOrDefault();
-        }*/
+            return BadRequest(1);
+        }
     }
 }

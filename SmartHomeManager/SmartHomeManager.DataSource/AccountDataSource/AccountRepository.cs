@@ -28,14 +28,16 @@ namespace SmartHomeManager.DataSource.AccountDataSource
             return true;
         }
 
-        public Task<bool> DeleteAsync(Account account)
+        public async Task<int> Update(Account account)
         {
-            throw new NotImplementedException();
+            _dbContext.Entry(account).State = EntityState.Modified;
+            return await _dbContext.SaveChangesAsync();
         }
 
-        public Task<bool> DeleteByIdAsync(Guid id)
+        public bool Delete(Account account)
         {
-            throw new NotImplementedException();
+            _dbContext.Accounts.Remove(account);
+            return true;
         }
 
         public async Task<IEnumerable<Account>> GetAllAsync()
@@ -67,11 +69,6 @@ namespace SmartHomeManager.DataSource.AccountDataSource
             int result = await _dbContext.SaveChangesAsync();
 
             return result;
-        }
-
-        public Task<bool> UpdateAsync(Account account)
-        {
-            throw new NotImplementedException();
         }
     }
 }

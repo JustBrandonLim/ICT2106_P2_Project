@@ -14,8 +14,6 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
     public class ProfileService
     {
         private readonly IProfileRepository _profileRepository;
-        private readonly IDeviceRepository _deviceRepository;
-
 
         public ProfileService(IProfileRepository profileRepository)
         {
@@ -49,9 +47,16 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             return 2;
         }
 
-        public async Task<IEnumerable<Profile?>> GetAllProfiles(Guid id)
+        public async Task<IEnumerable<Profile>> GetProfiles()
         {
-            throw new NotImplementedException();
+            IEnumerable<Profile> profiles = await _profileRepository.GetAllAsync();
+
+            if (!profiles.Any())
+            {
+                return Enumerable.Empty<Profile>();
+            }
+
+            return profiles;
         }
 
         public async Task<Profile?> GetProfileByProfileId(Guid id)
@@ -67,9 +72,15 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             
         }
 
-        public async Task<IEnumerable<Profile?>> GetProfilesByAccountId(Guid id)
+        public async Task<IEnumerable<Profile?>?> GetProfilesByAccountId(Guid id)
         {
-            throw new NotImplementedException();
+            IEnumerable<Profile> profiles = await _profileRepository.GetProfilesByAccountId(id);
+            if (!profiles.Any())
+            {
+                return null;
+            }
+
+            return profiles;
         }
 
         public async Task<IEnumerable<Guid>?> GetDevicesByProfileId(Guid id)
