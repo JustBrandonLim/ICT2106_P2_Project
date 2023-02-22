@@ -16,9 +16,9 @@ namespace SmartHomeManager.API.Controllers.DeviceAPI
     {
         private readonly ManageDeviceService _manageDeviceService;
 
-        public ManageDeviceController(IDeviceRepository deviceRepository) 
+        public ManageDeviceController(IDeviceRepository deviceRepository, IDeviceConfigurationLookUpRepository deviceConfigurationLookUpRepository, IDeviceConfigurationRepository deviceConfigurationRepository) 
 	    {
-            _manageDeviceService = new(deviceRepository);
+            _manageDeviceService = new(deviceRepository, deviceConfigurationLookUpRepository, deviceConfigurationRepository);
 	    }
 
 
@@ -27,6 +27,28 @@ namespace SmartHomeManager.API.Controllers.DeviceAPI
         {
             return await _manageDeviceService.GetAllDevicesByAccountAsync(accountId);
         }
+
+        [HttpGet("GetDeviceById/{deviceId}")]
+        public async Task<Device> GetDeviceById(Guid deviceId)
+        {
+            /* TEST */
+
+
+            return await _manageDeviceService.GetDeviceByIdAsync(deviceId);
+	    }
+
+        // config
+        [HttpGet("GetDevicePossibleConfigurations/{deviceBrand}/{deviceModel}")]
+        public async Task<IEnumerable<DeviceConfigurationLookUp>> GetDevicePossibleConfigurations(string deviceBrand, string deviceModel) 
+	    {
+            return await _manageDeviceService.GetDevicePossibleConfigurationsAsync(deviceBrand, deviceModel);
+	    }
+
+        [HttpGet("GetDeviceConfigurations/{deviceId}/{deviceBrand}/{deviceModel}")]
+        public async Task<IEnumerable<DeviceConfiguration>> GetDeviceConfigurations(Guid deviceId, string deviceBrand, string deviceModel) 
+	    {
+            return await _manageDeviceService.GetDeviceConfigurationsAsync(deviceId, deviceBrand, deviceModel);
+	    }
     }
 }
 
