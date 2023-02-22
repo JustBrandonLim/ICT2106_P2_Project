@@ -159,7 +159,7 @@ namespace SmartHomeManager.DataSource
                     DeviceSerialNumber = "789",
                     AccountId = new ("11111111-1111-1111-1111-111111111111"),
                     RoomId = rooms[0].RoomId
-                },
+                }
             };
 
             // create objects

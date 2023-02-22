@@ -25,6 +25,7 @@ import RegisterDevice from "./pages/RegisterDevice";
 import SelectNearbyDevice from "pages/SelectNearbyDevice";
 import DeviceConfig from "./pages/DeviceConfig";
 import Report from "pages/Analytics";
+import ManageDevices from "pages/ManageDevices";
 
 export function App() {
   return (
@@ -47,6 +48,7 @@ export function App() {
 
             <Route path="/selectnearbydevice" element={<SelectNearbyDevice />} />
             <Route path="/registerdevice" element={<RegisterDevice />} />
+            <Route path="/managedevices" element={<ManageDevices />} />
 
             <Route path="/director" element={<Director />} />
             <Route path="/backup" element={<Backup />} />
@@ -54,18 +56,9 @@ export function App() {
             <Route path="/configuration" element={<Configuration />} />
             <Route path="/energyProfile" element={<EnergyProfile />} />
             <Route path="/scenario" element={<Scenario />} />
-            <Route
-              path="/scenario/create/action-rule"
-              element={<ActionRule />}
-            />
-            <Route
-              path="/scenario/create/time-rule"
-              element={<SchRule />}
-            />
-            <Route
-              path="/scenario/edit/:id"
-              element={<SchRule />}
-            />
+            <Route path="/scenario/create/action-rule" element={<ActionRule />} />
+            <Route path="/scenario/create/time-rule" element={<SchRule />} />
+            <Route path="/scenario/edit/:id" element={<SchRule />} />
             <Route path="/config" element={<DeviceConfig />} />
             <Route path="/analytics" element={<Report />} />
           </Routes>
