@@ -17,7 +17,7 @@ namespace SmartHomeManager.DataSource.DeviceDataSource
 
         public async Task AddAsync(Device device) 
 	    {
-            await _applicationDbContext.AddAsync(device);
+            await _applicationDbContext.Devices.AddAsync(device);
 	    }
 
         public Task DeleteAsync(Guid deviceId)
@@ -25,9 +25,9 @@ namespace SmartHomeManager.DataSource.DeviceDataSource
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Device>> GetAllAsync()
+        public async Task<IEnumerable<Device>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _applicationDbContext.Devices.ToListAsync();
         }
 
         public Task<Device> GetAsync(Guid deviceId)
