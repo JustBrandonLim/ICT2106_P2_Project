@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Container, Text, Tabs, TabList, Tab, TabPanels, TabPanel } from "@chakra-ui/react";
+import { Container, Text, Tabs, TabList, Tab, TabPanels, TabPanel, Stack } from "@chakra-ui/react";
+import ManageDeviceSelectionCard from "components/Devices/ManageDeviceSelectionCard";
 
 export default function ManageDevices() {
   const [devices, setDevices] = useState([]);
@@ -41,37 +42,58 @@ export default function ManageDevices() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            {devices.length > 0 ? (
-              devices.map((device, i) => (
-                <p key={i}>
-                  {device.deviceName}, {device.deviceId}
-                </p>
-              ))
-            ) : (
-              <p>None available.</p>
-            )}
+            <Stack spacing={5}>
+              {devices.length > 0 ? (
+                devices.map((device, i) => (
+                  <ManageDeviceSelectionCard
+                    key={i}
+                    deviceId={device.deviceId}
+                    deviceSerialNumber={device.deviceSerialNumber}
+                    deviceName={device.deviceName}
+                    deviceModel={device.deviceModel}
+                    deviceBrand={device.deviceBrand}
+                  />
+                ))
+              ) : (
+                <p>None available.</p>
+              )}
+            </Stack>
           </TabPanel>
           <TabPanel>
-            {assignedDevices.length > 0 ? (
-              assignedDevices.map((device, i) => (
-                <p key={i}>
-                  {device.deviceName}, {device.deviceId}
-                </p>
-              ))
-            ) : (
-              <p>None available.</p>
-            )}
+            <Stack spacing={5}>
+              {assignedDevices.length > 0 ? (
+                assignedDevices.map((device, i) => (
+                  <ManageDeviceSelectionCard
+                    key={i}
+                    deviceId={device.deviceId}
+                    deviceSerialNumber={device.deviceSerialNumber}
+                    deviceName={device.deviceName}
+                    deviceModel={device.deviceModel}
+                    deviceBrand={device.deviceBrand}
+                  />
+                ))
+              ) : (
+                <p>None available.</p>
+              )}
+            </Stack>
           </TabPanel>
           <TabPanel>
-            {unassignedDevices.length > 0 ? (
-              unassignedDevices.map((device, i) => (
-                <p key={i}>
-                  {device.deviceName}, {device.deviceId}
-                </p>
-              ))
-            ) : (
-              <p>None available.</p>
-            )}
+            <Stack spacing={5}>
+              {unassignedDevices.length > 0 ? (
+                unassignedDevices.map((device, i) => (
+                  <ManageDeviceSelectionCard
+                    key={i}
+                    deviceId={device.deviceId}
+                    deviceSerialNumber={device.deviceSerialNumber}
+                    deviceName={device.deviceName}
+                    deviceModel={device.deviceModel}
+                    deviceBrand={device.deviceBrand}
+                  />
+                ))
+              ) : (
+                <p>None available.</p>
+              )}
+            </Stack>
           </TabPanel>
         </TabPanels>
       </Tabs>
