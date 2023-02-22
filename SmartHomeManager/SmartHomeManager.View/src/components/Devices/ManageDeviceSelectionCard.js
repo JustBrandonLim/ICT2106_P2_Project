@@ -13,8 +13,8 @@ export default function ManageDeviceSelectionCard(props) {
         <Text mt={5}>{props.deviceBrand}</Text>
         <Text mt={5}>{props.deviceModel}</Text>
       </CardBody>
-      <CardFooter flex="row" justifyContent="flex-end">
-        <Button colorScheme="green">Manage Device</Button>
+          <CardFooter flex="row" justifyContent="flex-end">
+              <Button onClick={props.handleOnClick} colorScheme="green">Manage Device</Button>
       </CardFooter>
     </Card>
   );

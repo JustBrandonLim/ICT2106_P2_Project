@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Text, Tabs, TabList, Tab, TabPanels, TabPanel, Stack } from "@chakra-ui/react";
+import { createSearchParams, useNavigate } from "react-router-dom";
 import ManageDeviceSelectionCard from "components/Devices/ManageDeviceSelectionCard";
 
 export default function ManageDevices() {
@@ -8,6 +9,23 @@ export default function ManageDevices() {
   const [unassignedDevices, setUnassignedDevices] = useState([]);
 
   const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111");
+
+
+    function handleManageDevice(e, navigate, device) {
+        e.preventDefault();
+
+        navigate({
+            pathname: "/managedeviceconfiguration",
+            search: `?${createSearchParams({
+                deviceId: device.deviceId,
+                deviceBrand: device.deviceBrand,
+                deviceModel: device.deviceModel,
+            })}`,
+        });
+
+        console.log(device.deviceModel);
+    }
+    const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`https://localhost:7140/api/ManageDevice/GetAllDevicesByAccount/${accountId}`)
@@ -45,7 +63,8 @@ export default function ManageDevices() {
             <Stack spacing={5}>
               {devices.length > 0 ? (
                 devices.map((device, i) => (
-                  <ManageDeviceSelectionCard
+                    <ManageDeviceSelectionCard
+                    handleOnClick={(event) => handleManageDevice(event, navigate, device)}
                     key={i}
                     deviceId={device.deviceId}
                     deviceSerialNumber={device.deviceSerialNumber}

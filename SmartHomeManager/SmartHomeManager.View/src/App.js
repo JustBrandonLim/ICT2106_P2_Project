@@ -26,6 +26,7 @@ import SelectNearbyDevice from "pages/SelectNearbyDevice";
 import DeviceConfig from "./pages/DeviceConfig";
 import Report from "pages/Analytics";
 import ManageDevices from "pages/ManageDevices";
+import ManageDeviceConfiguration from "pages/ManageDeviceConfiguration";
 
 export function App() {
   return (
@@ -49,6 +50,7 @@ export function App() {
             <Route path="/selectnearbydevice" element={<SelectNearbyDevice />} />
             <Route path="/registerdevice" element={<RegisterDevice />} />
             <Route path="/managedevices" element={<ManageDevices />} />
+            <Route path="/managedeviceconfiguration" element={<ManageDeviceConfiguration />} />
 
             <Route path="/director" element={<Director />} />
             <Route path="/backup" element={<Backup />} />
