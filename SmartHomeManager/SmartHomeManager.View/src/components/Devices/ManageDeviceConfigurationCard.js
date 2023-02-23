@@ -11,6 +11,8 @@ export default function ManageDeviceConfigurationCard(props) {
             return actualConfiguration.configurationKey == props.configurationKey;
         }));
 
+    console.log(actualConfigurationKey)
+
     return (
         <Card>
             <CardHeader>
@@ -18,7 +20,7 @@ export default function ManageDeviceConfigurationCard(props) {
             </CardHeader>
 
             <CardBody>
-                <Select value={actualConfigurationKey ? actualConfigurationKey.configurationValue : 0}>
+                <Select value={actualConfigurationKey[0] ? actualConfigurationKey[0].configurationValue : 0}>
                     {possibleConfigurations.length > 0 ? (
                         possibleConfigurations.map((configuration, i) => (
                             <option
