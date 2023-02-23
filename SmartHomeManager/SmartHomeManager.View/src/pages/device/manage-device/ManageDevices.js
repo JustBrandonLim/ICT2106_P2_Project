@@ -10,40 +10,34 @@ export default function ManageDevices() {
 
   const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111");
 
+  function handleManageSettings(e, navigate, device) {
+    e.preventDefault();
 
+    navigate({
+      pathname: "/managedevicesettings",
+      search: `?${createSearchParams({
+        deviceId: device.deviceId,
+        deviceName: device.deviceName,
+        deviceBrand: device.deviceBrand,
+        deviceModel: device.deviceModel,
+      })}`,
+    });
+  }
 
-    function handleManageSettings(e, navigate, device) {
-        e.preventDefault();
+  function handleManageConfiguration(e, navigate, device) {
+    e.preventDefault();
 
-        navigate({
-            pathname: "/managedevicesettings",
-            search: `?${createSearchParams({
-                deviceId: device.deviceId,
-                deviceName: device.deviceName,
-                deviceBrand: device.deviceBrand,
-                deviceModel: device.deviceModel,
-            })}`,
-        });
-
-        console.log(device.deviceModel);
-    }
-
-    function handleManageConfiguration(e, navigate, device) {
-        e.preventDefault();
-
-        navigate({
-            pathname: "/managedeviceconfiguration",
-            search: `?${createSearchParams({
-                deviceId: device.deviceId,
-                deviceName: device.deviceName,
-                deviceBrand: device.deviceBrand,
-                deviceModel: device.deviceModel,
-            })}`,
-        });
-
-        console.log(device.deviceModel);
-    }
-    const navigate = useNavigate();
+    navigate({
+      pathname: "/managedeviceconfiguration",
+      search: `?${createSearchParams({
+        deviceId: device.deviceId,
+        deviceName: device.deviceName,
+        deviceBrand: device.deviceBrand,
+        deviceModel: device.deviceModel,
+      })}`,
+    });
+  }
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`https://localhost:7140/api/ManageDevice/GetAllDevicesByAccount/${accountId}`)
@@ -81,7 +75,7 @@ export default function ManageDevices() {
             <Stack spacing={5}>
               {devices.length > 0 ? (
                 devices.map((device, i) => (
-                    <ManageDeviceSelectionCard
+                  <ManageDeviceSelectionCard
                     handleManageSettings={(event) => handleManageSettings(event, navigate, device)}
                     handleManageConfiguration={(event) => handleManageConfiguration(event, navigate, device)}
                     key={i}
@@ -101,7 +95,7 @@ export default function ManageDevices() {
             <Stack spacing={5}>
               {assignedDevices.length > 0 ? (
                 assignedDevices.map((device, i) => (
-                    <ManageDeviceSelectionCard
+                  <ManageDeviceSelectionCard
                     handleManageSettings={(event) => handleManageConfiguration(event, navigate, device)}
                     handleManageConfiguration={(event) => handleManageConfiguration(event, navigate, device)}
                     key={i}
@@ -121,7 +115,7 @@ export default function ManageDevices() {
             <Stack spacing={5}>
               {unassignedDevices.length > 0 ? (
                 unassignedDevices.map((device, i) => (
-                    <ManageDeviceSelectionCard
+                  <ManageDeviceSelectionCard
                     handleManageSettings={(event) => handleManageConfiguration(event, navigate, device)}
                     handleManageConfiguration={(event) => handleManageConfiguration(event, navigate, device)}
                     key={i}

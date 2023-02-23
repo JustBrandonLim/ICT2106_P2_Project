@@ -18,6 +18,21 @@ namespace SmartHomeManager.DataSource.DeviceDataSource
         {
             return await _applicationDbContext.DeviceConfigurations.ToListAsync();
         }
+
+        public async Task<DeviceConfiguration?> GetAsync(string configurationKey, Guid deviceId) 
+	    {
+            return await _applicationDbContext.DeviceConfigurations.FindAsync(configurationKey, deviceId);
+	    }
+
+        public async Task AddAsync(DeviceConfiguration deviceConfiguration) 
+	    {
+            await _applicationDbContext.DeviceConfigurations.AddAsync(deviceConfiguration);
+	    }
+
+        public void Update(DeviceConfiguration deviceConfiguration)
+        {
+            _applicationDbContext.DeviceConfigurations.Update(deviceConfiguration);
+        }
     }
 }
 

@@ -20,29 +20,19 @@ namespace SmartHomeManager.DataSource.DeviceDataSource
             await _applicationDbContext.Devices.AddAsync(device);
 	    }
 
-        public Task DeleteAsync(Guid deviceId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<Device>> GetAllAsync()
         {
             return await _applicationDbContext.Devices.ToListAsync();
         }
-
-        public Task<Device> GetAsync(Guid deviceId)
+        
+        public async Task<Device?> GetAsync(Guid deviceId)
         {
-            throw new NotImplementedException();
+            return await _applicationDbContext.Devices.FindAsync(deviceId);
         }
 
         public async Task<bool> SaveAsync() 
 	    {
             return await _applicationDbContext.SaveChangesAsync() > 0;
 	    }
-
-        public Task UpdateAsync(Device device)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

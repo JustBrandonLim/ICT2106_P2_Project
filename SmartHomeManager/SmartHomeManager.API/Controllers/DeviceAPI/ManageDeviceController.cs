@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.DeviceDomain.Entities.DTOs;
 using SmartHomeManager.Domain.DeviceDomain.Interfaces;
 using SmartHomeManager.Domain.DeviceDomain.Services;
 
@@ -29,15 +30,13 @@ namespace SmartHomeManager.API.Controllers.DeviceAPI
         }
 
         [HttpGet("GetDeviceById/{deviceId}")]
-        public async Task<Device> GetDeviceById(Guid deviceId)
+        public async Task<Device?> GetDeviceById(Guid deviceId)
         {
-            /* TEST */
+            Device? device = await _manageDeviceService.GetDeviceByIdAsync(deviceId);
 
-
-            return await _manageDeviceService.GetDeviceByIdAsync(deviceId);
+            return device ?? null;
 	    }
 
-        // config
         [HttpGet("GetDevicePossibleConfigurations/{deviceBrand}/{deviceModel}")]
         public async Task<IEnumerable<DeviceConfigurationLookUp>> GetDevicePossibleConfigurations(string deviceBrand, string deviceModel) 
 	    {
@@ -48,6 +47,17 @@ namespace SmartHomeManager.API.Controllers.DeviceAPI
         public async Task<IEnumerable<DeviceConfiguration>> GetDeviceConfigurations(Guid deviceId, string deviceBrand, string deviceModel) 
 	    {
             return await _manageDeviceService.GetDeviceConfigurationsAsync(deviceId, deviceBrand, deviceModel);
+	    }
+
+        [HttpPost("ApplyDeviceConfiguration")]
+        public async Task<ActionResult> ApplyDeviceConfiguration([FromBody] DeviceConfigurationWebRequest deviceConfigurationWebRequest) 
+	    {
+            if (await _manageDeviceService.ApplyDeviceConfiguration(deviceConfigurationWebRequest.ConfigurationKey, deviceConfigurationWebRequest.DeviceBrand, deviceConfigurationWebRequest.DeviceModel, deviceConfigurationWebRequest.DeviceId, deviceConfigurationWebRequest.ConfigurationValue))
+            {
+                return Ok("ApplyDeviceConfiguration() success!");
+            }
+
+            return BadRequest("AppleDeviceConfiguration() failed!");
 	    }
     }
 }

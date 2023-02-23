@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Interfaces;
 
@@ -24,7 +25,7 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services
 			return devices;
 		}
 
-		public async Task<Device> GetDeviceByIdAsync(Guid deviceId)
+		public async Task<Device?> GetDeviceByIdAsync(Guid deviceId)
 		{
 			return await _deviceRepository.GetAsync(deviceId);
 		}
@@ -41,6 +42,40 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services
 			IEnumerable<DeviceConfiguration> deviceConfigurations = (await _deviceConfigurationRepository.GetAllAsync()).Where(deviceConfiguration => deviceConfiguration.DeviceId == deviceId && deviceConfiguration.DeviceBrand == deviceBrand && deviceConfiguration.DeviceModel == deviceModel);
 
 			return deviceConfigurations;
+		}
+
+		public async Task<bool> ApplyDeviceConfiguration(string configurationKey, string deviceBrand, string deviceModel, Guid deviceId, int configurationValue)
+		{ 
+			try
+            {
+				DeviceConfiguration deviceConfiguration = new()
+				{
+					ConfigurationKey = configurationKey,
+					DeviceBrand = deviceBrand,
+					DeviceModel = deviceModel,
+					DeviceId = deviceId,
+					ConfigurationValue = configurationValue,
+                };
+
+				DeviceConfiguration? existingDeviceConfiguration = await _deviceConfigurationRepository.GetAsync(configurationKey, deviceId);
+				if (existingDeviceConfiguration != null)
+				{
+					existingDeviceConfiguration.ConfigurationValue = configurationValue;
+
+					_deviceConfigurationRepository.Update(existingDeviceConfiguration);
+				}
+				else
+				{
+					await _deviceConfigurationRepository.AddAsync(deviceConfiguration);
+				}
+
+                return await _deviceRepository.SaveAsync();
+            }
+            catch (Exception e)
+	        {
+				Debug.WriteLine(e.Message);
+                return false;
+            }
 		}
 	}
 }
