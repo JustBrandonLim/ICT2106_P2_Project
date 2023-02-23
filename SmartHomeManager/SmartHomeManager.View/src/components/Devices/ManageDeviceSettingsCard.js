@@ -2,18 +2,18 @@ import React, { useState } from "react";
 import { Heading, Card, CardHeader, CardBody, Text, CardFooter, Button, Select } from "@chakra-ui/react";
 
 export default function ManageDeviceSettingsCard(props) {
-    const [devicePossibleSettings, setDevicePossibleSettings] = useState(props.devicePossibleSettings);
+    const [deviceSettings, setDeviceSettings] = useState(props.deviceSettings);
 
     return (
         <Card>
             <CardHeader>
-                <Heading size="md">{`Configure ${props.configurationKey}`}</Heading>
+                <Heading size="md">{`Set ${props.deviceSettings}`}</Heading>
             </CardHeader>
 
             <CardBody>
-                <Select value={devicePossibleSettings ? devicePossibleSettings.configurationValue : 0}>
-                    {devicePossibleSettings.length > 0 ? (
-                        devicePossibleSettings.map((settings, i) => (
+                <Select value={deviceSettings ? deviceSettings.configurationValue : 0}>
+                    {deviceSettings.length > 0 ? (
+                        deviceSettings.map((settings, i) => (
                             <option
                                 key={i}
                                 value={settings}

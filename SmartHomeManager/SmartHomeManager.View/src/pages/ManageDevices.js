@@ -82,7 +82,7 @@ export default function ManageDevices() {
               {devices.length > 0 ? (
                 devices.map((device, i) => (
                     <ManageDeviceSelectionCard
-                        handleManageSettings={(event) => handleManageSettings(event, navigate, device)}
+                    handleManageSettings={(event) => handleManageSettings(event, navigate, device)}
                     handleManageConfiguration={(event) => handleManageConfiguration(event, navigate, device)}
                     key={i}
                     deviceId={device.deviceId}
