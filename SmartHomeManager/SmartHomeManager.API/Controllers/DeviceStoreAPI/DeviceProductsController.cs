@@ -33,7 +33,7 @@ public class DeviceProductsController : ControllerBase
 
     // POST: api/purchaseDevice
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost]
+    [HttpPost("purchaseDevice")]
     public async Task<ActionResult<DeviceProduct>> PurchaseDeviceProduct(int deviceId, int quantity)
     {
         await _deviceProductService.PurchaseDevice(deviceId,quantity);
