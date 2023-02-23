@@ -27,6 +27,7 @@ import DeviceConfig from "./pages/DeviceConfig";
 import Report from "pages/Analytics";
 import ManageDevices from "pages/ManageDevices";
 import ManageDeviceConfiguration from "pages/ManageDeviceConfiguration";
+import ManageDeviceSettings from "pages/ManageDeviceSettings";
 
 export function App() {
   return (
@@ -51,6 +52,7 @@ export function App() {
             <Route path="/registerdevice" element={<RegisterDevice />} />
             <Route path="/managedevices" element={<ManageDevices />} />
             <Route path="/managedeviceconfiguration" element={<ManageDeviceConfiguration />} />
+            <Route path="/managedevicesettings" element={<ManageDeviceSettings />} />
 
             <Route path="/director" element={<Director />} />
             <Route path="/backup" element={<Backup />} />

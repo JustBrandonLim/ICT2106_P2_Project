@@ -11,13 +11,31 @@ export default function ManageDevices() {
   const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111");
 
 
-    function handleManageDevice(e, navigate, device) {
+
+    function handleManageSettings(e, navigate, device) {
+        e.preventDefault();
+
+        navigate({
+            pathname: "/managedevicesettings",
+            search: `?${createSearchParams({
+                deviceId: device.deviceId,
+                deviceName: device.deviceName,
+                deviceBrand: device.deviceBrand,
+                deviceModel: device.deviceModel,
+            })}`,
+        });
+
+        console.log(device.deviceModel);
+    }
+
+    function handleManageConfiguration(e, navigate, device) {
         e.preventDefault();
 
         navigate({
             pathname: "/managedeviceconfiguration",
             search: `?${createSearchParams({
                 deviceId: device.deviceId,
+                deviceName: device.deviceName,
                 deviceBrand: device.deviceBrand,
                 deviceModel: device.deviceModel,
             })}`,
@@ -64,7 +82,8 @@ export default function ManageDevices() {
               {devices.length > 0 ? (
                 devices.map((device, i) => (
                     <ManageDeviceSelectionCard
-                    handleOnClick={(event) => handleManageDevice(event, navigate, device)}
+                        handleManageSettings={(event) => handleManageSettings(event, navigate, device)}
+                    handleManageConfiguration={(event) => handleManageConfiguration(event, navigate, device)}
                     key={i}
                     deviceId={device.deviceId}
                     deviceSerialNumber={device.deviceSerialNumber}
@@ -82,7 +101,9 @@ export default function ManageDevices() {
             <Stack spacing={5}>
               {assignedDevices.length > 0 ? (
                 assignedDevices.map((device, i) => (
-                  <ManageDeviceSelectionCard
+                    <ManageDeviceSelectionCard
+                    handleManageSettings={(event) => handleManageConfiguration(event, navigate, device)}
+                    handleManageConfiguration={(event) => handleManageConfiguration(event, navigate, device)}
                     key={i}
                     deviceId={device.deviceId}
                     deviceSerialNumber={device.deviceSerialNumber}
@@ -100,7 +121,9 @@ export default function ManageDevices() {
             <Stack spacing={5}>
               {unassignedDevices.length > 0 ? (
                 unassignedDevices.map((device, i) => (
-                  <ManageDeviceSelectionCard
+                    <ManageDeviceSelectionCard
+                    handleManageSettings={(event) => handleManageConfiguration(event, navigate, device)}
+                    handleManageConfiguration={(event) => handleManageConfiguration(event, navigate, device)}
                     key={i}
                     deviceId={device.deviceId}
                     deviceSerialNumber={device.deviceSerialNumber}

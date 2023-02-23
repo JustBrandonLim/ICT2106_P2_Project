@@ -1,50 +1,46 @@
 import React, { useEffect, useState } from "react";
 import { Container, Text, Tabs, TabList, Tab, TabPanels, TabPanel, Stack } from "@chakra-ui/react";
 import { useSearchParams } from 'react-router-dom';
-import ManageDeviceConfigurationCard from "../components/Devices/ManageDeviceConfigurationCard";
+import ManageDeviceSettingsCard from "../components/Devices/ManageDeviceSettingsCard";
 
-export default function ManageDeviceConfiguration() {
+export default function ManageDeviceSettings() {
   const [searchParams] = useSearchParams();
   const deviceId = searchParams.get('deviceId')
   const deviceName = searchParams.get('deviceName')
   const deviceBrand = searchParams.get('deviceBrand')
   const deviceModel = searchParams.get('deviceModel')
-  const [devicePossibleConfigurations, setDevicePossibleConfigurations] = useState([]);
-  const [deviceActualConfigurations, setDeviceActualConfigurations] = useState([]);
+  const [devicePossibleSettings, setDevicePossibleSettings] = useState([]);
+  const [deviceActualSettings, setDeviceActualSettings] = useState([]);
 
   const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111");
 
-
   useEffect(() => {
-      fetch(`https://localhost:7140/api/ManageDevice/GetDevicePossibleConfigurations/${deviceBrand}/${deviceModel}`)
+      fetch(``)
       .then((response) => response.json())
       .then((data) => {
-        setDevicePossibleConfigurations(data);
+          setDevicePossibleSettings(data);
       });
   }, []);
 
   useEffect(() => {
-      fetch(`https://localhost:7140/api/ManageDevice/GetDeviceConfigurations/${deviceId}/${deviceBrand}/${deviceModel}`)
+      fetch(``)
           .then((response) => response.json())
           .then((data) => {
-              setDeviceActualConfigurations(data);
+              setDeviceActualSettings(data);
           });
   }, []);
 
   return (
     <Container mt={5} mb={5} p={5} maxW="3xl" minH="50vh" border="1px" borderColor="gray.100" rounded="lg" boxShadow="lg" centerContent>
       <Text fontWeight="bold" fontSize="xl" mb={5}>
-              {`Manage ${deviceName} configurations`}
+              {`Manage ${deviceName} settings`}
       </Text>
             <Stack spacing={5}>
-              {devicePossibleConfigurations.length > 0 ? (
-                  devicePossibleConfigurations.map((configuration, i) => (
-                  <ManageDeviceConfigurationCard
+              {devicePossibleSettings.length > 0 ? (
+                  devicePossibleSettings.map((configuration, i) => (
+                  <ManageDeviceSettingsCard
                     key={i}
-                    actualConfigurations={deviceActualConfigurations}
-                    configurationKey={configuration.configurationKey}
-                    configurationValue={configuration.configurationValue }
-                    valueMeaning={configuration.valueMeaning }
+                    devicePossibleSettings={devicePossibleSettings}
                   />
                 ))
               ) : (

@@ -11,18 +11,13 @@ export default function ManageDeviceConfigurationCard(props) {
             return actualConfiguration.configurationKey == props.configurationKey;
         }));
 
-    console.log(actualConfigurationKey)
-
     return (
         <Card>
             <CardHeader>
-                <Heading size="xl">{props.deviceName}</Heading>
+                <Heading size="md">{`Configure ${props.configurationKey}`}</Heading>
             </CardHeader>
 
             <CardBody>
-                <Heading size='m'>
-                    {`Configure ${props.configurationKey}`}
-                </Heading>
                 <Select value={actualConfigurationKey ? actualConfigurationKey.configurationValue : 0}>
                     {possibleConfigurations.length > 0 ? (
                         possibleConfigurations.map((configuration, i) => (
