@@ -110,7 +110,12 @@ public class Program
         builder.Services.AddScoped<AccountService>();
         builder.Services.AddScoped<EmailService>();
         builder.Services.AddScoped<ProfileService>();
+        builder.Services.AddScoped<TwoFactorAuthService>();
         #endregion DEPENDENCY INJECTIONS
+
+        #region AUTHENTICATION
+
+        #endregion
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
@@ -129,6 +134,7 @@ public class Program
 
         app.UseCors();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();

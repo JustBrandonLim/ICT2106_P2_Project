@@ -26,11 +26,13 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         // in this context - accounts controller can use account service
         private readonly AccountService _accountService;
         private readonly EmailService _emailService;
+        private readonly TwoFactorAuthService _twoFactorAuthService;
 
-        public AccountsController(AccountService accountService, EmailService emailService)
+        public AccountsController(AccountService accountService, EmailService emailService, TwoFactorAuthService twoFactorAuthService)
         {
             _accountService = accountService;
             _emailService = emailService;
+            _twoFactorAuthService = twoFactorAuthService;
         }
 
         /* 
@@ -70,7 +72,6 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
 
             return Ok(account);
         }
-
 
         /* 
          * PUT: api/Accounts/11111111-1111-1111-1111-111111111111
@@ -161,7 +162,6 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
 
             // login unsuccessful
             return BadRequest();
-            
         }
 
 
@@ -189,6 +189,19 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
             }
 
             return BadRequest(1);
+        }
+
+
+        /* 
+         * Test Function for 2FA
+         * GET: 
+         * Return: 
+        */
+        [HttpGet("security/get-qr-response")]
+        public async Task<ActionResult<IEnumerable<String>>> GetQRResponse()
+        {
+            IEnumerable<String> response = await _twoFactorAuthService.GenerateTwoFactorAuthentication();
+            return Ok(response);
         }
     }
 }
