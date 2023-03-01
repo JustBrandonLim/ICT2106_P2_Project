@@ -5,9 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Entities;
+using SmartHomeManager.Domain.SceneDomain.Interfaces;
+
 namespace SmartHomeManager.DataSource.RulesDataSource
 {
-	public class ScenarioRepository: IGenericRepository<Scenario>
+	public class ScenarioRepository : IScenarioRepository<Scenario>
 	{
         private readonly ApplicationDbContext _applicationDbContext;
         protected DbSet<Scenario> _dbSet;
@@ -65,6 +67,19 @@ namespace SmartHomeManager.DataSource.RulesDataSource
             {
                 var scenario = await _applicationDbContext.Scenarios.FindAsync(id);
                 return scenario;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public IEnumerable<Scenario?> GetByProfileId(Guid id)
+        {
+            try
+            {
+                IEnumerable<Scenario> scenarios = _applicationDbContext.Scenarios.Where(scenario => scenario.ProfileId == id);
+                return scenarios;
             }
             catch
             {

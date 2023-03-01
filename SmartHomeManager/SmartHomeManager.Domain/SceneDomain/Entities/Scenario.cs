@@ -19,6 +19,9 @@ namespace SmartHomeManager.Domain.SceneDomain.Entities
         public Profile Profile { get; set; }
 
         [Required]
-        public Boolean isActive { get; set; }
+        public Boolean IsActive { get; set; }
+
+        [Required]
+        public Boolean IsShareable { get; set; }
     }
 }

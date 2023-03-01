@@ -11,6 +11,7 @@ using SmartHomeManager.Domain.AccountDomain.DTOs;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.AccountDomain.Services;
+using SmartHomeManager.Domain.SceneDomain.Services;
 
 namespace SmartHomeManager.API.Controllers.ProfileAPI
 {
@@ -19,10 +20,12 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
     public class ProfilesController : ControllerBase
     {
         private readonly ProfileService _profileService;
+        private readonly ScenarioServices _scenarioServices;
 
-        public ProfilesController(ProfileService profileService)
+        public ProfilesController(ProfileService profileService, ScenarioServices scenarioServices)
         {
             _profileService = profileService ?? throw new ArgumentNullException("profile service null");
+            _scenarioServices = scenarioServices ?? throw new ArgumentNullException("scenario service null");
         }
 
         /* 
@@ -112,6 +115,17 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
             }
 
             return BadRequest(1);
+        }
+
+        [HttpPut("share-profile/{profileId}")]
+        public ActionResult<string> Put(Guid profileId)
+        {
+            var success = _scenarioServices.ShareScenarios(profileId);
+            if (success)
+            {
+                return Ok("Scenarios shared!");
+            }
+            return BadRequest("Scenarios not shared");
         }
     }
 }

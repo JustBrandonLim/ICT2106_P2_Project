@@ -5,6 +5,7 @@ using SmartHomeManager.Domain.SceneDomain.Services;
 using SmartHomeManager.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
+using SmartHomeManager.Domain.SceneDomain.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,7 +18,7 @@ namespace SmartHomeManager.API.Controllers.ScenariosAPIs
         private readonly ScenarioServices _scenarioServices;
         //private readonly GetScenarioService _getScenarioService;
 
-        public ScenariosController(IGenericRepository<Scenario> scenarioRepository)
+        public ScenariosController(IScenarioRepository<Scenario> scenarioRepository)
         {
             _scenarioServices = new(scenarioRepository);
             //_getScenarioService = new(scenarioRepository);
@@ -66,5 +67,6 @@ namespace SmartHomeManager.API.Controllers.ScenariosAPIs
             return null;
         }
     }
+
 }
 

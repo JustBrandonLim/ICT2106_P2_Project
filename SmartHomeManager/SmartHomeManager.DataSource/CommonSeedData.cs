@@ -235,7 +235,9 @@ namespace SmartHomeManager.DataSource
                 {
                     ScenarioId = new("AC38AF14-9A57-4DF3-89F3-78F9CE9F4983"),
                     ScenarioName = "Default",
-                    ProfileId = profiles[0].ProfileId
+                    ProfileId = profiles[0].ProfileId,
+                    IsActive = false,
+                    IsShareable = false
                 }
             };
 
