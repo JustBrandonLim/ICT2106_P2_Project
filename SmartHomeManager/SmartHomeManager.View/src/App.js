@@ -25,6 +25,7 @@ import RegisterDevice from "./pages/RegisterDevice";
 import SelectNearbyDevice from "pages/SelectNearbyDevice";
 import DeviceConfig from "./pages/DeviceConfig";
 import Report from "pages/Analytics";
+import TwoFactorAuth from "./pages/account/TwoFactorAuth";
 
 export function App() {
   return (
@@ -44,6 +45,7 @@ export function App() {
             <Route path="/edit-profile" element={<UserProfileEdit />} />
             <Route path="/profile-landing" element={<ProfileLanding />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/two-factor-auth" element={<TwoFactorAuth />} />
 
             <Route path="/selectnearbydevice" element={<SelectNearbyDevice />} />
             <Route path="/registerdevice" element={<RegisterDevice />} />

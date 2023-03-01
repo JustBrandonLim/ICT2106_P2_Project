@@ -69,6 +69,15 @@ export default function MyAccount() {
                                 }}>
                                 Change Password
                             </Button>
+                            <Button
+                                onClick={() => navigate("/account-created", { replace: true })}
+                                bg={'green.400'}
+                                color={'white'}
+                                _hover={{
+                                    bg: 'green.500',
+                                }}>
+                                Enable 2FA
+                            </Button>
                         </Stack>
                     </Stack>
                 </Box>

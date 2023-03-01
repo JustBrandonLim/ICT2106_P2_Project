@@ -24,7 +24,8 @@ namespace SmartHomeManager.DataSource.AccountDataSource
                     Username = "username",
                     Password = "P@ssw0rd",
                     Address = "123 abc 456 888888",
-                    Timezone = 8
+                    Timezone = 8,
+                    TwoFactorFlag = true
                 }
             };
 

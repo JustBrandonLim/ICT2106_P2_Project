@@ -30,5 +30,8 @@ namespace SmartHomeManager.Domain.AccountDomain.Entities
 
         [Required]
         public int DevicesOnboarded { get; set; }
+
+        [Required]
+        public bool TwoFactorFlag { get; set; }
     }
 }

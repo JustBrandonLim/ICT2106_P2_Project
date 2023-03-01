@@ -4,68 +4,39 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Google.Authenticator;
+using SmartHomeManager.Domain.AccountDomain.DTOs;
 
 namespace SmartHomeManager.Domain.AccountDomain.Services
 {
     public class TwoFactorAuthService
     {
         public TwoFactorAuthService() { }
-        String? AuthenticationCode
-        {
-            get;
-            set;
-        }
-
-        String? AuthenticationTitle
-        {
-            get
-            {
-                return "Juleus";
-            }
-        }
-
-
-        String? AuthenticationBarCodeImage
-        {
-            get;
-            set;
-        }
-
-        String? AuthenticationManualCode
-        {
-            get;
-            set;
-        }
   
-        public Boolean ValidateTwoFactorPIN(String pin)  
+        public async Task<Boolean> ValidateTwoFactorPIN(ValidatePinWebRequest validatePin)  
         {  
-            TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();  
-            return tfa.ValidateTwoFactorPIN(AuthenticationCode, pin);  
+            TwoFactorAuthenticator tfa = new();
+            String authCode = validatePin.AuthenticationCode.Replace("-", "");
+            return tfa.ValidateTwoFactorPIN(authCode, validatePin.Pin);  
         }  
   
-        public async Task<IEnumerable<String>> GenerateTwoFactorAuthentication()  
+        public async Task<QrResponse> GenerateTwoFactorAuthentication(Guid accountId)
         {  
-            Guid guid = new Guid("11111111-1111-1111-1111-111111111111");  
-            String uniqueUserKey = Convert.ToString(guid).Replace("-", "").Substring(0, 10);  
-            AuthenticationCode = uniqueUserKey;
-            Console.WriteLine("Auth Code: " + AuthenticationCode);
-  
-            Dictionary<String, String> result = new Dictionary<String, String>();  
-            TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();  
-            var setupInfo = tfa.GenerateSetupCode("Complio", AuthenticationTitle, AuthenticationCode, false, 300);
-            List<String> response = new List<String>();
+            String accountIdString = accountId.ToString();
+            String authCode = accountIdString.Replace("-", ""); 
+            /*Console.WriteLine("Auth Code: " + authCode);*/
 
-            if (setupInfo != null)  
+            TwoFactorAuthenticator tfa = new();
+            var setupInfo = tfa.GenerateSetupCode("Company", "Placeholder", authCode, false, 5);
+            QrResponse response = new();
+
+            if (setupInfo != null) 
             {  
-                
-                AuthenticationBarCodeImage = setupInfo.QrCodeSetupImageUrl; 
-                Console.WriteLine("Auth Image URL: " + AuthenticationBarCodeImage);
-                AuthenticationManualCode = setupInfo.ManualEntryKey;  
-                Console.WriteLine("Auth Manual Code: " + AuthenticationManualCode);
+                /*Console.WriteLine("Auth Image URL: " + setupInfo.QrCodeSetupImageUrl);
+                Console.WriteLine("Auth Manual Code: " + setupInfo.ManualEntryKey);*/
 
-                response.Add(AuthenticationCode);
-                response.Add(AuthenticationBarCodeImage);
-                response.Add(AuthenticationManualCode);
+                response.AuthenticationCode = authCode;
+                response.AuthenticationBarCodeImage = setupInfo.QrCodeSetupImageUrl;
+                response.AuthenticationManualCode = setupInfo.ManualEntryKey;
             }
             return response;
         }

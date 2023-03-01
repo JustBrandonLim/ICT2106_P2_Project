@@ -73,7 +73,19 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 			return account;
 		}
 
-		public async Task<IEnumerable<Account>> GetAccounts()
+        public async Task<bool?> GetTwoFactorFlag(Guid id)
+        {
+            Account? account = await _accountRepository.GetByIdAsync(id);
+
+            if (account == null)
+            {
+                return null;
+            }
+
+            return account.TwoFactorFlag;
+        }
+
+        public async Task<IEnumerable<Account>> GetAccounts()
 		{
 			IEnumerable<Account> accounts = await _accountRepository.GetAllAsync();
 

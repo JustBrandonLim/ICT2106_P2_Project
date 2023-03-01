@@ -194,13 +194,55 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
 
         /* 
          * Test Function for 2FA
-         * GET: 
-         * Return: 
+         * GET: api/Accounts/security/get-qr-response
+         * Return:
+         * Ok(list) - List containing QR auth code, QR image URL, and QR manual entry key
+         * BadRequest() - 2FA generation failed
         */
         [HttpGet("security/get-qr-response")]
-        public async Task<ActionResult<IEnumerable<String>>> GetQRResponse()
+        public async Task<ActionResult<List<QrResponse>>> GetQRResponse(Guid accountId)
         {
-            IEnumerable<String> response = await _twoFactorAuthService.GenerateTwoFactorAuthentication();
+            QrResponse response = await _twoFactorAuthService.GenerateTwoFactorAuthentication(accountId);
+            List<QrResponse> list = new()
+            {
+                response
+            };
+
+            if (list.Count() != 0)
+                return Ok(list);
+            return BadRequest();
+        }
+
+        /* 
+         * POST: api/Accounts/security/validate-2fa-pin
+         * Return: 
+         * Ok(true) - 2FA Pin validated successfully
+         * BadRequest(false) - 2FA Pin is incorrect
+        */
+        [HttpPost("security/validate-2fa-pin")]
+        public async Task<ActionResult<bool>> ValidateTwoFactorPIN([FromBody] ValidatePinWebRequest validatePin)
+        {
+            bool response = await _twoFactorAuthService.ValidateTwoFactorPIN(validatePin);
+
+            if (response)
+                return Ok(response);
+            return BadRequest(response);
+        }
+
+        /* 
+         * GET: api/Accounts/security/get-2fa-flag/11111111-1111-1111-1111-111111111111
+         * Return: 
+        */
+        [HttpGet("security/get-2fa-flag")]
+        public async Task<ActionResult<bool>> GetTwoFactorFlag(Guid accountId)
+        {
+            bool? response = await _accountService.GetTwoFactorFlag(accountId);
+
+            if (response == null)
+            {
+                return NotFound(1);
+            }
+
             return Ok(response);
         }
     }
