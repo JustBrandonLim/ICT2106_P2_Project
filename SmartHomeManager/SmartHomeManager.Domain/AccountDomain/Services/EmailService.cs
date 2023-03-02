@@ -15,11 +15,10 @@ using SmartHomeManager.Domain.AccountDomain.DTOs;
 
 namespace SmartHomeManager.Domain.AccountDomain.Services
 {
-    public class EmailService
+    public class EmailService : IEmailService
     {
         private const string From = "1004companyemail@gmail.com";
         private const string GoogleAppPassword = "alirejlqrkfqisji";
-        private const string Subject = "Test email";
 
         private readonly IAccountRepository _accountRepository;
 
@@ -28,14 +27,13 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             _accountRepository = accountRepository;
         }
 
-
-        
         public bool SendRegistrationEmail(string username, string recipient)
         {
             string messageBody = $"<div><h2>Hello {username},</h2>  <h2>Thank you for registering an account with Company, we hope you enjoy your experience.</h2></div>";
+            string subject = "Company Account Registration";
 
-            var smtpClient = setupClient();
-            var mailMessage = setupMessage(messageBody, recipient);
+            var smtpClient = SetupClient();
+            var mailMessage = SetupMessage(messageBody, recipient, subject);
 
             try
             {
@@ -52,7 +50,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
         public async Task<bool> SendPurchaseEmailConfirmation(Guid accountId)
         {
 
-            Account account = await _accountRepository.GetByIdAsync(accountId);
+            Account? account = await _accountRepository.GetByIdAsync(accountId);
 
             string messageBody = "You have purchased device xxx";
 
@@ -66,9 +64,10 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 
                 try
                 {
-                    var smtpClient = setupClient();
+                    var smtpClient = SetupClient();
                     string recipient = account.Email.ToString();
-                    var mailMessage = setupMessage(messageBody, recipient);
+                    string subject = "Purchase Confirmation";
+                    var mailMessage = SetupMessage(messageBody, recipient, subject);
 
                     smtpClient.Send(mailMessage);
                     return true;
@@ -79,9 +78,9 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
                     Debug.WriteLine(e);
                     return false;
                 }
-            } 
+            }
         }
-        public SmtpClient setupClient()
+        public SmtpClient SetupClient()
         {
             var smtpClient = new SmtpClient("smtp.gmail.com")
             {
@@ -93,12 +92,12 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             return smtpClient;
         }
 
-        public MailMessage setupMessage(string givenBody, string recipient)
+        public MailMessage SetupMessage(string givenBody, string recipient, string subject)
         {
             var mailMessage = new MailMessage
             {
                 From = new MailAddress(From),
-                Subject = Subject,
+                Subject = subject,
                 Body = givenBody,
                 IsBodyHtml = true,
             };

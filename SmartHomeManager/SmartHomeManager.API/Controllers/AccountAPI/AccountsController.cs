@@ -202,7 +202,7 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         [HttpGet("security/get-qr-response")]
         public async Task<ActionResult<List<QrResponse>>> GetQRResponse(Guid accountId)
         {
-            QrResponse response = await _twoFactorAuthService.GenerateTwoFactorAuthentication(accountId);
+            QrResponse response = _twoFactorAuthService.GenerateTwoFactorAuthentication(accountId);
             List<QrResponse> list = new()
             {
                 response

@@ -11,7 +11,7 @@ using SmartHomeManager.Domain.DeviceDomain.Interfaces;
 
 namespace SmartHomeManager.Domain.AccountDomain.Services
 {
-    public class ProfileService
+    public class ProfileService : IProfileService
     {
         private readonly IProfileRepository _profileRepository;
 
