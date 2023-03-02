@@ -118,7 +118,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             return null;
 		}
 
-        public async Task<bool> CheckAccountExists(Guid id)
+        /*public async Task<bool> CheckAccountExists(Guid id)
         {
             Account? account = await _accountRepository.GetByIdAsync(id);
             if (account != null)
@@ -126,7 +126,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
                 return true;
             }
             return false;
-        }
+        }*/
 
         public async Task<bool> UpdateAccount(Account account, AccountWebRequest accountWebRequest)
         {

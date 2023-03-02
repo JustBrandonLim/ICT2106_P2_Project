@@ -15,7 +15,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Interfaces
         public Task<bool?> GetTwoFactorFlag(Guid id);
         public Task<IEnumerable<Account>> GetAccounts();
         public Task<Guid?> VerifyLogin(LoginWebRequest login);
-        public Task<bool> CheckAccountExists(Guid id);
+        /*public Task<bool> CheckAccountExists(Guid id);*/
         public Task<bool> UpdateAccount(Account account, AccountWebRequest accountWebRequest);
         public Task<bool> DeleteAccount(Account account);
         public string GetHashedPassword(Guid accountId, string unhashedPassword);
