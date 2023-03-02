@@ -52,12 +52,14 @@ export default function Login() {
                 },
             })
             .then(async response => {
-                const msg = await response.text();
+                const msg = await response.json();
                 /* Ok(1) - Login Successful */
                 if (response.ok) {
                     updateErrorStatus(false);
                     navigate("/", { replace: true });
-                    localStorage.setItem('accountId', msg);
+                    localStorage.setItem('accountId', msg["accountId"]);
+                    localStorage.setItem('email', msg["email"]);
+                    localStorage.setItem('username', msg["username"]);
                 } else {
                     /*  BadRequest(1) - Login Unsuccessful, wrong password
                     *   BadRequest(2) - Login Unsuccessful, account does not exist

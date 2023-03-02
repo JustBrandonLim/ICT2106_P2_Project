@@ -16,6 +16,7 @@ import Rooms from "./pages/Rooms";
 import { Container } from "@chakra-ui/react";
 import Register from "./pages/account/Register";
 import ForgetPassword from "./pages/account/ForgetPassword";
+import ChangePassword from "./pages/account/ChangePassword";
 import Login from "./pages/account/Login";
 import RegisterOK from "./pages/account/RegisterOK";
 import MyAccount from "./pages/account/Setting";
@@ -38,6 +39,7 @@ export function App() {
             <Route path="/rooms" element={<Rooms />} />
             <Route path="/profiles" element={<Profiles />} />
             <Route path="/forgetpw" element={<ForgetPassword />} />
+            <Route path="/changepw" element={<ChangePassword />} />
             <Route path="/login" element={<Login />} />
             <Route path="/myaccount" element={<MyAccount />} />
             <Route path="/account-created" element={<RegisterOK />} />
