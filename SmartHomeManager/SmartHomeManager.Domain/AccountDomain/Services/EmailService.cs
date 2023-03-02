@@ -17,10 +17,10 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 {
     public class EmailService : IEmailService
     {
+        private readonly IAccountRepository _accountRepository;
+
         private const string From = "1004companyemail@gmail.com";
         private const string GoogleAppPassword = "alirejlqrkfqisji";
-
-        private readonly IAccountRepository _accountRepository;
 
         public EmailService(IAccountRepository accountRepository)
         {

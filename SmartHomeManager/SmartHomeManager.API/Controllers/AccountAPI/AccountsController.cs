@@ -28,11 +28,12 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         private readonly EmailService _emailService;
         private readonly TwoFactorAuthService _twoFactorAuthService;
 
-        public AccountsController(AccountService accountService, EmailService emailService, TwoFactorAuthService twoFactorAuthService)
+        public AccountsController(IAccountRepository accountRepository, IAccountService accountService, 
+            IEmailService emailService, ITwoFactorAuthService twoFactorAuthService)
         {
-            _accountService = accountService;
-            _emailService = emailService;
-            _twoFactorAuthService = twoFactorAuthService;
+            _accountService = new(accountRepository);
+            _emailService = new(accountRepository);
+            _twoFactorAuthService = new();
         }
 
         /* 
@@ -222,7 +223,7 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         [HttpPost("security/validate-2fa-pin")]
         public async Task<ActionResult<bool>> ValidateTwoFactorPIN([FromBody] ValidatePinWebRequest validatePin)
         {
-            bool response = await _twoFactorAuthService.ValidateTwoFactorPIN(validatePin);
+            bool response = _twoFactorAuthService.ValidateTwoFactorPIN(validatePin);
 
             if (response)
                 return Ok(response);

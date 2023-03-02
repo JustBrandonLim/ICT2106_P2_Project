@@ -21,7 +21,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 		{
 			_accountRepository = accountRepository;
 		}
-		public async Task<int> CreateAccount(AccountWebRequest accountWebRequest) 
+		public async Task<int> CreateAccount(AccountWebRequest accountWebRequest)
 		{
 			bool isEmailUnique = await _accountRepository.IsEmailUnique(accountWebRequest.Email);
 

@@ -107,10 +107,10 @@ public class Program
         // ACCOUNT
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
         builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
-        builder.Services.AddScoped<AccountService>();
-        builder.Services.AddScoped<EmailService>();
-        builder.Services.AddScoped<ProfileService>();
-        builder.Services.AddScoped<TwoFactorAuthService>();
+        builder.Services.AddScoped<IAccountService, AccountService>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
+        builder.Services.AddScoped<Domain.AccountDomain.Interfaces.IProfileService, ProfileService>(); // specified due to mock IProfileService elsewhere
+        builder.Services.AddScoped<ITwoFactorAuthService,TwoFactorAuthService>();
         #endregion DEPENDENCY INJECTIONS
 
         #region AUTHENTICATION
