@@ -46,6 +46,7 @@ export default function TwoFactorAuthLogin() {
                     <Input 
                         type="text" 
                         value={pinInput} 
+                        placeholder="Enter your 2fa pin"
                         onChange={(e) => updatePinInput(e.target.value)} 
                         maxW='200px'
                     />
