@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Text, Tabs, TabList, Tab, TabPanels, TabPanel, Stack, Heading, Card, CardHeader, CardBody, CardFooter, Button, Input } from "@chakra-ui/react";
 import { useSearchParams } from "react-router-dom";
-import ManageDeviceSettingsCard from "../../../components/Devices/ManageDeviceSettingsCard";
 
 export default function ManageDeviceSettings() {
   const [searchParams] = useSearchParams();
