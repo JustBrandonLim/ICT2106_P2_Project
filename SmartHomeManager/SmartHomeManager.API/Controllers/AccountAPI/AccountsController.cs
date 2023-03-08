@@ -39,7 +39,8 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         /* 
          * GET: api/Accounts
          * Return: 
-         * Ok(accounts) - IEnumerable of accounts
+         * Ok(accounts) - IEnumerable
+         * of accounts
          * NotFound(1) - No accounts in DB
         */
         [HttpGet]
@@ -153,12 +154,12 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         [HttpPost("login")]
         public async Task<ActionResult> VerifyLogin([FromBody]LoginWebRequest login)
         {
-            Guid? accountId = await _accountService.VerifyLogin(login);
+            LoginResponse? loginResponseDetails = await _accountService.VerifyLogin(login);
 
             // login successful
-            if (accountId != null)
+            if (loginResponseDetails != null)
             {
-                return Ok(accountId);
+                return Ok(loginResponseDetails);
             }
 
             // login unsuccessful

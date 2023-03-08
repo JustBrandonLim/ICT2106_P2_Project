@@ -1,33 +1,19 @@
 import { InputRightElement } from '@chakra-ui/react';
 import { React, useState, useEffect } from 'react';
-import { InputGroup, Button, Image, Input } from '@chakra-ui/react'
+import { Flex, Box, Stack, InputGroup, Button, Image, Input } from '@chakra-ui/react'
+import { Fade, ScaleFade, Slide, SlideFade } from '@chakra-ui/react'
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 
+export default function TwoFactorAuthLogin() {
+    const navigate = useNavigate()
 
-export default function TwoFactorAuth() {
     const [accountId, updateAccountId] = useState(JSON.parse(localStorage.getItem('accountId')))
-    const [authDetails, updateAuthDetails] = useState([])
     const [pinInput, updatePinInput] = useState("")
-
-    useEffect(() => {
-        const getQrDetails = async () => {
-            await fetch(`https://localhost:7140/api/Accounts/security/get-qr-response?accountId=${accountId}`, {
-                    method: 'GET',
-                    headers: {
-                        accept: 'text/plain'
-                    },
-                })
-                .then(async response => {
-                    const data = await response.json()
-
-                    if (response.ok) {
-                        updateAuthDetails(data)
-                    }
-                })
-        }
-        getQrDetails()
-    }, [accountId]);
+    const [validationMsg, updateValidationMsg] = useState("")
+    const [isOpen, updateIsOpen] = useState(false)
 
     const validatePin = async () => {
+        updateIsOpen(true)
         const validatePinObj = {
             "authenticationCode": accountId, "pin": pinInput
         }
@@ -41,30 +27,21 @@ export default function TwoFactorAuth() {
         .then(async response => {
             const msg = await response.text();
             if (response.ok) {
-                console.log("Pin validated")
+                updateValidationMsg("Pin verified!")
+                setTimeout(() => { 
+                    navigate("/two-factor-auth-setup-success", { replace: true });
+                }, 2000);
+                
             }
             else {
-                console.log("Pin is wrong")
+                updateValidationMsg("Pin is incorrect!")
             }
         })
     }
 
     return (
         <>
-            {
-                authDetails.map((item) => (
-                    <div key={item.authenticationCode}>
-                        <Image 
-                            src={item.authenticationBarCodeImage}
-                            boxSize='300px'
-                            >
-                        </Image>
-                        Your Secret Key: {item.authenticationManualCode}
-                    </div>
-                ))
-            }
-
-            {
+            <Stack align={'center'} padding={'5%'} alignItems={'center'} >
                 <InputGroup size='md' maxWidth='380px'>
                     <Input 
                         type="text" 
@@ -85,8 +62,13 @@ export default function TwoFactorAuth() {
                         </Button>
                     </InputRightElement> 
                 </InputGroup>
-            }
+
+                <ScaleFade initialScale={0.7} in={isOpen}>
+                    <Box fontSize={'xl'}>
+                        {validationMsg}
+                    </Box>
+                </ScaleFade>
+            </Stack>
         </>
     );
 }
-

@@ -1,4 +1,5 @@
 import { React } from 'react';
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import {
     Flex,
     Box,
@@ -15,6 +16,7 @@ import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
 export default function MyAccount() {
 
+    const navigate = useNavigate()
 
     return (
         <Flex
@@ -70,7 +72,7 @@ export default function MyAccount() {
                                 Change Password
                             </Button>
                             <Button
-                                onClick={() => navigate("/account-created", { replace: true })}
+                                onClick={() => navigate("/two-factor-auth-setup", { replace: true })}
                                 bg={'green.400'}
                                 color={'white'}
                                 _hover={{

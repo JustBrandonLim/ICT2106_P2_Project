@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.Domain.AccountDomain.DTOs
 {
-    public class LoginWebRequest
+    public class LoginResponse
     {
         [Required]
-        public string Email { get; set; }
+        public Guid AccountId { get; set; }
         [Required]
-        public string Password { get; set; }
+        public bool TwoFactorFlag { get; set; }
     }
 }
