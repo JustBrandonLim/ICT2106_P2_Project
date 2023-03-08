@@ -40,9 +40,8 @@ export default function ManageDevices() {
     // on form submit
     else {
       if (password1 && (password1 == password2)) {
-        alert("imagine it's set!");
-        return // remove this after api is implemented
-        axios.post('https://localhost:7140/api/ManageDevice/SetDevicePassword', {
+        axios.post('https://localhost:7140/api/ManageDevice/SetDevicePasswordById', {
+          deviceId: devices[selectedDeviceToManagePassword].deviceId,
           devicePassword: password1
         })
           .then(function (response) {
@@ -56,6 +55,7 @@ export default function ManageDevices() {
                 duration: 9000,
                 isClosable: true,
               })
+              fetchData();
             }
           })
           .catch(function (error) {
@@ -92,10 +92,8 @@ export default function ManageDevices() {
     // on form submit
     else {
       if (password1) {
-        // alert("imagine it's set!");
-        // return // remove this after api is implemented
         let device = devices[selectedDeviceToManagePassword];
-        if (password1 == device.devicePassword || password1 == "123") { // latter to be removed
+        if (password1 == device.devicePassword) { 
           handleCloseModal();
           if (destination == 1) navigateToSettings(device)
           else navigateToConfiguration(device)
@@ -110,24 +108,6 @@ export default function ManageDevices() {
           })
         }
       }
-      // axios.get(`https://localhost:7140/api/ManageDevice/GetDevicePassword/${devices[selectedDeviceToManagePassword].deviceId}`)
-      // .then(function (response) {
-      //   console.log(response);
-      //   if (response.data.devicePassword == password1) {
-      //     handleCloseModal();
-
-      //   }
-      // })
-      // .catch(function (error) {
-      //   console.log(error);
-      //   toast({
-      //     title: "Error",
-      //     description: "Password lock failed.",
-      //     status: "error",
-      //     duration: 9000,
-      //     isClosable: true,
-      //   });
-      // })
   }
 }
 
@@ -144,7 +124,7 @@ function handleManageSettings(e, device, i) {
   e.preventDefault();
 
   // if requires password, get input
-  if (device.devicePassword || device.deviceName.includes("Fan")) {
+  if (device.devicePassword) {
     handleCheckPassword(e, i);
     setDestination(1);
   }
@@ -155,7 +135,7 @@ function handleManageConfiguration(e, device, i) {
   e.preventDefault();
 
   // if requires password, get input
-  if (device.devicePassword || device.deviceName.includes("Fan")) {
+  if (device.devicePassword) {
     handleCheckPassword(e, i);
     setDestination(2);
   }
@@ -186,23 +166,27 @@ function navigateToConfiguration(device) {
   });
 }
 
-useEffect(() => {
+function fetchData() {
   fetch(`https://localhost:7140/api/ManageDevice/GetAllDevicesByAccount/${accountId}`)
-    .then((response) => response.json())
-    .then((data) => {
-      setDevices(data);
-      setAssignedDevices(
-        data.filter((device) => {
-          return device.roomId;
-        })
-      );
+  .then((response) => response.json())
+  .then((data) => {
+    setDevices(data);
+    setAssignedDevices(
+      data.filter((device) => {
+        return device.roomId;
+      })
+    );
 
-      setUnassignedDevices(
-        data.filter((device) => {
-          return !device.roomId;
-        })
-      );
-    });
+    setUnassignedDevices(
+      data.filter((device) => {
+        return !device.roomId;
+      })
+    );
+  });
+}
+
+useEffect(() => {
+  fetchData()
 }, []);
 
 return (
@@ -282,7 +266,7 @@ return (
             {devices.length > 0 ? (
               devices.map((device, i) => (
                 <ManageDeviceSelectionCard
-                  handleSetPassword={!device.devicePassword && !device.deviceName.includes("Fan") ? (event) => handleSetPassword(event, i) : null}
+                  handleSetPassword={!device.devicePassword ? (event) => handleSetPassword(event, i) : null}
                   handleManageSettings={(event) => handleManageSettings(event, device, i)}
                   handleManageConfiguration={(event) => handleManageConfiguration(event, device, i)}
                   key={i}
