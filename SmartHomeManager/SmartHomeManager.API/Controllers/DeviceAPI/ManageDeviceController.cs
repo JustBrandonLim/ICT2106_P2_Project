@@ -22,7 +22,6 @@ namespace SmartHomeManager.API.Controllers.DeviceAPI
             _manageDeviceService = new(deviceRepository, deviceConfigurationLookUpRepository, deviceConfigurationRepository);
 	    }
 
-
         [HttpGet("GetAllDevicesByAccount/{accountId}")]
         public async Task<IEnumerable<Device>> GetAllDevicesByAccount(Guid accountId)
         {
@@ -59,6 +58,17 @@ namespace SmartHomeManager.API.Controllers.DeviceAPI
 
             return BadRequest("AppleDeviceConfiguration() failed!");
 	    }
+
+        [HttpPost("SetDevicePasswordById")]
+        public async Task<ActionResult> SetDevicePasswordById([FromBody] DevicePasswordWebRequest devicePasswordWebRequest)
+        {
+            if (await _manageDeviceService.SetDevicePasswordById(devicePasswordWebRequest.DeviceId, devicePasswordWebRequest.DevicePassword))
+            {
+                return Ok("SetDevicePasswordById() success!");
+            }
+
+            return BadRequest("SetDevicePasswordById() failed!");
+        }
     }
 }
 

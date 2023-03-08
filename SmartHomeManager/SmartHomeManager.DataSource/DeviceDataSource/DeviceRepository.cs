@@ -34,5 +34,10 @@ namespace SmartHomeManager.DataSource.DeviceDataSource
 	    {
             return await _applicationDbContext.SaveChangesAsync() > 0;
 	    }
+
+        public void Update(Device device)
+        {
+            _applicationDbContext.Devices.Update(device);
+        }
     }
 }
