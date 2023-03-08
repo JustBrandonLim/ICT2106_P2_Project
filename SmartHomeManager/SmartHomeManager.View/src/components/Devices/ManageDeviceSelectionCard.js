@@ -14,6 +14,7 @@ export default function ManageDeviceSelectionCard(props) {
         <Text mt={5}>{props.deviceModel}</Text>
       </CardBody>
           <CardFooter flex="row" justifyContent="flex-end">
+              {props.handleSetPassword && <Button mr={3} onClick={props.handleSetPassword}  colorScheme="blue">Set Password</Button>}
               <Button mr={3} onClick={props.handleManageSettings}  colorScheme="blue">Manage Settings</Button>
               <Button onClick={props.handleManageConfiguration} colorScheme="green">Manage Configuration</Button>
       </CardFooter>
