@@ -263,7 +263,7 @@ return (
 
           <ModalFooter>
             <Button type="submit" form="set-password-form" colorScheme='green' mr={3}>
-              Set
+              Submit
             </Button>
           </ModalFooter>
         </ModalContent>
