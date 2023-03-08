@@ -36,6 +36,10 @@ export default function Login() {
                     navigate("/two-factor-auth-login", { replace: true })
                 else
                     navigate("/", { replace: true })
+
+                // doing here first because havent merge
+                localStorage.setItem('accountId', accountDetails['accountId']);
+                localStorage.setItem('twoFactorFlag', accountDetails['twoFactorFlag']);
             }        
         }
         checkAccountDetails()

@@ -7,7 +7,7 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 export default function TwoFactorAuthLogin() {
     const navigate = useNavigate()
 
-    const [accountId, updateAccountId] = useState(JSON.parse(localStorage.getItem('accountId')))
+    const [accountId, updateAccountId] = useState(localStorage.getItem('accountId'))
     const [pinInput, updatePinInput] = useState("")
     const [validationMsg, updateValidationMsg] = useState("")
     const [isOpen, updateIsOpen] = useState(false)

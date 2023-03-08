@@ -146,7 +146,7 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         /*
          * POST: api/Accounts/login
          * Return:
-         * Ok(1) - Login successful
+         * Ok(1) - Login successful, returns response details consisting of account ID and 2fa flag
          * BadRequest(1) - Login unsuccessful, wrong password
          * BadRequest(2) - Login unsuccessful, account does not exist
          */
