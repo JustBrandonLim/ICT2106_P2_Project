@@ -27,15 +27,15 @@ function ProfileCard({ profileName, imgSrc, Description }) {
         navigate(`/add-profile`)
     }
     return (
-        <Link to="/profile-juleus">
 
-            <Card
-                css={cardHoverStyle }
-                direction={{ base: 'column', sm: 'row' }}
-                size="sm"
-                h="250px"
-                overflow='hidden'>
 
+        <Card
+            css={cardHoverStyle}
+            direction={{ base: 'column', sm: 'row' }}
+            size="sm"
+            h="250px"
+            overflow='hidden'>
+            <Link to="/profile-juleus">
                 <Image
                     objectFit='cover'
                     borderRadius='full'
@@ -47,34 +47,35 @@ function ProfileCard({ profileName, imgSrc, Description }) {
                     src={imgSrc}
                     alt='img'
                 />
-                <Stack>
-                    <CardBody>
-                        <Heading size='md' margin="10px">{profileName}</Heading>
 
-                        <Text py='2' marginRight="10px" marginLeft="10px">
-                            {Description}
-                        </Text>
-                    </CardBody>
-                    {profileName !== "Add Profile" ? (
-                        <CardFooter>
-                            <Button
-                                variant='solid'
-                                colorScheme='blue'
-                                onClick={() => handleEditProfileClick(profileName, imgSrc, Description)}
-                                marginLeft="10px">
-                                Edit Profile
-                            </Button>
-                        </CardFooter>
-                    ) : (
-                        <CardFooter>
-                            <Button variant='solid' colorScheme='blue' onClick={handleAddProfileClick} margin="10px">
-                                Add Profile
-                            </Button>
-                        </CardFooter>
-                    )}
-                </Stack>
-            </Card>
-        </Link>
+            </Link>
+            <Stack>
+                <CardBody>
+                    <Heading size='md' margin="10px">{profileName}</Heading>
+
+                    <Text py='2' marginRight="10px" marginLeft="10px">
+                        {Description}
+                    </Text>
+                </CardBody>
+                {profileName !== "Add Profile" ? (
+                    <CardFooter>
+                        <Button
+                            variant='solid'
+                            colorScheme='blue'
+                            onClick={() => handleEditProfileClick(profileName, imgSrc, Description)}
+                            marginLeft="10px">
+                            Edit Profile
+                        </Button>
+                    </CardFooter>
+                ) : (
+                    <CardFooter>
+                        <Button variant='solid' colorScheme='blue' onClick={handleAddProfileClick} margin="10px">
+                            Add Profile
+                        </Button>
+                    </CardFooter>
+                )}
+            </Stack>
+        </Card>
     )
 }
 
