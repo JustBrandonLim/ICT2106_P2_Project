@@ -39,6 +39,11 @@ export default function ManageDeviceSettings() {
 
     function handleDeviceSettings(e) {
         e.preventDefault();
+
+        if (newDevicePassword == "") {
+            setNewDevicePassword(null)
+        }
+
         fetch("https://localhost:7140/api/ManageDevice/ApplyDeviceSettings", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
