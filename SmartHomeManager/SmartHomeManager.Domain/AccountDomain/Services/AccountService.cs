@@ -124,6 +124,48 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 		}
 
         /*public async Task<bool> CheckAccountExists(Guid id)
+        public async Task<bool> VerifyPassword(PasswordWebRequest passwordWebRequest)
+        {
+			//Get the account based on the account id
+            Account? account = await _accountRepository.GetByIdAsync(passwordWebRequest.AccountID);
+            
+
+            if (account != null)
+            {
+				//Hash the password that user input
+                string hashedPassword = GetHashedPassword(passwordWebRequest.AccountID, passwordWebRequest.Password);
+
+                // Check if password match
+                if (account.Password == hashedPassword)
+                {
+                    return true;
+                }
+            }
+
+            // account does not exist/account exists but password is wrong
+            return false;
+        }
+
+        public async Task<bool> UpdatePassword(PasswordWebRequest passwordWebRequest)
+        {
+            //Get the account based on the account id
+            Account? account = await _accountRepository.GetByIdAsync(passwordWebRequest.AccountID);
+			if (account != null)
+			{
+				//Update password
+				account.Password = GetHashedPassword(passwordWebRequest.AccountID, passwordWebRequest.Password);
+
+				int updateResponse = await _accountRepository.Update(account);
+				if (updateResponse == 1)
+				{
+					return true;
+				}
+			}
+            return false;
+        }
+
+
+        public async Task<bool> CheckAccountExists(Guid id)
         {
             Account? account = await _accountRepository.GetByIdAsync(id);
             if (account != null)

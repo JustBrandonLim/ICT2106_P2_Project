@@ -146,13 +146,12 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         /*
          * POST: api/Accounts/login
          * Return:
-         * Ok(1) - Login successful, returns response details consisting of account ID and 2fa flag
-         * BadRequest(1) - Login unsuccessful, wrong password
-         * BadRequest(2) - Login unsuccessful, account does not exist
+         * Ok(account) - Login successful
+         * BadRequest() - Login unsuccessful
          */
 
         [HttpPost("login")]
-        public async Task<ActionResult> VerifyLogin([FromBody]LoginWebRequest login)
+        public async Task<ActionResult<Account>> VerifyLogin([FromBody]LoginWebRequest login)
         {
             LoginResponse? loginResponseDetails = await _accountService.VerifyLogin(login);
 
@@ -160,12 +159,59 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
             if (loginResponseDetails != null)
             {
                 return Ok(loginResponseDetails);
+            Account? account = await _accountService.VerifyLogin(login);
+
+            // login successful
+            if (account != null)
+            {
+                return Ok(account);
             }
 
             // login unsuccessful
             return BadRequest();
         }
 
+        /*
+         * POST: api/Accounts/passwordVerification
+         * Return:
+         * Ok() - Password Match
+         * BadRequest() - Password don't match
+         */
+
+        [HttpPost("passwordVerification")]
+        public async Task<ActionResult> VerifyPassword([FromBody] PasswordWebRequest passwordWebRequest)
+        {
+            bool verified = await _accountService.VerifyPassword(passwordWebRequest);
+
+            // password match
+            if (verified)
+            {
+                return Ok();
+            }
+
+            // password dont match
+            return BadRequest();
+
+        }
+
+        /* 
+         * PUT: api/Accounts/updatePassword/
+         * Return:
+         * Ok() - Account successfully updated
+         * BadRequest() - Account failed to update
+         * 
+        */
+        [HttpPut("updatePassword")]
+        public async Task<IActionResult> PutNewPassword([FromBody] PasswordWebRequest passwordWebRequest)
+        {
+
+            if (await _accountService.UpdatePassword(passwordWebRequest))
+            {
+                return Ok();
+            }
+
+            return BadRequest();
+        }
 
         /* 
          * DELETE: api/Accounts/11111111-1111-1111-1111-111111111111

@@ -79,6 +79,10 @@ export default function Login() {
                     // // if not, navigate to /
                     // navigate("/", { replace: true }); 
                     // localStorage.setItem('accountId', msg); // this one probably will be done once 2fa verified instead
+                    navigate("/", { replace: true });
+                    localStorage.setItem('accountId', msg["accountId"]);
+                    localStorage.setItem('email', msg["email"]);
+                    localStorage.setItem('username', msg["username"]);
                 } else {
                     /*  BadRequest(1) - Login Unsuccessful, wrong password
                     *   BadRequest(2) - Login Unsuccessful, account does not exist

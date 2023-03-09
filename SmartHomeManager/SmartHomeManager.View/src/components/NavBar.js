@@ -7,6 +7,7 @@ import { Link as RouterLink } from "react-router-dom";
 
 import Notification from "components/Notification/Notification"
 
+
 export function NavBar() {
   const { isOpen, onToggle } = useDisclosure();
   return (

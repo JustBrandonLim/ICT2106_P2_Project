@@ -1,4 +1,4 @@
-import { React } from 'react';
+import { React, useState } from 'react';
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import {
     Flex,
@@ -7,6 +7,7 @@ import {
     FormLabel,
     Stack,
     Button,
+    Input,
     Heading,
     Text,
     useColorModeValue,
@@ -15,9 +16,36 @@ import {
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
 export default function MyAccount() {
+    const accountId = localStorage.getItem('accountId');
+    const [username, updateUsername] = useState("")
+    const [email, updateEmail] = useState("")
+    const [timezone, updateTimezone] = useState(0)
+    const [address, updateAddress] = useState("")
 
     const navigate = useNavigate()
 
+    //Retrieve account information
+    const onLoad = () =>{
+        fetch('https://localhost:7140/api/Accounts/'+accountId, {
+            method: 'GET',
+            headers: {
+                accept: 'text/plain',
+            },
+        })
+        .then(async response => {
+            const msg = await response.json();
+            if (response.ok) {
+                updateUsername(msg["username"])
+                updateEmail(msg["email"])
+                updateTimezone(parseInt(msg["timezone"]))
+                updateAddress(msg["address"])
+            } 
+        })
+        .catch((err) => {
+        });
+    }
+    onLoad()
+    
     return (
         <Flex
             minH={'100vh'}
@@ -35,33 +63,35 @@ export default function MyAccount() {
                     p={8}>
                     <Stack spacing={4}>
                         <FormControl id="username">
-                            <FormLabel>Username</FormLabel>
-                            <Text>ThisIsUserName</Text>
+                            <FormLabel>Username:</FormLabel>
+                            <Text>{username}</Text>
                         </FormControl>
 
                         <FormControl id="email">
-                            <FormLabel>Email address</FormLabel>
-                            <Text> abc@gmail.com</Text>
+                            <FormLabel>Email address:</FormLabel>
+                            <Text>{email}</Text>
                         </FormControl>
                         
                         <FormControl id="timezone">
-                            <FormLabel>Timezone</FormLabel>
-                            <Text>GMT +8</Text>
+                            <FormLabel>Timezone:</FormLabel>
+                            <Text>{ timezone>0 ? "GMT +"+timezone : "GMT "+timezone}</Text>
                         </FormControl>
 
                         <FormControl id="address">
-                            <FormLabel>Address</FormLabel>
-                            <Text>Dover St</Text>
+                            <FormLabel>Address:</FormLabel>
+                            <Text>{address}</Text>
                         </FormControl>
 
                         <Stack spacing={4}>
                             <Button
+                                as={RouterLink}
+                                to="/changepw"
                                 bg={'yellow.400'}
                                 color={'white'}
                                 _hover={{
                                     bg: 'yellow.500',
                                 }}>
-                                Edit
+                                Change Password
                             </Button>
                             <Button
                                 bg={'blue.400'}
@@ -69,7 +99,7 @@ export default function MyAccount() {
                                 _hover={{
                                     bg: 'blue.500',
                                 }}>
-                                Change Password
+                                Enable 2FA
                             </Button>
                             <Button
                                 onClick={() => navigate("/two-factor-auth-setup", { replace: true })}
