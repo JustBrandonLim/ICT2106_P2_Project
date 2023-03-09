@@ -59,6 +59,17 @@ namespace SmartHomeManager.API.Controllers.DeviceAPI
             return BadRequest("AppleDeviceConfiguration() failed!");
 	    }
 
+        [HttpPost("ApplyDeviceSettings")]
+        public async Task<ActionResult> ApplyDeviceSettings([FromBody] DeviceSettingsWebRequest deviceSettingsWebRequest)
+        {
+            if (await _manageDeviceService.ApplyDeviceSettings(deviceSettingsWebRequest.DeviceId, deviceSettingsWebRequest.DeviceName, deviceSettingsWebRequest.DevicePassword, deviceSettingsWebRequest.DeviceTypeName))
+            {
+                return Ok("ApplyDeviceSettings() success!");
+            }
+
+            return BadRequest("AppleDeviceSettings() failed!");
+        }
+
         [HttpPost("SetDevicePasswordById")]
         public async Task<ActionResult> SetDevicePasswordById([FromBody] DevicePasswordWebRequest devicePasswordWebRequest)
         {

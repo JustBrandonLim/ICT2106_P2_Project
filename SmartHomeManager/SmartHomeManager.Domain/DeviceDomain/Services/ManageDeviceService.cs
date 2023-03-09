@@ -78,6 +78,37 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services
             }
 		}
 
+		public async Task<bool> ApplyDeviceSettings(Guid deviceId, string deviceName, string devicePassword, string deviceTypeName)
+		{
+            try
+            {
+                Device device = new()
+                {
+                    DeviceId = deviceId,
+                    DeviceName = deviceName,
+					DevicePassword = devicePassword,
+					DeviceTypeName = deviceTypeName,
+                };
+
+                Device? existingDevice = await _deviceRepository.GetAsync(deviceId);
+                if (existingDevice != null)
+                {
+					existingDevice.DeviceName = deviceName;
+					existingDevice.DevicePassword = devicePassword;
+					existingDevice.DeviceTypeName = deviceTypeName;
+
+                    _deviceRepository.Update(existingDevice);
+                }
+
+                return await _deviceRepository.SaveAsync();
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return false;
+            }
+        }
+
 		public async Task<bool> SetDevicePasswordById(Guid deviceId, string devicePassword)
 		{
             try
