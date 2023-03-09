@@ -28,7 +28,6 @@ export default function Login() {
     const [errorMsg, updateErrorMsg] = useState("")
     const [errorStatus, updateErrorStatus] = useState(false)
     const [accountDetails, updateAccountDetails] = useState([])
-
     useEffect(() => {
         const checkAccountDetails = () => {
             // check if 2fa flag enabled first
@@ -41,7 +40,8 @@ export default function Login() {
                 if(accountDetails['twoFactorFlag'])
                     navigate("/two-factor-auth-login", { replace: true })
                 else {
-                    navigate("/", { replace: true })   
+                    navigate("/", { replace: true })  
+                    location.reload() 
                 }    
             }        
         }
@@ -77,11 +77,6 @@ export default function Login() {
                 if (response.ok) {
                     updateErrorStatus(false);
                     updateAccountDetails(msg)
-
-                    // navigate("/", { replace: true }); 
-                    // localStorage.setItem('accountId', msg["accountId"]);
-                    // localStorage.setItem('email', msg["email"]);
-                    // localStorage.setItem('username', msg["username"]);
                 } else {
                     /*  BadRequest(1) - Login Unsuccessful, wrong password
                     *   BadRequest(2) - Login Unsuccessful, account does not exist

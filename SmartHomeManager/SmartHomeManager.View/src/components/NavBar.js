@@ -1,14 +1,33 @@
-import React from "react";
-import { Box, Flex, Text, IconButton, Button, Stack, Collapse, Link, useColorModeValue, useBreakpointValue, useDisclosure } from "@chakra-ui/react";
+import { useState, React, useEffect } from "react";
+import {
+  Box, Flex, Text, IconButton, Button, Stack, Collapse, Link, useColorModeValue, useBreakpointValue, useDisclosure,
+  Menu,
+  Avatar,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider
+} from "@chakra-ui/react";
 
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 
-import { Link as RouterLink } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 
 import Notification from "components/Notification/Notification"
 
-
 export function NavBar() {
+
+  const [accountUsername, updateAccountUsername] = useState(localStorage.getItem('username'))
+
+  //Navigation declaration
+  const navigate = useNavigate()
+
+  const signOut = () => {
+    localStorage.clear()
+    updateAccountUsername(null)
+    navigate("/", { replace: true });
+  }
+
   const { isOpen, onToggle } = useDisclosure();
   return (
     <Box>
@@ -44,26 +63,53 @@ export function NavBar() {
 
         <Notification />
 
-        <Stack flex={{ base: 1, md: 0 }} justify={"flex-end"} direction={"row"} spacing={6}>
-          <Button fontSize={"sm"} fontWeight={400} variant={"link"} as={RouterLink} to="/login">
-            Sign In
-          </Button>
-          <Button
-            as={RouterLink}
-            to="/register"
-            display={{ base: "none", md: "inline-flex" }}
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"white"}
-            bg={"pink.400"}
-            _hover={{
-              bg: "pink.300",
-            }}
-          >
-            Sign Up
-          </Button>
-          
-        </Stack>
+        {accountUsername != null ?
+
+          <Menu>
+            <MenuButton
+              as={Button}
+              rounded={'full'}
+              variant={'link'}
+              cursor={'pointer'}
+              minW={0}>
+              <Avatar
+                size={'sm'}
+
+              />
+            </MenuButton>
+            <MenuList>
+              <MenuItem as={RouterLink}
+                to="/myaccount">My Account</MenuItem>
+              <MenuItem as={RouterLink}
+                to="/profiles">Profiles</MenuItem>
+              <MenuDivider />
+              <MenuItem onClick={() => signOut()}>Sign out</MenuItem>
+            </MenuList>
+          </Menu>
+          :
+          <Stack flex={{ base: 1, md: 0 }} justify={"flex-end"} direction={"row"} spacing={6}>
+            <Button fontSize={"sm"} fontWeight={400} variant={"link"} as={RouterLink} to="/login">
+              Sign In
+            </Button>
+            <Button
+              as={RouterLink}
+              to="/register"
+              display={{ base: "none", md: "inline-flex" }}
+              fontSize={"sm"}
+              fontWeight={600}
+              color={"white"}
+              bg={"pink.400"}
+              _hover={{
+                bg: "pink.300",
+              }}
+            >
+              Sign Up
+            </Button>
+
+          </Stack>
+        }
+
+
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
@@ -165,5 +211,5 @@ const NAV_ITEMS = [
     label: "Analytics",
     href: "/analytics",
   },
-    
+
 ];
