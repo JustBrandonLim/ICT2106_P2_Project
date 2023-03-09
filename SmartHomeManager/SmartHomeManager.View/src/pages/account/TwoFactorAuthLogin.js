@@ -29,7 +29,7 @@ export default function TwoFactorAuthLogin() {
             if (response.ok) {
                 updateValidationMsg("Pin verified!")
                 setTimeout(() => { 
-                    navigate("/two-factor-auth-setup-success", { replace: true });
+                    navigate("/", { replace: true });
                 }, 2000);
                 
             }

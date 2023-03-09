@@ -14,9 +14,11 @@ import {
 
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { isDisabled } from '@testing-library/user-event/dist/utils';
 
 export default function MyAccount() {
     const accountId = localStorage.getItem('accountId');
+    const twoFactorFlag = (localStorage.getItem('twoFactorFlag') === "true");
     const [username, updateUsername] = useState("")
     const [email, updateEmail] = useState("")
     const [timezone, updateTimezone] = useState(0)
@@ -93,15 +95,8 @@ export default function MyAccount() {
                                 }}>
                                 Change Password
                             </Button>
-                            <Button
-                                bg={'blue.400'}
-                                color={'white'}
-                                _hover={{
-                                    bg: 'blue.500',
-                                }}>
-                                Enable 2FA
-                            </Button>
-                            <Button
+                            <Button 
+                                isDisabled = {twoFactorFlag}
                                 onClick={() => navigate("/two-factor-auth-setup", { replace: true })}
                                 bg={'green.400'}
                                 color={'white'}
@@ -110,6 +105,7 @@ export default function MyAccount() {
                                 }}>
                                 Enable 2FA
                             </Button>
+                            
                         </Stack>
                     </Stack>
                 </Box>

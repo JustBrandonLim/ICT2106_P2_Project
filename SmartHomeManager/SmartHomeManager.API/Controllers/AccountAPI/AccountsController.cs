@@ -146,27 +146,20 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         /*
          * POST: api/Accounts/login
          * Return:
-         * Ok(account) - Login successful
+         * Ok(loginResponse) - Login successful
          * BadRequest() - Login unsuccessful
          */
 
         [HttpPost("login")]
         public async Task<ActionResult<Account>> VerifyLogin([FromBody]LoginWebRequest login)
         {
-            LoginResponse? loginResponseDetails = await _accountService.VerifyLogin(login);
+            LoginResponse? loginResponse = await _accountService.VerifyLogin(login);
 
             // login successful
-            if (loginResponseDetails != null)
+            if (loginResponse != null)
             {
-                return Ok(loginResponseDetails);
-            Account? account = await _accountService.VerifyLogin(login);
-
-            // login successful
-            if (account != null)
-            {
-                return Ok(account);
+                return Ok(loginResponse);
             }
-
             // login unsuccessful
             return BadRequest();
         }

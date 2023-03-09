@@ -31,15 +31,18 @@ export default function Login() {
 
     useEffect(() => {
         const checkAccountDetails = () => {
+            // check if 2fa flag enabled first
+            // if enabled, navigate to /two-factor-auth-login
+            // // if not, navigate to /
+
             if (accountDetails.length != 0) {
+                setAccountDetails()
+                
                 if(accountDetails['twoFactorFlag'])
                     navigate("/two-factor-auth-login", { replace: true })
-                else
-                    navigate("/", { replace: true })
-
-                // doing here first because havent merge
-                localStorage.setItem('accountId', accountDetails['accountId']);
-                localStorage.setItem('twoFactorFlag', accountDetails['twoFactorFlag']);
+                else {
+                    navigate("/", { replace: true })   
+                }    
             }        
         }
         checkAccountDetails()
@@ -74,15 +77,11 @@ export default function Login() {
                 if (response.ok) {
                     updateErrorStatus(false);
                     updateAccountDetails(msg)
-                    // check if 2fa flag enabled first
-                    // if enabled, navigate to /two-factor-auth-login
-                    // // if not, navigate to /
+
                     // navigate("/", { replace: true }); 
-                    // localStorage.setItem('accountId', msg); // this one probably will be done once 2fa verified instead
-                    navigate("/", { replace: true });
-                    localStorage.setItem('accountId', msg["accountId"]);
-                    localStorage.setItem('email', msg["email"]);
-                    localStorage.setItem('username', msg["username"]);
+                    // localStorage.setItem('accountId', msg["accountId"]);
+                    // localStorage.setItem('email', msg["email"]);
+                    // localStorage.setItem('username', msg["username"]);
                 } else {
                     /*  BadRequest(1) - Login Unsuccessful, wrong password
                     *   BadRequest(2) - Login Unsuccessful, account does not exist
@@ -100,6 +99,14 @@ export default function Login() {
         }
     }
 
+    const setAccountDetails = () => {
+        if (accountDetails.length != 0) {
+            localStorage.setItem('accountId', accountDetails['accountId']);
+            localStorage.setItem('email', accountDetails['email']);
+            localStorage.setItem('username', accountDetails['username']);
+            localStorage.setItem('twoFactorFlag', accountDetails['twoFactorFlag']);
+        }
+    }
 
     return (
         <Flex

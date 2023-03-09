@@ -12,6 +12,10 @@ namespace SmartHomeManager.Domain.AccountDomain.DTOs
         [Required]
         public Guid AccountId { get; set; }
         [Required]
+        public string Email { get; set; }
+        [Required]
+        public string Username { get; set; }
+        [Required]
         public bool TwoFactorFlag { get; set; }
     }
 }
