@@ -1,4 +1,5 @@
-import { React, useState } from 'react';
+import { React, useState, } from 'react';
+import { useNavigate, useLocation } from "react-router-dom"
 import {
     Button,
     Flex,
@@ -14,9 +15,33 @@ import {
     IconButton,
     Center,
 } from '@chakra-ui/react';
+import { ModalComponent } from "components/Profile/Modal";
 import { SmallCloseIcon } from '@chakra-ui/icons';
 
-export default function UserProfileEdit(): JSX.Element {
+function EditProfile() {
+    const { state } = useLocation()
+    const profileName = state?.profileName
+    const description = state?.Description
+    const imgSrc = state?.imgSrc
+
+    console.log("imgSrc from state" + imgSrc)
+    console.log("profileName from state" + profileName)
+    console.log("description from state" + description)
+
+    const [inputText, setInputText] = useState('');
+
+    const handleInputChange = (event) => {
+        setInputText(event.target.value);
+    }
+
+    const navigate = useNavigate();
+
+    const handleSaveClick = (imgSrc, profileName, event) => {
+        /*event.preventDefault();*/
+        console.log("description from state" + event)
+        navigate(`/profile-edited`, { state: { profileName, imgSrc, event } });
+    }
+
     return (
         <Flex
             minH={'100vh'}
@@ -32,40 +57,43 @@ export default function UserProfileEdit(): JSX.Element {
                 boxShadow={'lg'}
                 p={6}
                 my={12}>
-                <Heading lineHeight={1.1} fontSize={{ base: '2xl', sm: '3xl' }}>
-                    User Profile Edit
+                <Heading lineHeight={1.1} fontSize={{ base: '2xl', sm: '3xl' }} >
+                    Edit {profileName}
                 </Heading>
                 <FormControl id="userName">
-                    <FormLabel>Profile Picture</FormLabel>
-                    <Stack direction={['column', 'row']} spacing={6}>
+                    <FormLabel >Profile Picture</FormLabel>
+                    <Stack direction={['column', 'row']} spacing={2}>
                         <Center>
-                            <Avatar size="xl" src="https://bit.ly/sage-adebayo">
-                                <AvatarBadge
-                                    as={IconButton}
-                                    size="sm"
-                                    rounded="full"
-                                    top="-10px"
-                                    colorScheme="red"
-                                    aria-label="remove Image"
-                                    icon={<SmallCloseIcon />}
-                                />
-                            </Avatar>
+                            <Avatar size="xl" src={imgSrc} marginRight="15px" />
                         </Center>
-                        <Center w="full">
-                            <Button w="full">Change Picture</Button>
+                        <Center>
+                            <ModalComponent />
                         </Center>
                     </Stack>
                 </FormControl>
-                <FormControl id="userName" isRequired>
-                    <FormLabel>Name</FormLabel>
+                <FormControl id="description" isRequired>
+                    <FormLabel>Description</FormLabel>
                     <Input
-                        placeholder="UserName"
-                        _placeholder={{ color: 'gray.500' }}
+                        placeholder={description}
+                        _placeholder={{ color: 'gray.500', }}
+                        value={inputText}
+                        onChange={handleInputChange}
+                        type="text"
+                        maxLength={4}
+                        style={{ height: "150px", whiteSpace: "pre-wrap" }}
+                    />
+                </FormControl>
+                <FormControl id="pin" isRequired>
+                    <FormLabel>Pin</FormLabel>
+                    <Input
+                        placeholder="4-digit pin"
+                        _placeholder={{ color: 'gray.500', }}
+                        
                         type="text"
                     />
                 </FormControl>
-                
-                
+
+
                 <Stack spacing={6} direction={['column', 'row']}>
                     <Button
                         bg={'red.400'}
@@ -82,11 +110,17 @@ export default function UserProfileEdit(): JSX.Element {
                         w="full"
                         _hover={{
                             bg: 'blue.500',
-                        }}>
-                        Submit
+                        }}
+                        onClick={() => handleSaveClick(imgSrc, profileName, inputText)}                 >
+                        Save
                     </Button>
                 </Stack>
             </Stack>
         </Flex>
     );
+
+}
+
+export default function UserProfileEdit(): JSX.Element {
+    return <EditProfile />
 }
