@@ -1,13 +1,12 @@
 import { React, useState } from 'react';
 import { CardComponent, } from "components/Profile/Card";
 import { Grid, GridItem, Box } from "@chakra-ui/react"
-import user1 from "./profile/img/user1.png"
-import user2 from "./profile/img/user2.png"
-import user3 from "./profile/img/user3.png"
-import user4 from "./profile/img/user4.png"
-import user5 from "./profile/img/user5.png"
-import user6 from "./profile/img/user6.png"
-import { ClickableImageComponent } from '../components/Profile/ClickableImage';
+import user1 from "./img/user1.png"
+import user2 from "./img/user2.png"
+import user3 from "./img/user3.png"
+import user4 from "./img/user4.png"
+import user5 from "./img/user5.png"
+import user6 from "./img/user6.png"
 
 export default function ProfileLanding() {
     return (
@@ -15,9 +14,9 @@ export default function ProfileLanding() {
             <Grid templateColumns='repeat(3, 1fr)' gap={3} paddingTop="3em" paddingRight="3em" >
                 <Box w="100%" m="0 auto" maxW="400px" h="100px" bg="gray.50">
                     <CardComponent
-                        imgSrc={user1 }
-                        profileName ="Juleus"
-                        description = "Controlling television, fans, lights, air-conditioner in master bedroom"
+                        imgSrc={user1}
+                        profileName="Juleus"
+                        description="Controlling television, fans, lights, air-conditioner in master bedroom"
                     >
                     </CardComponent>
                 </Box>
@@ -61,8 +60,8 @@ export default function ProfileLanding() {
                 <Box w="100%" m="0 auto" mt="10em" maxW="400px" h="100px" bg="gray.50">
                     <CardComponent
                         imgSrc={user6}
-                        profileName="Add Profile"
-                        description="Click on Add Profile Button"
+                        profileName="Ryan"
+                        description="Control fans"
                     >
                     </CardComponent>
                 </Box>

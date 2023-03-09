@@ -1,0 +1,152 @@
+import { React, useState } from 'react';
+import {
+    Button,
+    Flex,
+    FormControl,
+    FormLabel,
+    Heading,
+    Input,
+    Stack,
+    useColorModeValue,
+    HStack,
+    Avatar,
+    AvatarBadge,
+    IconButton,
+    Center,
+    Image,
+    CardBody,
+    CardFooter,
+    Card,
+    Text,
+    Box,
+    Grid
+} from '@chakra-ui/react';
+import { SmallCloseIcon } from '@chakra-ui/icons';
+import user1 from "./img/user1.png"
+
+export default function ProfileJuleus(): JSX.Element {
+    return (
+
+        <Grid templateColumns='repeat(1, 1fr)' gap={3} padding="1.5em" maxWidth="500px">
+            <Box >
+                    <Card
+                        direction={{ base: 'column', sm: 'row' }}
+                        overflow='hidden'
+                        variant='outline'
+                    size="md"
+                    width="1015px"
+                    >
+                        <Image
+                            objectFit='cover'
+                            borderRadius='full'
+                            boxSize='128px'
+                            object-position="center"
+                            marginTop="10px"
+                            marginLeft="10px"
+                            maxW={{ base: '80%', sm: '150px' }}
+                            src={user1}
+                            alt='img'
+                        />
+                        <Stack>
+                            <CardBody>
+                                <Heading size='md'>Juleus Profile</Heading>
+
+                                <Text py='2'>
+                                    Controlling television, fans, lights, air-conditioner in master bedroom
+                                </Text>
+                            </CardBody>
+
+                            <CardFooter>
+                                <Button variant='solid' colorScheme='blue' marginRight="10px">
+                                    Add Scenario
+                                </Button>
+                            </CardFooter>
+                        </Stack>
+                    </Card>
+            </Box>
+            <Grid templateColumns='repeat(3, 1fr)' gap={3} paddingTop="3em" paddingRight="3em" width= "990px">
+                <Box width="330px">
+                    <Card
+                        direction={{ base: 'column', sm: 'row' }}
+                        overflow='hidden'
+                        variant='outline'
+                        size="sm"
+                    >
+                        <Stack>
+                            <CardBody>
+                                <Heading size='md'>Scenario 1</Heading>
+
+                                <Text py='2'>
+                                    Night Settings for fans, lights
+                                </Text>
+                            </CardBody>
+
+                            <CardFooter>
+                                <Button variant='solid' colorScheme='blue' marginLeft="10px">
+                                    Edit Scenario
+                                </Button>
+                                <Button variant='solid' colorScheme='red' marginLeft="10px">
+                                    Delete Scenario
+                                </Button>
+                            </CardFooter>
+                        </Stack>
+                    </Card>
+                </Box>
+                <Box width="330px">
+                    <Card
+                        direction={{ base: 'column', sm: 'row' }}
+                        overflow='hidden'
+                        variant='outline'
+                        size="sm"
+                    >
+                        <Stack>
+                            <CardBody>
+                                <Heading size='md'>Scenario 2</Heading>
+
+                                <Text py='2'>
+                                    Day settings for fans, lights, television
+                                </Text>
+                            </CardBody>
+
+                            <CardFooter>
+                                <Button variant='solid' colorScheme='blue' marginLeft="10px">
+                                    Edit Scenario
+                                </Button>
+                                <Button variant='solid' colorScheme='red' marginLeft="10px">
+                                    Delete Scenario
+                                </Button>
+                            </CardFooter>
+                        </Stack>
+                    </Card>
+                </Box>
+                <Box width="330px">
+                    <Card
+                        direction={{ base: 'column', sm: 'row' }}
+                        overflow='hidden'
+                        variant='outline'
+                        size="sm"
+                    >
+                        <Stack>
+                            <CardBody>
+                                <Heading size='md'>Scenario 3</Heading>
+
+                                <Text py='2'>
+                                    Night settings for hot weather
+                                </Text>
+                            </CardBody>
+
+                            <CardFooter>
+                                <Button variant='solid' colorScheme='blue' marginLeft="10px">
+                                    Edit Scenario
+                                </Button>
+                                <Button variant='solid' colorScheme='red' marginLeft="10px">
+                                    Delete Scenario
+                                </Button>
+                            </CardFooter>
+                        </Stack>
+                    </Card>
+                </Box>
+                </Grid>
+            </Grid>
+    );
+}
