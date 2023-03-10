@@ -77,6 +77,62 @@ export default function ProfileJuleus(): JSX.Element {
                     >
                         <Stack>
                             <CardBody>
+                                <Heading size='md'>Device 1</Heading>
+
+                                <Text py='2'>
+                                    Xiao Mi Fan
+                                </Text>
+                            </CardBody>
+                        </Stack>
+                    </Card>
+                </Box>
+                <Box width="330px">
+                    <Card
+                        direction={{ base: 'column', sm: 'row' }}
+                        overflow='hidden'
+                        variant='outline'
+                        size="sm"
+                    >
+                        <Stack>
+                            <CardBody>
+                                <Heading size='md'>Device 2</Heading>
+
+                                <Text py='2'>
+                                    Xiao Mi Aircon
+                                </Text>
+                            </CardBody>
+                        </Stack>
+                    </Card>
+                </Box>
+                <Box width="330px">
+                    <Card
+                        direction={{ base: 'column', sm: 'row' }}
+                        overflow='hidden'
+                        variant='outline'
+                        size="sm"
+                    >
+                        <Stack>
+                            <CardBody>
+                                <Heading size='md'>Device 3</Heading>
+
+                                <Text py='2'>
+                                    Xiao Mi Television
+                                </Text>
+                            </CardBody>
+                        </Stack>
+                    </Card>
+                </Box>
+            </Grid>
+            <Grid templateColumns='repeat(3, 1fr)' gap={3} paddingTop="3em" paddingRight="3em" width="990px">
+                <Box width="330px">
+                    <Card
+                        direction={{ base: 'column', sm: 'row' }}
+                        overflow='hidden'
+                        variant='outline'
+                        size="sm"
+                    >
+                        <Stack>
+                            <CardBody>
                                 <Heading size='md'>Scenario 1</Heading>
 
                                 <Text py='2'>
