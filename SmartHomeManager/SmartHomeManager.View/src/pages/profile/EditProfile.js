@@ -79,16 +79,16 @@ function EditProfile() {
                         value={inputText}
                         onChange={handleInputChange}
                         type="text"
-                        maxLength={4}
+                        
                         style={{ height: "150px", whiteSpace: "pre-wrap" }}
                     />
                 </FormControl>
-                <FormControl id="pin" isRequired>
-                    <FormLabel>Pin</FormLabel>
+                <FormControl id="pin">
+                    <FormLabel>Change Pin</FormLabel>
                     <Input
                         placeholder="4-digit pin"
                         _placeholder={{ color: 'gray.500', }}
-                        
+                        maxLength={4}
                         type="text"
                     />
                 </FormControl>

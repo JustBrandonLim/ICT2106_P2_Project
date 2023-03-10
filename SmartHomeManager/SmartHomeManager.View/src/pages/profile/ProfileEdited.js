@@ -67,7 +67,7 @@ function ProfileEdited() {
                     <CardComponent
                         imgSrc={user6}
                         profileName="Ryan"
-                        description="Controlling fans in bedroom"
+                        description="Controlling fans"
                     >
                     </CardComponent>
                 </Box>

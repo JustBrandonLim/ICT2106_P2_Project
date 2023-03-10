@@ -29,42 +29,45 @@ export default function ProfileJuleus(): JSX.Element {
 
         <Grid templateColumns='repeat(1, 1fr)' gap={3} padding="1.5em" maxWidth="500px">
             <Box >
-                    <Card
-                        direction={{ base: 'column', sm: 'row' }}
-                        overflow='hidden'
-                        variant='outline'
+                <Card
+                    direction={{ base: 'column', sm: 'row' }}
+                    overflow='hidden'
+                    variant='outline'
                     size="md"
                     width="1015px"
-                    >
-                        <Image
-                            objectFit='cover'
-                            borderRadius='full'
-                            boxSize='128px'
-                            object-position="center"
-                            marginTop="10px"
-                            marginLeft="10px"
-                            maxW={{ base: '80%', sm: '150px' }}
-                            src={user1}
-                            alt='img'
-                        />
-                        <Stack>
-                            <CardBody>
-                                <Heading size='md'>Juleus Profile</Heading>
+                >
+                    <Image
+                        objectFit='cover'
+                        borderRadius='full'
+                        boxSize='128px'
+                        object-position="center"
+                        marginTop="10px"
+                        marginLeft="10px"
+                        maxW={{ base: '80%', sm: '150px' }}
+                        src={user1}
+                        alt='img'
+                    />
+                    <Stack>
+                        <CardBody>
+                            <Heading size='md'>Juleus Profile</Heading>
 
-                                <Text py='2'>
-                                    Controlling television, fans, lights, air-conditioner in master bedroom
-                                </Text>
-                            </CardBody>
+                            <Text py='2'>
+                                Controlling television, fans, lights, air-conditioner in master bedroom
+                            </Text>
+                        </CardBody>
 
-                            <CardFooter>
-                                <Button variant='solid' colorScheme='blue' marginRight="10px">
-                                    Add Scenario
-                                </Button>
-                            </CardFooter>
-                        </Stack>
-                    </Card>
+                        <CardFooter>
+                            <Button variant='solid' colorScheme='blue' marginRight="10px">
+                                Add Scenario
+                            </Button>
+                            <Button variant='solid' colorScheme='green' marginRight="10px">
+                                Share Profile
+                            </Button>
+                        </CardFooter>
+                    </Stack>
+                </Card>
             </Box>
-            <Grid templateColumns='repeat(3, 1fr)' gap={3} paddingTop="3em" paddingRight="3em" width= "990px">
+            <Grid templateColumns='repeat(3, 1fr)' gap={3} paddingTop="3em" paddingRight="3em" width="990px">
                 <Box width="330px">
                     <Card
                         direction={{ base: 'column', sm: 'row' }}
@@ -146,7 +149,7 @@ export default function ProfileJuleus(): JSX.Element {
                         </Stack>
                     </Card>
                 </Box>
-                </Grid>
             </Grid>
+        </Grid>
     );
 }

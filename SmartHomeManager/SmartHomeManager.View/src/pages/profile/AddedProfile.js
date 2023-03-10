@@ -61,7 +61,7 @@ export default function ProfileLanding() {
                     <CardComponent
                         imgSrc={user6}
                         profileName="Ryan"
-                        description="Control fans"
+                        description="Controlling fans"
                     >
                     </CardComponent>
                 </Box>
