@@ -25,6 +25,10 @@ import RegisterDevice from "./pages/RegisterDevice";
 import SelectNearbyDevice from "pages/SelectNearbyDevice";
 import DeviceConfig from "./pages/DeviceConfig";
 import Report from "pages/Analytics";
+import Room2D from "pages/Room2D";
+
+import "/node_modules/react-grid-layout/css/styles.css";
+import "/node_modules/react-resizable/css/styles.css";
 
 export function App() {
   return (
@@ -35,7 +39,10 @@ export function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/devices" element={<Devices />} />
+
             <Route path="/rooms" element={<Rooms />} />
+            <Route path="/room2D" element={<Room2D />} />
+
             <Route path="/profiles" element={<Profiles />} />
             <Route path="/forgetpw" element={<ForgetPassword />} />
             <Route path="/login" element={<Login />} />
@@ -45,7 +52,10 @@ export function App() {
             <Route path="/profile-landing" element={<ProfileLanding />} />
             <Route path="/register" element={<Register />} />
 
-            <Route path="/selectnearbydevice" element={<SelectNearbyDevice />} />
+            <Route
+              path="/selectnearbydevice"
+              element={<SelectNearbyDevice />}
+            />
             <Route path="/registerdevice" element={<RegisterDevice />} />
 
             <Route path="/director" element={<Director />} />
@@ -58,14 +68,8 @@ export function App() {
               path="/scenario/create/action-rule"
               element={<ActionRule />}
             />
-            <Route
-              path="/scenario/create/time-rule"
-              element={<SchRule />}
-            />
-            <Route
-              path="/scenario/edit/:id"
-              element={<SchRule />}
-            />
+            <Route path="/scenario/create/time-rule" element={<SchRule />} />
+            <Route path="/scenario/edit/:id" element={<SchRule />} />
             <Route path="/config" element={<DeviceConfig />} />
             <Route path="/analytics" element={<Report />} />
           </Routes>
