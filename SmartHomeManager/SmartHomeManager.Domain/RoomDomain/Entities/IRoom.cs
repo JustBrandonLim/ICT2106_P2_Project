@@ -1,4 +1,7 @@
-﻿namespace SmartHomeManager.Domain.RoomDomain.Entities;
+﻿using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.TwoDHomeDomain.Entities;
+
+namespace SmartHomeManager.Domain.RoomDomain.Entities;
 
 public interface IRoom
 {
@@ -7,4 +10,6 @@ public interface IRoom
     public Guid RoomId { get; }
     public string Name { get; set; }
     public Guid AccountId { get; }
+    public RoomCoordinate? RoomCoordinate { get; set; }
+    public List<Device> Devices { get; set; }
 }

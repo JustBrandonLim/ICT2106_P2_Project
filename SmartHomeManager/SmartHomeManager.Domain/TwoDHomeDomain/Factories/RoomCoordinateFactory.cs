@@ -4,11 +4,11 @@ namespace SmartHomeManager.Domain.TwoDHomeDomain.Factories;
 
 public class RoomCoordinateFactory
 {
-    public static IRoomCoordinate CreateRoomCoordinate(int x, int y, int w, int h, Guid roomId)
+    public static IRoomCoordinate CreateRoomCoordinate(Guid roomCoordinateId, int x, int y, int w, int h, Guid roomId)
     {
         return new RoomCoordinate
         {
-            RoomCoordinateId = new Guid(),
+            RoomCoordinateId = roomCoordinateId,
             XCoordinate = x,
             YCoordinate = y,
             Width = w,

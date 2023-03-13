@@ -48,7 +48,7 @@ public class RoomRepository : IRoomRepository
     }
 
     // this is used by team 2
-    public IEnumerable<Room> GetRoomsRelatedToAccount(Guid accountId)
+    public IEnumerable<IRoom> GetRoomsRelatedToAccount(Guid accountId)
     {
         // load the data
         var allRooms = _db.Rooms.ToList();

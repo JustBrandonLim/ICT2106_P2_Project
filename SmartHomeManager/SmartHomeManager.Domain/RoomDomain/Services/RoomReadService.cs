@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using SmartHomeManager.Domain.DeviceDomain.Entities;
+﻿using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.DTOs.Responses;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Factories;
@@ -19,7 +18,7 @@ public class RoomReadService : IRoomReadService, IRoomInformationService
         _deviceInformationService = deviceInformationService;
     }
 
-    public IList<Room> GetRoomsByAccountId(Guid accountId)
+    public IList<IRoom> GetRoomsByAccountId(Guid accountId)
     {
         return _roomRepository.GetRoomsRelatedToAccount(accountId).ToList();
     }

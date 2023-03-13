@@ -26,6 +26,7 @@ public class TwoDHomeWriteService : ITwoDHomeWriteService
         foreach (var room in roomGrids)
             updatedRoomCoordinates.Add(RoomCoordinateFactory.CreateRoomCoordinate
                 (
+                    room.RoomCoordinateId,
                     room.XCoordinate,
                     room.YCoordinate,
                     room.Width,

@@ -58,13 +58,13 @@ public class TwoDHomeRepository : ITwoDHomeRepository
     }
 
     // for testing purposes
-    public async Task<IEnumerable<DeviceCoordinate>> GetAllDeviceCoordinates()
+    public async Task<IEnumerable<IDeviceCoordinate>> GetAllDeviceCoordinates()
     {
         IEnumerable<DeviceCoordinate> query = await _dbSetDeviceCoordinate.ToListAsync();
         return query;
     }
 
-    public async Task<IEnumerable<RoomCoordinate>> GetAllRoomCoordinates()
+    public async Task<IEnumerable<IRoomCoordinate>> GetAllRoomCoordinates()
     {
         IEnumerable<RoomCoordinate> query = await _dbSetRoomCoordinate.ToListAsync();
         return query;

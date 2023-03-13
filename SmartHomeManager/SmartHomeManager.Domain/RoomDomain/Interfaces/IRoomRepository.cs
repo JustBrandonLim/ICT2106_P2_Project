@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using SmartHomeManager.Domain.RoomDomain.Entities;
+﻿using SmartHomeManager.Domain.RoomDomain.Entities;
 
 namespace SmartHomeManager.Domain.RoomDomain.Interfaces;
 
@@ -11,5 +10,5 @@ public interface IRoomRepository
     void Remove(IRoom entity);
     void Update(IRoom entity);
     Task SaveChangesAsync();
-    IEnumerable<Room> GetRoomsRelatedToAccount(Guid accountId);
+    IEnumerable<IRoom> GetRoomsRelatedToAccount(Guid accountId);
 }

@@ -4,5 +4,5 @@ namespace SmartHomeManager.Domain.RoomDomain.Interfaces;
 
 public interface IRoomInformationService
 {
-    IList<Room> GetRoomsByAccountId(Guid accountId);
+    IList<IRoom> GetRoomsByAccountId(Guid accountId);
 }

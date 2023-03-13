@@ -9,6 +9,6 @@ public interface ITwoDHomeRepository
     Task RemoveRange(IEnumerable<IRoomCoordinate> entities);
 
     // for testing purposes only
-    Task<IEnumerable<DeviceCoordinate>> GetAllDeviceCoordinates();
-    Task<IEnumerable<RoomCoordinate>> GetAllRoomCoordinates();
+    Task<IEnumerable<IDeviceCoordinate>> GetAllDeviceCoordinates();
+    Task<IEnumerable<IRoomCoordinate>> GetAllRoomCoordinates();
 }
