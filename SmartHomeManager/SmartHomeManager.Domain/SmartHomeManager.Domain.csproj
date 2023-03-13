@@ -28,11 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AccountDomain\Interfaces\" />
-    <Folder Include="AccountDomain\Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Microsoft.AspNetCore.Cryptography.KeyDerivation" />
     <None Remove="Microsoft.AspNet.WebApi.Core" />
     <None Remove="Microsoft.EntityFrameworkCore" />

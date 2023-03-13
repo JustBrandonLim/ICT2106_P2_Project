@@ -68,8 +68,8 @@ export default function Notification() {
         <>
             { 
                 // If there exists at least one error, return an alert for each of them
-                errors &&
-                handleNotificationAPIError()
+                // errors &&
+                // handleNotificationAPIError()
             }
 
             {/* Notification bell modal */}

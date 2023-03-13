@@ -51,6 +51,15 @@ export default function TwoFactorAuthSetUp() {
             if (response.ok) {
                 updateValidationMsg("Pin verified!")
                 setTimeout(() => { 
+                    fetch(`https://localhost:7140/api/Accounts/security/update-2fa-flag?accountId=${accountId}&twoFactorFlag=true`, 
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Content-type': 'application/problem+json; charset=utf-8',
+                        },
+                    })
+                    var flag = "true"
+                    localStorage.setItem('twoFactorFlag', JSON.parse(flag) === true);
                     navigate("/two-factor-auth-setup-success", { replace: true });
                 }, 2000);
                 
