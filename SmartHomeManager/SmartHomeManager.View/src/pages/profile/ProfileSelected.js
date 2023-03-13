@@ -1,4 +1,5 @@
 import { React, useState } from 'react';
+import { useLocation } from "react-router-dom";
 import {
     Button,
     Flex,
@@ -28,8 +29,10 @@ import user1 from "./img/user1.png"
 
 export default function ProfileSelected(): JSX.Element {
     const [profileDetails, updateProfileDetails] = useState([])
+    const location = useLocation();
+    const profileId = location.state?.profileId;
+    console.log(profileId)
     const getAllProfiles = async () => {
-        const profileId = "22222222-2222-2222-2222-222222222222";
         await fetch(`https://localhost:7140/api/Profiles/${profileId}`, {
             method: 'GET',
             headers: {

@@ -1,4 +1,5 @@
 import { React, useState } from 'react';
+import { useLocation, useNavigate } from "react-router-dom"
 import { CardComponent, } from "components/Profile/Card";
 import { Grid, GridItem, Box } from "@chakra-ui/react"
 import user1 from "./img/user1.png"
@@ -9,6 +10,7 @@ import user5 from "./img/user5.png"
 import user6 from "./img/user6.png"
 
 export default function ProfileLanding() {
+    const navigate = useNavigate();
 
     const [profileDetails, updateProfileDetails] = useState([])
     const getAllProfiles = async () => {
@@ -30,17 +32,27 @@ export default function ProfileLanding() {
 
     getAllProfiles()
 
+    function handleCardClick(profileId) {
+        console.log(profileId);
+        navigate("/profile-selected", { state: { profileId } });
+    // Do something with the profileId
+    }
     return (
         <>
             <Grid templateColumns='repeat(3, 1fr)' templateRows="repeat(2, 300px)" gap={3} paddingTop="3em" paddingRight="3em" >
 
                 {
                     profileDetails.map((item) => (
-                            <Box key={item.profileId}  w="100%" padding="10dp" marginBottom="10dp" maxW="400px" h="100px" bg="gray.50">
-                                <CardComponent
+                        <Box key={item.profileId} w="100%" padding="10dp" marginBottom="10dp" maxW="400px" h="100px" bg="gray.50"
+                                                  >
+                            
+                            <CardComponent
+                                onClick={() => handleCardClick(item.profileId)}
+                                profileId={item.profileId }
                                     imgSrc={user1}
                                     profileName={item.name}
                                     description={item.description}
+                                    
                                 >
                                 </CardComponent>
                             </Box>

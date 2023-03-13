@@ -24,6 +24,7 @@ function EditProfile() {
     const profileName = state?.profileName
     const description = state?.Description
     const imgSrc = state?.imgSrc
+    const profileId = state?.profileId
 
     const [inputUserName, setInputUserName] = useState('');
     const [inputDescription, setInputDescription] = useState('');
@@ -45,7 +46,6 @@ function EditProfile() {
     const navigate = useNavigate();
 
     //JSO stringify to send to api controller
-    const profileId = "22222222-2222-2222-2222-222222222222"
     if (inputPin == "") {
         setInputPin(null)
     }
@@ -73,9 +73,8 @@ function EditProfile() {
 
     //Use API to delete from DB
     //to replace with new id created
-    const deleteId = "24F6750A-EC72-43FB-A06B-4D7BBA0847DA"
     const handleDeleteClick = async () => {
-        const response = await fetch(`https://localhost:7140/api/Profiles/${deleteId}`, {
+        const response = await fetch(`https://localhost:7140/api/Profiles/${profileId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
