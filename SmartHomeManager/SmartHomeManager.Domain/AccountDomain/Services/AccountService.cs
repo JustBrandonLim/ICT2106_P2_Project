@@ -178,6 +178,24 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             return false;
         }
 
+        public async Task<bool> UpdateTwoFactorFlag(Guid accountId, bool twoFactorFlag)
+        {
+            //Get the account based on the account id
+            Account? account = await _accountRepository.GetByIdAsync(accountId);
+            if (account != null)
+            {
+                //Update password
+                account.TwoFactorFlag = twoFactorFlag;
+
+                int updateResponse = await _accountRepository.Update(account);
+                if (updateResponse == 1)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public async Task<bool> UpdateAccount(Account account, AccountWebRequest accountWebRequest)
         {
             account.Email = accountWebRequest.Email;

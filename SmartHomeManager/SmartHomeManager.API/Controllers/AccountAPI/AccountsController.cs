@@ -29,10 +29,10 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         private readonly TwoFactorAuthService _twoFactorAuthService;
 
         public AccountsController(IAccountRepository accountRepository, IAccountService accountService, 
-            IEmailService emailService, ITwoFactorAuthService twoFactorAuthService)
+            IEmailBuilder emailBuilder, ITwoFactorAuthService twoFactorAuthService)
         {
             _accountService = new(accountRepository);
-            _emailService = new(accountRepository);
+            _emailService = new(accountRepository, emailBuilder);
             _twoFactorAuthService = new();
         }
 
@@ -286,6 +286,22 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
 
             return Ok(response);
         }
-       
+
+        /* 
+         * PUT: api/Accounts/security/update-2fa-flag/
+         * Return: 
+        */
+        [HttpPut("security/update-2fa-flag")]
+        public async Task<ActionResult<bool>> GetTwoFactorFlag(Guid accountId, bool twoFactorFlag)
+        {
+            bool? response = await _accountService.UpdateTwoFactorFlag(accountId, twoFactorFlag);
+
+            if (response == null)
+            {
+                return NotFound(1);
+            }
+
+            return Ok(response);
+        }
     }
 }

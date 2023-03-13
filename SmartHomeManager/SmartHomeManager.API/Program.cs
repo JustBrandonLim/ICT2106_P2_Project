@@ -46,6 +46,7 @@ using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.NotificationDomain.Entities;
 using SmartHomeManager.Domain.NotificationDomain.Interfaces;
+using SmartHomeManager.Domain.AccountDomain.Builder;
 
 namespace SmartHomeManager.API;
 
@@ -109,6 +110,7 @@ public class Program
         builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
         builder.Services.AddScoped<IAccountService, AccountService>();
         builder.Services.AddScoped<IEmailService, EmailService>();
+        builder.Services.AddScoped<IEmailBuilder, EmailBuilder>();
         builder.Services.AddScoped<Domain.AccountDomain.Interfaces.IProfileService, ProfileService>(); // specified due to mock IProfileService elsewhere
         builder.Services.AddScoped<ITwoFactorAuthService,TwoFactorAuthService>();
         #endregion DEPENDENCY INJECTIONS

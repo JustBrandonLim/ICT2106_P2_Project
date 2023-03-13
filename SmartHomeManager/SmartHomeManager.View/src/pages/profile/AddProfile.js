@@ -14,6 +14,7 @@ import {
     AvatarBadge,
     IconButton,
     Center,
+    CloseButton,
 } from '@chakra-ui/react';
 import user6 from "./img/user6.png"
 import { ModalComponent } from '../../components/Profile/Modal'
@@ -41,21 +42,21 @@ function AddedProfilePage() {
     }
 
     const handlePinChange = (event) => {
-        setInputPin(event.target.value)
+        const pin = event.target.value.trim().slice(0, 4); // Trims whitespace and limits input to 4 characters
+        setInputPin(pin || null);
     }
-
-    /*const handleSubmitClick = () => {
-        navigate(`/profile-added`);
-    }*/
-
     //Access API to create profile
     const handleSubmitClick = () => {
-
+        console.log(inputPin)
         //JSO stringify to send to api controller
         const accountId = "11111111111111111111111111111111";
+        if (inputPin == "") {
+            setInputPin(null)
+        }
         const addProfileObj = {
             "Name": inputUserName, "Description": inputDescription, "Pin": inputPin, "AccountId": accountId
         }
+        console.log(addProfileObj.Pin)
 
         fetch('https://localhost:7140/api/Profiles', {
             method: 'POST',
@@ -78,7 +79,11 @@ function AddedProfilePage() {
                 updateProfileCreateFailStatus(true);
             })
     }
-
+    //Navigate to profiles page when closing the card
+    const handleCloseClick = () => {
+        //Navigate back to profile
+        navigate(`/profiles`);
+    }
 
     return (
         <Flex
@@ -95,9 +100,15 @@ function AddedProfilePage() {
                 boxShadow={'lg'}
                 p={6}
                 my={12}>
-                <Heading lineHeight={1.1} fontSize={{ base: '2xl', sm: '3xl' }}>
-                    Add Profile
-                </Heading>
+                <Stack direction='row'>
+                    <Flex justify="space-between" align="center" w="100%">
+                        <Heading lineHeight={1.1} fontSize={{ base: '2xl', sm: '3xl' }}>
+                            Add Profile
+                        </Heading>
+                        <CloseButton onClick={handleCloseClick} />
+                    </Flex>
+                </Stack>
+                
                 <FormControl id="userName">
                     <FormLabel>Profile Picture</FormLabel>
                     <Stack direction={['column', 'row']} spacing={6}>

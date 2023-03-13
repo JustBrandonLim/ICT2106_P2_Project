@@ -10,21 +10,19 @@ using System.Diagnostics;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.AccountDomain.DTOs;
-
-
+using SmartHomeManager.Domain.AccountDomain.Product;
 
 namespace SmartHomeManager.Domain.AccountDomain.Services
 {
     public class EmailService : IEmailService
     {
         private readonly IAccountRepository _accountRepository;
+        private readonly IEmailBuilder _emailBuilder;
 
-        private const string From = "1004companyemail@gmail.com";
-        private const string GoogleAppPassword = "alirejlqrkfqisji";
-
-        public EmailService(IAccountRepository accountRepository)
+        public EmailService(IAccountRepository accountRepository, IEmailBuilder emailBuilder)
         {
             _accountRepository = accountRepository;
+            _emailBuilder = emailBuilder;
         }
 
         public bool SendRegistrationEmail(string username, string recipient)
@@ -32,12 +30,11 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             string messageBody = $"<div><h2>Hello {username},</h2>  <h2>Thank you for registering an account with Company, we hope you enjoy your experience.</h2></div>";
             string subject = "Company Account Registration";
 
-            var smtpClient = SetupClient();
-            var mailMessage = SetupMessage(messageBody, recipient, subject);
+            EmailProduct emailProduct = _emailBuilder.BuildEmailProduct(messageBody, recipient, subject);
 
             try
             {
-                smtpClient.Send(mailMessage);
+                emailProduct.Client.Send(emailProduct.Message);
                 return true;
             }
 
@@ -61,15 +58,11 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             }
             else
             {
-
                 try
                 {
-                    var smtpClient = SetupClient();
-                    string recipient = account.Email.ToString();
-                    string subject = "Purchase Confirmation";
-                    var mailMessage = SetupMessage(messageBody, recipient, subject);
+                    EmailProduct emailProduct = _emailBuilder.BuildEmailProduct(messageBody, account.Email.ToString(), "Purchase Confirmation");
 
-                    smtpClient.Send(mailMessage);
+                    emailProduct.Client.Send(emailProduct.Message);
                     return true;
                 }
 
@@ -80,34 +73,6 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
                 }
             }
         }
-        public SmtpClient SetupClient()
-        {
-            var smtpClient = new SmtpClient("smtp.gmail.com")
-            {
-                Port = 587,
-                Credentials = new NetworkCredential(From, GoogleAppPassword),
-                EnableSsl = true,
-            };
-
-            return smtpClient;
-        }
-
-        public MailMessage SetupMessage(string givenBody, string recipient, string subject)
-        {
-            var mailMessage = new MailMessage
-            {
-                From = new MailAddress(From),
-                Subject = subject,
-                Body = givenBody,
-                IsBodyHtml = true,
-            };
-
-            mailMessage.To.Add(new MailAddress(recipient));
-
-            return mailMessage;
-        }
-
-     
     }
 }
 
