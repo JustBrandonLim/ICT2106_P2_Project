@@ -35,7 +35,7 @@ function ProfileCard({ profileName, imgSrc, Description }) {
             size="sm"
             h="250px"
             overflow='hidden'>
-            <Link to="/profile-juleus">
+            <Link to="/profile-selected">
                 <Image
                     objectFit='cover'
                     borderRadius='full'

@@ -68,6 +68,7 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
         [HttpGet("get-profiles/{accountId}")]
         public async Task<ActionResult<IEnumerable<Profile>>> GetProfilesByAccountId(Guid accountId)
         {
+            /*var realAccountId = Guid.Parse(accountId);*/
             IEnumerable<Profile> profiles = (await _profileService.GetProfilesByAccountId(accountId))!;
 
             if (profiles == null)
@@ -96,17 +97,67 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
         }
 
         /*
-         * POST: api/Profiles
-         * Return:
-         * Ok(1) - Profile created successfully
-         * BadRequest(1) - Profile failed to create
-         */
+                * POST: api/Profiles
+                * Return:
+                * Ok(1) - Profile created successfully
+                * BadRequest(1) - Profile failed to create
+                */
         [HttpPost]
-        public async Task<ActionResult> PostProfile([FromBody] Profile profile)
+        public async Task<ActionResult> PostProfile([FromBody] ProfileWebRequest profileWebRequest)
         {
-            int response = await _profileService.CreateProfile(profile);
+            int response = await _profileService.CreateProfile(profileWebRequest);
 
             if (response == 1)
+            {
+                return Ok(1);
+            }
+
+            return BadRequest(1);
+        }
+
+        /* 
+         * PUT: api/Profiles/11111111-1111-1111-1111-111111111111
+         * Return:
+         * Ok(1) - Profile successfully updated
+         * BadRequest(1) - Profile failed to update
+         * NotFound(1) - Profile does not exist
+         * 
+        */
+        [HttpPut("{profileId}")]
+        public async Task<IActionResult> PutProfile(Guid profileId, [FromBody] UpdateProfileWebRequest updateProfileWebRequest)
+        {
+            Profile? profile = await _profileService.GetProfileByProfileId(profileId);
+            if (profile == null)
+            {
+                return NotFound(1);
+            }
+
+            if (await _profileService.UpdateProfile(profile, updateProfileWebRequest))
+            {
+                return Ok(1);
+            }
+
+            return BadRequest(1);
+        }
+        /* 
+         * DELETE: api/Profiles/11111111-1111-1111-1111-111111111111
+         * Return:
+         * Ok(1) - Profile successfully deleted
+         * BadRequest(1) - Profile failed to delete
+         * NotFound(1) - Profile does not exist
+         * 
+        */
+        [HttpDelete("{profileId}")]
+        public async Task<IActionResult> DeleteProfile(Guid profileId)
+        {
+
+            Profile? profile = await _profileService.GetProfileByProfileId(profileId);
+            if (profile == null)
+            {
+                return NotFound(1);
+            }
+
+            if (await _profileService.DeleteProfile(profile))
             {
                 return Ok(1);
             }

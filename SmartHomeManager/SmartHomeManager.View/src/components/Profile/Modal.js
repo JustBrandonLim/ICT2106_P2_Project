@@ -33,7 +33,7 @@ function ProfileModalComponent() {
     return (
         <>
 
-            <Button bg={'blue.400'} onClick={onOpen}>Change Picture</Button>
+            {/*<Button bg={'blue.400'} onClick={onOpen}>Change Picture</Button>*/}
 
             <Modal onClose={onClose} size={'lg'} isOpen={isOpen} isCentered>
                 <ModalOverlay />

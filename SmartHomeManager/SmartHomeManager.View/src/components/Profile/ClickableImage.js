@@ -19,8 +19,8 @@ function ClickableImage({ imgSrc }) {
 
     const handleImageClick = (imgSrc) => {
         setIsClicked(true)
-        navigate(`/edit-profile`, { state: { imgSrc, profileName, description } });
-        console.log("im in clickable:" + imgSrc + profileName + description)
+        /*navigate(`/edit-profile`, { state: { imgSrc, profileName, description } });
+        console.log("im in clickable:" + imgSrc + profileName + description)*/
 
     }
     return (

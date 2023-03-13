@@ -24,49 +24,71 @@ import {
 import { SmallCloseIcon } from '@chakra-ui/icons';
 import user1 from "./img/user1.png"
 
-export default function ProfileJuleus(): JSX.Element {
+
+
+export default function ProfileSelected(): JSX.Element {
+    const [profileDetails, updateProfileDetails] = useState([])
+    const getAllProfiles = async () => {
+        const profileId = "22222222-2222-2222-2222-222222222222";
+        await fetch(`https://localhost:7140/api/Profiles/${profileId}`, {
+            method: 'GET',
+            headers: {
+                accept: 'text/plain'
+            },
+        })
+            .then(async response => {
+                const data = await response.json()
+
+                if (response.ok) {
+                    updateProfileDetails(data)
+                }
+            })
+    }
+
+    getAllProfiles()
+
     return (
 
         <Grid templateColumns='repeat(1, 1fr)' gap={3} padding="1.5em" maxWidth="500px">
-            <Box >
-                <Card
-                    direction={{ base: 'column', sm: 'row' }}
-                    overflow='hidden'
-                    variant='outline'
-                    size="md"
-                    width="1015px"
-                >
-                    <Image
-                        objectFit='cover'
-                        borderRadius='full'
-                        boxSize='128px'
-                        object-position="center"
-                        marginTop="10px"
-                        marginLeft="10px"
-                        maxW={{ base: '80%', sm: '150px' }}
-                        src={user1}
-                        alt='img'
-                    />
-                    <Stack>
-                        <CardBody>
-                            <Heading size='md'>Juleus Profile</Heading>
+                    <Box>
+                        <Card
+                            direction={{ base: 'column', sm: 'row' }}
+                            overflow='hidden'
+                            variant='outline'
+                            size="md"
+                            width="1015px"
+                        >
+                            <Image
+                                objectFit='cover'
+                                borderRadius='full'
+                                boxSize='128px'
+                                object-position="center"
+                                marginTop="10px"
+                                marginLeft="10px"
+                                maxW={{ base: '80%', sm: '150px' }}
+                                src={user1}
+                                alt='img'
+                            />
+                            <Stack>
+                                <CardBody >
+                                    <Heading size='md'>{ profileDetails.name }</Heading>
 
-                            <Text py='2'>
-                                Controlling television, fans, lights, air-conditioner in master bedroom
-                            </Text>
-                        </CardBody>
+                                    <Text py='2'>
+                                {profileDetails.description }
+                                    </Text>
+                                </CardBody>
 
-                        <CardFooter>
-                            <Button variant='solid' colorScheme='blue' marginRight="10px">
-                                Add Scenario
-                            </Button>
-                            <Button variant='solid' colorScheme='green' marginRight="10px">
-                                Share Profile
-                            </Button>
-                        </CardFooter>
-                    </Stack>
-                </Card>
-            </Box>
+                                <CardFooter>
+                                    <Button variant='solid' colorScheme='blue' marginRight="10px">
+                                        Add Scenario
+                                    </Button>
+                                    <Button variant='solid' colorScheme='green' marginRight="10px">
+                                        Share Profile
+                                    </Button>
+                                </CardFooter>
+                            </Stack>
+                        </Card>
+                    </Box>            
             <Grid templateColumns='repeat(3, 1fr)' gap={3} paddingTop="3em" paddingRight="3em" width="990px">
                 <Box width="330px">
                     <Card

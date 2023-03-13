@@ -3,7 +3,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { NavBar } from "./components/NavBar";
 import Home from "./pages/Home";
 import Devices from "./pages/Devices";
-import Profiles from "./pages/Profiles";
+import Profiles from "./pages/profile/Profiles";
 import Director from "./pages/Director";
 import Backup from "./pages/Backup";
 import Intruder from "./pages/Intruder";
@@ -21,10 +21,8 @@ import Login from "./pages/account/Login";
 import RegisterOK from "./pages/account/RegisterOK";
 import MyAccount from "./pages/account/Setting";
 import UserProfileEdit from "./pages/profile/EditProfile";
-import ProfileEdited from "./pages/profile/ProfileEdited";
 import AddProfile from "./pages/profile/AddProfile";
-import AddedProfile from "./pages/profile/AddedProfile";
-import ProfileJuleus from "./pages/profile/ProfileJuleus";
+import ProfileSelected from "./pages/profile/ProfileSelected";
 import RegisterDevice from "./pages/RegisterDevice";
 import SelectNearbyDevice from "pages/SelectNearbyDevice";
 import DeviceConfig from "./pages/DeviceConfig";
@@ -51,10 +49,7 @@ export function App() {
             <Route path="/account-created" element={<RegisterOK />} />
             <Route path="/edit-profile" element={<UserProfileEdit />} />
             <Route path="/add-profile" element={<AddProfile />} />
-            <Route path="/profile-added" element={<AddedProfile />} />
-            <Route path="/profile-juleus" element={<ProfileJuleus />} />
-
-            <Route path="/profile-edited" element={<ProfileEdited />} />
+            <Route path="/profile-selected" element={<ProfileSelected />} />
             <Route path="/register" element={<Register />} />
             <Route path="/two-factor-auth-setup" element={<TwoFactorAuthSetUp />} />
             <Route path="/two-factor-auth-setup-success" element={<TwoFactorAuthSetUpSuccess />} />

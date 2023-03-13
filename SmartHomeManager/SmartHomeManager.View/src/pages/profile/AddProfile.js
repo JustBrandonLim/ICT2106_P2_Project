@@ -26,6 +26,11 @@ function AddedProfilePage() {
     const [inputPin, setInputPin] = useState('');
     const navigate = useNavigate();
 
+    //For validation
+    const [profileCreateFailStatus, updateProfileCreateFailStatus] = useState(false)
+    const [errorMessage, updateErrorMessage] = useState("")
+    const [profileCreationMessage, updateProfileCreationMessage] = useState("")
+
 
     const handleUserNameChange = (event) => {
         setInputUserName(event.target.value)
@@ -39,8 +44,39 @@ function AddedProfilePage() {
         setInputPin(event.target.value)
     }
 
-    const handleSubmitClick = () => {
+    /*const handleSubmitClick = () => {
         navigate(`/profile-added`);
+    }*/
+
+    //Access API to create profile
+    const handleSubmitClick = () => {
+
+        //JSO stringify to send to api controller
+        const accountId = "11111111111111111111111111111111";
+        const addProfileObj = {
+            "Name": inputUserName, "Description": inputDescription, "Pin": inputPin, "AccountId": accountId
+        }
+
+        fetch('https://localhost:7140/api/Profiles', {
+            method: 'POST',
+            body: JSON.stringify(addProfileObj),
+            headers: {
+                'Content-type': 'application/problem+json; charset=utf-8',
+            },
+        })
+            .then(async response => {
+                if (response.ok) {
+                    /*Ok(1) - Profile Created*/
+                    updateProfileCreateFailStatus(false);
+                    navigate("/profiles", { replace: true });
+                }
+                else {
+                    /*BadRequest(1) - Profile Not Created*/
+                    updateErrorMessage("Profile not created.")
+                }
+                updateProfileCreationMessage("Your account fail to create: " + errorMessage + " Please try again.")
+                updateProfileCreateFailStatus(true);
+            })
     }
 
 
@@ -100,7 +136,7 @@ function AddedProfilePage() {
                     <Input
                         placeholder="set pin if you want parental controls"
                         _placeholder={{ color: 'gray.500' }}
-                        type="text"
+                        type="number"
                         maxLength={4}
                         value={inputPin}
                         onChange={handlePinChange}
@@ -131,9 +167,9 @@ function AddedProfilePage() {
                 </Stack>
             </Stack>
         </Flex>
-        )
+    )
 }
 
 export default function AddedProfile(): JSX.Element {
-    return ( <AddedProfilePage/>)
+    return (<AddedProfilePage />)
 }

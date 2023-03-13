@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using SmartHomeManager.Domain.AccountDomain.DTOs;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
@@ -20,17 +23,27 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             _profileRepository = profileRepository;
         }
 
-        public async Task<int> CreateProfile(Profile profile)
+        public async Task<int> CreateProfile(ProfileWebRequest profileWebRequest)
         {
             Profile newProfile = new Profile();
+            newProfile.ProfileId = Guid.NewGuid();
+            newProfile.Name = profileWebRequest.Name;
+            newProfile.Description = profileWebRequest.Description;
+            newProfile.Pin = profileWebRequest.Pin;
+            //For testing set to the default accountId(how to get from frontend?)
+            newProfile.AccountId = Guid.Parse(profileWebRequest.AccountId);
+            /*newProfile.Scenarios = new List<Scenario>();*/
+
+
+            //previous method
+            /*Profile newProfile = new Profile();
             newProfile.ProfileId = new Guid();
-            newProfile.Name = profile.Name;
             newProfile.AccountId = profile.AccountId;
             newProfile.Account = profile.Account;
-            /*newProfile.Scenarios = profile.Scenarios;
+            newProfile.Scenarios = profile.Scenarios;
             newProfile.Devices = profile.Devices;*/
 
-            Debug.WriteLine(profile.Account);
+            /*Debug.WriteLine(profile.Account);*/
 
             bool response = await _profileRepository.AddAsync(newProfile);
 
@@ -95,14 +108,34 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             return listOfDeviceIds;
         }
 
-        public async Task<bool> UpdateProfile(Profile profile)
+        public async Task<bool> UpdateProfile(Profile profile, UpdateProfileWebRequest updateProfileWebRequest)
         {
-            throw new NotImplementedException();
+            profile.Name = updateProfileWebRequest.Name;
+            profile.Description = updateProfileWebRequest.Description;
+            profile.Pin = updateProfileWebRequest.Pin;
+           
+
+            int updateResponse = await _profileRepository.UpdateAsync(profile);
+            if (updateResponse == 1)
+            {
+                return true;
+            }
+
+            return false;
+            /* throw new NotImplementedException();*/
         }
 
-        public async Task<bool> DeleteProfile(Guid id)
+        public async Task<bool> DeleteProfile(Profile profile)
         {
-            throw new NotImplementedException();
+            bool deleteResponse = _profileRepository.Delete(profile);
+            if (deleteResponse)
+            {
+                await _profileRepository.SaveAsync();
+                return true;
+            }
+
+            return false;
+            /*throw new NotImplementedException();*/
         }
 
     }
