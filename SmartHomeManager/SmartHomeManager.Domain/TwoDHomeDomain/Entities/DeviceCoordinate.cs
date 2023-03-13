@@ -4,7 +4,7 @@ using SmartHomeManager.Domain.DeviceDomain.Entities;
 
 namespace SmartHomeManager.Domain.TwoDHomeDomain.Entities;
 
-public class DeviceCoordinate
+public class DeviceCoordinate : IDeviceCoordinate
 {
     [Key]
     [Required]

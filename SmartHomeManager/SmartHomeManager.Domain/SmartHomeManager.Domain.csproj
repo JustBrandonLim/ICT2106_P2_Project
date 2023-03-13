@@ -15,7 +15,6 @@
     <Folder Include="SceneDomain\Services\" />
     <Folder Include="SceneDomain\Entities\DTOs\" />
     <Folder Include="SceneDomain\Interfaces\" />
-    <Folder Include="TwoDHomeDomain\DTOs\Responses" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="EnergyProfile\**" />

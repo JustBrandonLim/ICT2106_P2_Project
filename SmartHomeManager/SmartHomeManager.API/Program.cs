@@ -49,6 +49,8 @@ using SmartHomeManager.Domain.NotificationDomain.Entities;
 using SmartHomeManager.Domain.NotificationDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Services;
 using SmartHomeManager.Domain.TwoDHomeDomain.Interfaces;
+using SmartHomeManager.Domain.TwoDHomeDomain.Mocks;
+using SmartHomeManager.Domain.TwoDHomeDomain.Services;
 
 namespace SmartHomeManager.API;
 
@@ -114,6 +116,9 @@ public class Program
 
         // 2DHOME
         builder.Services.AddScoped<ITwoDHomeRepository, TwoDHomeRepository>();
+        builder.Services.AddScoped<ITwoDHomeReadService, TwoDHomeReadService>();
+        builder.Services.AddScoped<ITwoDHomeWriteService, TwoDHomeWriteService>();
+        builder.Services.AddScoped<IControlDeviceServiceMock, ControlDeviceServiceMock>();
 
         // ACCOUNT
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();

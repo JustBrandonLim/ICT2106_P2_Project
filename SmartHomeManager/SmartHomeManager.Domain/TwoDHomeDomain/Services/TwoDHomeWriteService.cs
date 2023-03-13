@@ -1,14 +1,49 @@
+using SmartHomeManager.Domain.TwoDHomeDomain.DTOs.Requests;
+using SmartHomeManager.Domain.TwoDHomeDomain.DTOs.Responses;
+using SmartHomeManager.Domain.TwoDHomeDomain.Entities;
+using SmartHomeManager.Domain.TwoDHomeDomain.Factories;
 using SmartHomeManager.Domain.TwoDHomeDomain.Interfaces;
+using SmartHomeManager.Domain.TwoDHomeDomain.Mocks;
 
 namespace SmartHomeManager.Domain.TwoDHomeDomain.Services;
 
-public class TwoDHomeWriteService
+public class TwoDHomeWriteService : ITwoDHomeWriteService
 {
     private readonly ITwoDHomeRepository _twoDHomeRepository;
+    private readonly IControlDeviceServiceMock _updateDeviceService;
 
-    public TwoDHomeWriteService(ITwoDHomeRepository twoDHomeRepository)
+    public TwoDHomeWriteService(ITwoDHomeRepository twoDHomeRepository, IControlDeviceServiceMock updateDeviceService)
     {
         _twoDHomeRepository = twoDHomeRepository;
+        _updateDeviceService = updateDeviceService;
+    }
+
+    public ITwoDHomeWebResponse UpdateRoomGrids(Guid accountId, List<RoomGrid> roomGrids)
+    {
+        _twoDHomeRepository.RemoveRange(_twoDHomeRepository.GetAllRoomCoordinatesRelatedToAccount(accountId));
+
+        var updatedRoomCoordinates = new List<IRoomCoordinate>();
+        foreach (var room in roomGrids)
+            updatedRoomCoordinates.Add(RoomCoordinateFactory.CreateRoomCoordinate
+                (
+                    room.XCoordinate,
+                    room.YCoordinate,
+                    room.Width,
+                    room.Height,
+                    room.RoomId
+                )
+            );
+        _twoDHomeRepository.AddRange(updatedRoomCoordinates);
+        return TwoDHomeWebResponseFactory.CreateRoomWebResponse(roomGrids);
+    }
+
+    public bool ChangeDeviceState(Guid deviceId, bool state)
+    {
+        if (state)
+            _updateDeviceService.SwitchOnDevice(deviceId);
+        else
+            _updateDeviceService.SwitchOffDevice(deviceId);
+        return true;
     }
 
     public async Task UpdateDeviceCoordinate(Guid deviceCoordinateId, int xCoordinate, int yCoordinate, int height,
@@ -30,37 +65,6 @@ public class TwoDHomeWriteService
         if (res == null) return;
         _twoDHomeRepository.RemoveDeviceCoordinate(res);
         await _twoDHomeRepository.SaveChangesAsync();
-    }
-
-    public async Task<bool> UpdateRoomCoordinate(Guid roomCoordinateId, int xCoordinate, int yCoordinate, int height,
-        int width)
-    {
-        //If there is no roomCoordinate with given id, return false
-        var res = await _twoDHomeRepository.GetRoomCoordinate(roomCoordinateId);
-        if (res == null) return false;
-
-        //Get all roomCoordinates
-        var roomCoordinateList = await _twoDHomeRepository.GetAllRoomCoordinates();
-
-        //Loop through all roomCoordinates
-        foreach (var roomCoordinate in roomCoordinateList)
-            // Check for collision between given object and other object
-            if (xCoordinate < roomCoordinate.XCoordinate + roomCoordinate.Width &&
-                xCoordinate + width > roomCoordinate.XCoordinate &&
-                yCoordinate < roomCoordinate.YCoordinate + roomCoordinate.Height &&
-                yCoordinate + height > roomCoordinate.YCoordinate)
-                // Collision detected, exit loop
-                return false;
-
-        // No collision detected, update coordinates and width of given object
-        res.XCoordinate = xCoordinate;
-        res.YCoordinate = yCoordinate;
-        res.Height = height;
-        res.Width = width;
-        _twoDHomeRepository.UpdateRoomCoordinate(res);
-        await _twoDHomeRepository.SaveChangesAsync();
-
-        return true;
     }
 
     public async Task RemoveRoomCoordinate(Guid id)

@@ -29,10 +29,18 @@ public class DeviceRepositoryMock : IDeviceInformationServiceMock
     {
         // load the data
         var allDevices = _db.Devices.ToList();
-        
+
         // filter the data
         var result = allDevices.Where(device => device.RoomId == roomId);
 
         return result;
+    }
+
+    
+    // dummy implementation, actual implementation is coming from team 4 (Device Team)
+    // this is for internal testing purposes only
+    public bool isDeviceOn(Guid deviceId)
+    {
+        return false;
     }
 }

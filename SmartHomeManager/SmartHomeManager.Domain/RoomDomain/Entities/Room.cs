@@ -17,8 +17,8 @@ public class Room : IRoom
     [Required] public Guid AccountId { get; set; }
 
     [ForeignKey("AccountId")] public Account Account { get; set; }
-
+    
     public RoomCoordinate RoomCoordinate { get; set; }
-
+    
     public List<Device> Devices { get; set; }
 }

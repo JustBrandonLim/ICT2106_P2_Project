@@ -1,4 +1,7 @@
-﻿namespace SmartHomeManager.Domain.RoomDomain.Entities;
+﻿using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.TwoDHomeDomain.Entities;
+
+namespace SmartHomeManager.Domain.RoomDomain.Entities;
 
 public interface IRoom
 {

@@ -3,8 +3,6 @@ using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.DTOs.Requests;
 using SmartHomeManager.Domain.RoomDomain.DTOs.Responses;
 using SmartHomeManager.Domain.RoomDomain.Interfaces;
-using SmartHomeManager.Domain.RoomDomain.Mocks;
-using SmartHomeManager.Domain.RoomDomain.Services;
 
 namespace SmartHomeManager.API.Controllers.RoomAPI;
 
@@ -87,11 +85,5 @@ public class RoomsController : ControllerBase
         var result = _roomReadService.GetDevicesInRoom(roomId);
         if (!result.Any()) return NotFound();
         return Ok(result);
-    }
-
-    private async Task<bool> RoomExists(Guid id)
-    {
-        var result = await _roomReadService.GetRoomById(id);
-        return result == null;
     }
 }

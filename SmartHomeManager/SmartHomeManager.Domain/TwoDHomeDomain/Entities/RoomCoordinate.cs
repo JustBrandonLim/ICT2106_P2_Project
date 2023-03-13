@@ -4,7 +4,7 @@ using SmartHomeManager.Domain.RoomDomain.Entities;
 
 namespace SmartHomeManager.Domain.TwoDHomeDomain.Entities;
 
-public class RoomCoordinate
+public class RoomCoordinate : IRoomCoordinate
 {
     [Key]
     [Required]
@@ -22,4 +22,15 @@ public class RoomCoordinate
     [Required] public Guid RoomId { get; set; }
 
     [ForeignKey("RoomId")] public Room Room { get; set; }
+
+    public bool IsCollidedWith(IRoomCoordinate roomCoordinate)
+    {
+        // Check for collision between current object and the other object
+        if (XCoordinate < roomCoordinate.XCoordinate + roomCoordinate.Width &&
+            XCoordinate + roomCoordinate.Width > roomCoordinate.XCoordinate &&
+            YCoordinate < roomCoordinate.YCoordinate + roomCoordinate.Height &&
+            YCoordinate + roomCoordinate.Height > roomCoordinate.YCoordinate)
+            return true;
+        return false;
+    }
 }
