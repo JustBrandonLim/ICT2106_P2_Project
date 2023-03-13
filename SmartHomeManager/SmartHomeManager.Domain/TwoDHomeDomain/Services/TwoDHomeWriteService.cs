@@ -8,14 +8,11 @@ namespace SmartHomeManager.Domain.TwoDHomeDomain.Services;
 
 public class TwoDHomeWriteService : ITwoDHomeWriteService
 {
-    private readonly ITwoDHomeReadService _twoDHomeReadService;
     private readonly ITwoDHomeRepository _twoDHomeRepository;
     private readonly IControlDeviceServiceMock _updateDeviceService;
 
-    public TwoDHomeWriteService(ITwoDHomeRepository twoDHomeRepository, IControlDeviceServiceMock updateDeviceService,
-        ITwoDHomeReadService twoDHomeReadService)
+    public TwoDHomeWriteService(ITwoDHomeRepository twoDHomeRepository, IControlDeviceServiceMock updateDeviceService)
     {
-        _twoDHomeReadService = twoDHomeReadService;
         _twoDHomeRepository = twoDHomeRepository;
         _updateDeviceService = updateDeviceService;
     }
@@ -37,9 +34,7 @@ public class TwoDHomeWriteService : ITwoDHomeWriteService
                 )
             );
         _twoDHomeRepository.AddRange(updatedRoomCoordinates);
-        // return TwoDHomeWebResponseFactory.CreateRoomWebResponse(roomGrids);
-        return TwoDHomeWebResponseFactory.CreateRoomWebResponse(_twoDHomeReadService
-            .GetAllRoomGridsRelatedToAccount(accountId).RoomGrids);
+        return TwoDHomeWebResponseFactory.CreateRoomWebResponse(roomGrids);
     }
 
     public bool ChangeDeviceState(Guid deviceId, bool state)
