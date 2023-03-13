@@ -47,6 +47,7 @@ using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.NotificationDomain.Entities;
 using SmartHomeManager.Domain.NotificationDomain.Interfaces;
+using SmartHomeManager.Domain.RoomDomain.Services;
 using SmartHomeManager.Domain.TwoDHomeDomain.Interfaces;
 
 namespace SmartHomeManager.API;
@@ -67,6 +68,7 @@ public class Program
         });
 
         #region DEPENDENCY INJECTIONS
+
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -84,14 +86,16 @@ public class Program
         builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
         builder.Services.AddScoped<IGenericRepository<HomeSecurity>, HomeSecurityRepository>();
         builder.Services.AddScoped<IGenericRepository<HomeSecuritySetting>, HomeSecuritySettingRepository>();
-        builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
-        
+        builder.Services
+            .AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>,
+                HomeSecurityDeviceDefinitionRepository>();
+
         // builder.Services.AddHostedService<DirectorServices>();
 
         // DEVICE
         builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
         builder.Services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();
-            
+
 
         // DEVICELOG
         builder.Services.AddScoped<IDeviceLogRepository, DeviceLogRepository>();
@@ -103,9 +107,11 @@ public class Program
         builder.Services.AddScoped<IGenericRepository<Account>, MockAccountRepository>();
 
         // ROOM
+        builder.Services.AddScoped<IRoomReadService, RoomReadService>();
+        builder.Services.AddScoped<IRoomWriteService, RoomWriteService>();
         builder.Services.AddScoped<IRoomRepository, RoomRepository>();
         builder.Services.AddScoped<IDeviceInformationServiceMock, DeviceRepositoryMock>();
-        
+
         // 2DHOME
         builder.Services.AddScoped<ITwoDHomeRepository, TwoDHomeRepository>();
 
@@ -115,6 +121,7 @@ public class Program
         builder.Services.AddScoped<AccountService>();
         builder.Services.AddScoped<EmailService>();
         builder.Services.AddScoped<ProfileService>();
+
         #endregion DEPENDENCY INJECTIONS
 
         builder.Services.AddControllers();

@@ -3,6 +3,7 @@ using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Entities;
+using SmartHomeManager.Domain.TwoDHomeDomain.Entities;
 
 
 namespace SmartHomeManager.DataSource.RulesDataSource;
@@ -34,90 +35,90 @@ public class RuleSeedData
         // create objects
 
         var accounts = new List<Account>
+        {
+            new()
             {
-                new Account
-                {
-                    AccountId = Guid.NewGuid(),
-                    Email = "John",
-                    Username = "Doe",
-                    Address = "Ang Mo Kio",
-                    Timezone = 8,
-                    Password = "Ang Mo Kio",
-                }
-            };
+                AccountId = Guid.NewGuid(),
+                Email = "John",
+                Username = "Doe",
+                Address = "Ang Mo Kio",
+                Timezone = 8,
+                Password = "Ang Mo Kio"
+            }
+        };
 
         var profiles = new List<Profile>
         {
-            new Profile
+            new()
             {
                 ProfileId = Guid.NewGuid(),
                 Name = "My Profile",
-                AccountId = accounts[0].AccountId,
+                AccountId = accounts[0].AccountId
             }
         };
 
         var scenario = new List<Scenario>
         {
-            new Scenario
+            new()
             {
-                ScenarioId = new("AC38AF14-9A57-4DF3-89F3-78F9CE9F4983"),
+                ScenarioId = new Guid("AC38AF14-9A57-4DF3-89F3-78F9CE9F4983"),
                 ScenarioName = "string",
                 ProfileId = profiles[0].ProfileId
             }
         };
-       
+
         var deviceTypes = new List<DeviceType>
         {
-            new DeviceType
+            new()
             {
-                DeviceTypeName = "Light",
+                DeviceTypeName = "Light"
             }
         };
 
         var devices = new List<Device>
         {
-            new Device
+            new()
             {
-                DeviceId = new("5CDDF6A7-C3B8-47A7-9DA1-19E1795EBF69"),
+                DeviceId = new Guid("5CDDF6A7-C3B8-47A7-9DA1-19E1795EBF69"),
                 DeviceName = "Light",
                 DeviceBrand = "Philips",
                 DeviceModel = "Hue",
                 DeviceTypeName = deviceTypes[0].DeviceTypeName,
-                AccountId = accounts[0].AccountId,
+                AccountId = accounts[0].AccountId
             }
         };
 
         var rooms = new List<Room>
         {
-            new Room
+            new()
             {
                 RoomId = Guid.NewGuid(),
                 Name = "Bedroom",
-                AccountId = accounts[0].AccountId,
+                AccountId = accounts[0].AccountId
             }
         };
 
         var roomCoordinates = new List<RoomCoordinate>
         {
-            new RoomCoordinate
+            new()
             {
                 XCoordinate = 0,
                 YCoordinate = 0,
                 Width = 2,
                 Height = 1,
-                RoomId = rooms[0].RoomId,
+                RoomId = rooms[0].RoomId
             }
         };
 
         var deviceCoordinates = new List<DeviceCoordinate>
         {
-            new DeviceCoordinate
+            new()
             {
                 XCoordinate = 0,
                 YCoordinate = 0,
                 Width = 2,
                 Height = 1,
-                DeviceId = devices[0].DeviceId,
+                DeviceId = devices[0].DeviceId
             }
         };
 
@@ -149,7 +150,7 @@ public class RuleSeedData
 
         await context.Devices.AddRangeAsync(devices);
         await context.SaveChangesAsync();
-        
+
         await context.Rooms.AddRangeAsync(rooms);
         await context.SaveChangesAsync();
 
@@ -165,4 +166,3 @@ public class RuleSeedData
         //test
     }
 }
-

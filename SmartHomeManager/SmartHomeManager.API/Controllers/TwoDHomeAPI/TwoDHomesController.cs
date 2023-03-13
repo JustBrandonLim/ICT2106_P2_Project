@@ -3,6 +3,7 @@ using SmartHomeManager.Domain.RoomDomain.DTOs.Requests;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Services;
+using SmartHomeManager.Domain.TwoDHomeDomain.Entities;
 using SmartHomeManager.Domain.TwoDHomeDomain.Interfaces;
 using SmartHomeManager.Domain.TwoDHomeDomain.Services;
 

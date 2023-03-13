@@ -12,6 +12,7 @@ using SmartHomeManager.Domain.HomeSecurityDomain.Entities;
 using SmartHomeManager.Domain.APIDomain.Entities;
 using SmartHomeManager.Domain.EnergyProfileDomain.Entities;
 using SmartHomeManager.Domain.AnalysisDomain.Entities;
+using SmartHomeManager.Domain.TwoDHomeDomain.Entities;
 
 namespace SmartHomeManager.DataSource;
 
@@ -81,7 +82,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<EnergyEfficiency> EnergyEfficiency { get; }
 
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -92,12 +92,13 @@ public class ApplicationDbContext : DbContext
 
         // Remove on delete cascade, make RoomId nullable on Device table...
         modelBuilder.Entity<Room>()
-                    .HasMany(room => room.Devices)
-                    .WithOne(device => device.Room)
-                    .HasForeignKey(device => device.RoomId)
-                    .IsRequired(false)
-                    .OnDelete(DeleteBehavior.SetNull);
+            .HasMany(room => room.Devices)
+            .WithOne(device => device.Room)
+            .HasForeignKey(device => device.RoomId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<DeviceProfile>().HasKey(deviceProfile => new { deviceProfile.DeviceId, deviceProfile.ProfileId });
+        modelBuilder.Entity<DeviceProfile>()
+            .HasKey(deviceProfile => new { deviceProfile.DeviceId, deviceProfile.ProfileId });
     }
 }
