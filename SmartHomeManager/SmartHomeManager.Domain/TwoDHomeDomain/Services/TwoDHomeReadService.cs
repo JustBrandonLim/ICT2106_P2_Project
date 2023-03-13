@@ -47,6 +47,20 @@ public class TwoDHomeReadService : ITwoDHomeReadService
         return TwoDHomeWebResponseFactory.CreateRoomWebResponse(allRoomGrids);
     }
 
+    public async Task<IRoomCoordinateResponse?> GetRoomCoordinate(Guid roomCoordinateId)
+    {
+        var res = await _twoDHomeRepository.GetRoomCoordinateById(roomCoordinateId);
+        if (res == null) return null;
+        return RoomCoordinateResponseFactory.CreateRoomCoordinateResponse(res);
+    }
+
+    public async Task<IDeviceCoordinateResponse?> GetDeviceCoordinate(Guid deviceCoordinateId)
+    {
+        var res = await _twoDHomeRepository.GetDeviceCoordinateById(deviceCoordinateId);
+        if (res == null) return null;
+        return DeviceCoordinateResponseFactory.CreateDeviceCoordinateResponse(res);
+    }
+
     // for testing purposes only
     public async Task<IEnumerable<IDeviceCoordinate>> GetAllDeviceCoordinates()
     {

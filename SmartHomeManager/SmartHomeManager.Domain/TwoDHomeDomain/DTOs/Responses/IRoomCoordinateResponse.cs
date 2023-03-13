@@ -1,6 +1,6 @@
-﻿namespace SmartHomeManager.Domain.TwoDHomeDomain.Entities;
+﻿namespace SmartHomeManager.Domain.TwoDHomeDomain.DTOs.Responses;
 
-public interface IRoomCoordinate
+public interface IRoomCoordinateResponse
 {
     public Guid RoomCoordinateId { get; set; }
     public int XCoordinate { get; set; }
@@ -8,5 +8,4 @@ public interface IRoomCoordinate
     public int Width { get; set; }
     public int Height { get; set; }
     public Guid RoomId { get; set; }
-    public bool IsCollidedWith(IRoomCoordinate roomCoordinate);
 }

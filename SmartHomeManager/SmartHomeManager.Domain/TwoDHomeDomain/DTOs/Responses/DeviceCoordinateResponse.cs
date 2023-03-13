@@ -1,6 +1,6 @@
-﻿namespace SmartHomeManager.Domain.TwoDHomeDomain.Entities;
+﻿namespace SmartHomeManager.Domain.TwoDHomeDomain.DTOs.Responses;
 
-public interface IDeviceCoordinate
+public class DeviceCoordinateResponse : IDeviceCoordinateResponse
 {
     public Guid DeviceCoordinateId { get; set; }
     public int XCoordinate { get; set; }

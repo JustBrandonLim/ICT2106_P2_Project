@@ -1,5 +1,4 @@
 ﻿using SmartHomeManager.Domain.RoomDomain.DTOs.Responses;
-using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Factories;
 using SmartHomeManager.Domain.RoomDomain.Interfaces;
 
@@ -17,8 +16,7 @@ public class RoomWriteService : IRoomWriteService
     public async Task<IRoomWebResponse> AddRoom(string name, Guid accountId)
     {
         var newRoom = RoomFactory.CreateRoom(name, accountId);
-        _roomRepository.Add(newRoom);
-        await _roomRepository.SaveChangesAsync();
+        await _roomRepository.Add(newRoom);
         return RoomWebResponseFactory.CreateRoomWebResponse(newRoom.RoomId, newRoom.Name, newRoom.AccountId);
     }
 
@@ -26,8 +24,7 @@ public class RoomWriteService : IRoomWriteService
     {
         var res = await _roomRepository.Get(roomId);
         if (res == null) return;
-        _roomRepository.Remove(res);
-        await _roomRepository.SaveChangesAsync();
+        await _roomRepository.Remove(res);
     }
 
     public async Task UpdateRoom(Guid roomId, string name)
@@ -35,7 +32,6 @@ public class RoomWriteService : IRoomWriteService
         var res = await _roomRepository.Get(roomId);
         if (res == null) return;
         res.Name = name;
-        _roomRepository.Update(res);
-        await _roomRepository.SaveChangesAsync();
+        await _roomRepository.Update(res);
     }
 }

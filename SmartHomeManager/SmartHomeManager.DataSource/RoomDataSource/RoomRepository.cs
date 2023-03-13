@@ -27,24 +27,22 @@ public class RoomRepository : IRoomRepository
         return query;
     }
 
-    public void Add(IRoom entity)
+    public async Task Add(IRoom entity)
     {
         _dbSet.Add((Room)entity);
+        await SaveChangesAsync();
     }
 
-    public void Remove(IRoom entity)
+    public async Task Remove(IRoom entity)
     {
         _dbSet.Remove((Room)entity);
+        await SaveChangesAsync();
     }
 
-    public void Update(IRoom room)
+    public async Task Update(IRoom room)
     {
         _dbSet.Update((Room)room);
-    }
-
-    public async Task SaveChangesAsync()
-    {
-        await _db.SaveChangesAsync();
+        await SaveChangesAsync();
     }
 
     // this is used by team 2
@@ -56,5 +54,10 @@ public class RoomRepository : IRoomRepository
         // filter the data
         var result = allRooms.Where(room => room.AccountId == accountId);
         return result;
+    }
+
+    private async Task SaveChangesAsync()
+    {
+        await _db.SaveChangesAsync();
     }
 }

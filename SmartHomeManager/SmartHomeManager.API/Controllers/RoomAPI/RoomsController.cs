@@ -50,7 +50,7 @@ public class RoomsController : ControllerBase
     // POST: api/Rooms
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<RoomWebResponse>> PostRoom(PostRoomWebRequest roomWebRequest)
+    public async Task<ActionResult<IRoomWebResponse>> PostRoom(PostRoomWebRequest roomWebRequest)
     {
         var resp = await _roomWriteService.AddRoom(roomWebRequest.Name, roomWebRequest.AccountId);
 
@@ -72,12 +72,13 @@ public class RoomsController : ControllerBase
 
     // GET: api/Rooms/GetRoomsRelatedToAccount/accountId
     [HttpGet("GetRoomsRelatedToAccount/{accountId}")]
-    public ActionResult<IEnumerable<RoomWebResponse>> GetRoomsRelatedToAccount(Guid accountId)
+    public ActionResult<IEnumerable<IRoomWebResponse>> GetRoomsRelatedToAccount(Guid accountId)
     {
         var result = _roomReadService.GetRoomsRelatedToAccount(accountId);
         return Ok(result);
     }
 
+    // For testing purposes only
     // GET: api/Rooms/GetDevicesRelatedToRoom/roomId
     [HttpGet("GetDevicesInRoom/{roomId}")]
     public ActionResult<IEnumerable<Device>> GetDevicesInRoom(Guid roomId)

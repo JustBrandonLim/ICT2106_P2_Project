@@ -57,6 +57,55 @@ public class TwoDHomeRepository : ITwoDHomeRepository
         await SaveChangesAsync();
     }
 
+    public async Task<IRoomCoordinate?> GetRoomCoordinateById(Guid roomCoordinateId)
+    {
+        var roomCoordinate = await _dbSetRoomCoordinate.FindAsync(roomCoordinateId);
+        return roomCoordinate;
+    }
+
+    public IRoomCoordinate? GetRoomCoordinateByRoomId(Guid roomId)
+    {
+        // load the data, including the room coordinates
+        var allRoomCoordinates = _dbSetRoomCoordinate.ToList();
+
+        // filter the data
+        var result = allRoomCoordinates.Where(rc => rc.RoomId == roomId);
+        var roomCoordinates = result.ToList();
+        if (!roomCoordinates.Any()) return null;
+        return roomCoordinates.First();
+    }
+
+    public async Task AddRoomCoordinate(IRoomCoordinate entity)
+    {
+        _dbSetRoomCoordinate.Add((RoomCoordinate)entity);
+        await SaveChangesAsync();
+    }
+
+    public async Task AddDeviceCoordinate(IDeviceCoordinate entity)
+    {
+        _dbSetDeviceCoordinate.Add((DeviceCoordinate)entity);
+        await SaveChangesAsync();
+    }
+
+    public async Task<IDeviceCoordinate?> GetDeviceCoordinateById(Guid deviceCoordinateId)
+    {
+        var res = await _dbSetDeviceCoordinate.FindAsync(deviceCoordinateId);
+        if (res == null) return null;
+        return res;
+    }
+
+    public IDeviceCoordinate? GetDeviceCoordinateByDeviceId(Guid deviceId)
+    {
+        // load the data, including the room coordinates
+        var allDeviceCoordinates = _dbSetDeviceCoordinate.ToList();
+
+        // filter the data
+        var result = allDeviceCoordinates.Where(d => d.DeviceId == deviceId);
+        var deviceCoordinates = result.ToList();
+        if (!deviceCoordinates.Any()) return null;
+        return deviceCoordinates.First();
+    }
+
     // for testing purposes
     public async Task<IEnumerable<IDeviceCoordinate>> GetAllDeviceCoordinates()
     {
@@ -70,7 +119,7 @@ public class TwoDHomeRepository : ITwoDHomeRepository
         return query;
     }
 
-    public async Task SaveChangesAsync()
+    private async Task SaveChangesAsync()
     {
         await _db.SaveChangesAsync();
     }

@@ -6,9 +6,8 @@ public interface IRoomRepository
 {
     Task<IRoom?> Get(Guid roomId);
     Task<IEnumerable<IRoom>> GetAll();
-    void Add(IRoom entity);
-    void Remove(IRoom entity);
-    void Update(IRoom entity);
-    Task SaveChangesAsync();
+    Task Add(IRoom entity);
+    Task Remove(IRoom entity);
+    Task Update(IRoom entity);
     IEnumerable<IRoom> GetRoomsRelatedToAccount(Guid accountId);
 }

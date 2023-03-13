@@ -1,8 +1,7 @@
-﻿namespace SmartHomeManager.Domain.TwoDHomeDomain.Entities;
+﻿namespace SmartHomeManager.Domain.TwoDHomeDomain.DTOs.Requests;
 
-public interface IDeviceCoordinate
+public class PostDeviceCoordinateWebRequest
 {
-    public Guid DeviceCoordinateId { get; set; }
     public int XCoordinate { get; set; }
     public int YCoordinate { get; set; }
     public int Width { get; set; }
