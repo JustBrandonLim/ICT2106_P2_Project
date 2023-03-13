@@ -93,7 +93,8 @@ public class Program
         // DEVICE
         builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
         builder.Services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();
-            
+        builder.Services.AddScoped<IDeviceConfigurationLookUpRepository, DeviceConfigurationLookUpRepository>();
+        builder.Services.AddScoped<IDeviceConfigurationRepository, DeviceConfigurationRepository>();
 
         // DEVICELOG
         builder.Services.AddScoped<IDeviceLogRepository, DeviceLogRepository>();
