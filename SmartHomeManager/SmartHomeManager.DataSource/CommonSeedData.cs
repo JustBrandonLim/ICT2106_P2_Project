@@ -28,6 +28,8 @@ namespace SmartHomeManager.DataSource
             context.Rooms.RemoveRange(context.Rooms);
             context.RoomCoordinates.RemoveRange(context.RoomCoordinates);
             context.DeviceTypes.RemoveRange(context.DeviceTypes);
+            context.DeviceConfigurations.RemoveRange(context.DeviceConfigurations);
+            context.DeviceConfigurationLookUps.RemoveRange(context.DeviceConfigurationLookUps);
             context.Devices.RemoveRange(context.Devices);
             context.DeviceCoordinates.RemoveRange(context.DeviceCoordinates);
 
@@ -122,6 +124,28 @@ namespace SmartHomeManager.DataSource
                 },
             };
 
+            /* MANAGE DEVICES */
+            var deviceConfigurationLookUps = new List<DeviceConfigurationLookUp>
+            {
+                // Aircon Mode
+                new DeviceConfigurationLookUp { 
+		            ConfigurationKey = "Mode",
+                    DeviceBrand = "xiaomi",
+                    DeviceModel = "smart aircon",
+                    ConfigurationValue = "0,1,2,3",
+                    ValueMeaning = "Auto,Warm,Dry,Cool",
+		        },
+		
+                // Aircon Fan Speed
+		        new DeviceConfigurationLookUp { 
+		            ConfigurationKey = "Fan Speed",
+                    DeviceBrand = "xiaomi",
+                    DeviceModel = "smart aircon",
+                    ConfigurationValue = "0,1,2,3",
+                    ValueMeaning = "Auto,High,Medium,Low",
+		        },
+	        };
+
             var devices = new List<Device>
             {
                 new Device
@@ -159,8 +183,21 @@ namespace SmartHomeManager.DataSource
                     DeviceSerialNumber = "789",
                     AccountId = new ("11111111-1111-1111-1111-111111111111"),
                     RoomId = rooms[0].RoomId
-                },
+                }
             };
+
+
+            //device configurations
+            var deviceConfigurations = new List<DeviceConfiguration> {
+                new DeviceConfiguration
+                {
+                    DeviceId = new("55555555-5555-5555-5555-555555555555"),
+                    DeviceBrand = "xiaomi",
+                    DeviceModel = "smart aircon",
+                    ConfigurationKey = "Mode",
+                    ConfigurationValue = 0,
+		        },
+	        };
 
             // create objects
             var deviceProfiles = new List<DeviceProfile>
@@ -216,8 +253,14 @@ namespace SmartHomeManager.DataSource
 
             await context.DeviceTypes.AddRangeAsync(deviceTypes);
             await context.SaveChangesAsync();
-            
+
+            await context.DeviceConfigurationLookUps.AddRangeAsync(deviceConfigurationLookUps);
+            await context.SaveChangesAsync();
+
             await context.Devices.AddRangeAsync(devices);
+            await context.SaveChangesAsync();
+
+            await context.DeviceConfigurations.AddRangeAsync(deviceConfigurations);
             await context.SaveChangesAsync();
             
             await context.DeviceProfiles.AddRangeAsync(deviceProfiles);

@@ -21,10 +21,13 @@ import RegisterOK from "./pages/account/RegisterOK";
 import MyAccount from "./pages/account/Setting";
 import UserProfileEdit from "./pages/profile/EditProfile";
 import ProfileLanding from "./pages/profile/ProfileLanding";
-import RegisterDevice from "./pages/RegisterDevice";
-import SelectNearbyDevice from "pages/SelectNearbyDevice";
+import RegisterDevice from "./pages/device/register-device/RegisterDevice";
+import SelectDevice from "pages/device/register-device/SelectDevice";
 import DeviceConfig from "./pages/DeviceConfig";
 import Report from "pages/Analytics";
+import ManageDevices from "pages/device/manage-device/ManageDevices";
+import ManageDeviceConfiguration from "pages/device/manage-device/ManageDeviceConfiguration";
+import ManageDeviceSettings from "pages/device/manage-device/ManageDeviceSettings";
 
 export function App() {
   return (
@@ -45,8 +48,11 @@ export function App() {
             <Route path="/profile-landing" element={<ProfileLanding />} />
             <Route path="/register" element={<Register />} />
 
-            <Route path="/selectnearbydevice" element={<SelectNearbyDevice />} />
+            <Route path="/selectnearbydevice" element={<SelectDevice />} />
             <Route path="/registerdevice" element={<RegisterDevice />} />
+            <Route path="/managedevices" element={<ManageDevices />} />
+            <Route path="/managedeviceconfiguration" element={<ManageDeviceConfiguration />} />
+            <Route path="/managedevicesettings" element={<ManageDeviceSettings />} />
 
             <Route path="/director" element={<Director />} />
             <Route path="/backup" element={<Backup />} />
@@ -54,18 +60,9 @@ export function App() {
             <Route path="/configuration" element={<Configuration />} />
             <Route path="/energyProfile" element={<EnergyProfile />} />
             <Route path="/scenario" element={<Scenario />} />
-            <Route
-              path="/scenario/create/action-rule"
-              element={<ActionRule />}
-            />
-            <Route
-              path="/scenario/create/time-rule"
-              element={<SchRule />}
-            />
-            <Route
-              path="/scenario/edit/:id"
-              element={<SchRule />}
-            />
+            <Route path="/scenario/create/action-rule" element={<ActionRule />} />
+            <Route path="/scenario/create/time-rule" element={<SchRule />} />
+            <Route path="/scenario/edit/:id" element={<SchRule />} />
             <Route path="/config" element={<DeviceConfig />} />
             <Route path="/analytics" element={<Report />} />
           </Routes>

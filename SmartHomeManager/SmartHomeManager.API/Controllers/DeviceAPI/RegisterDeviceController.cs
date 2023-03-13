@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartHomeManager.Domain.DeviceDomain.Services;
-using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Entities.DTOs;
 using SmartHomeManager.Domain.DeviceDomain.Interfaces;

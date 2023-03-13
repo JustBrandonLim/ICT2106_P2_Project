@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Heading, Stack, Text, Card, CardHeader, CardBody } from "@chakra-ui/react";
 import { createSearchParams, useNavigate } from "react-router-dom";
 
-export default function SelectNearbyDevice() {
+export default function SelectDevice() {
   const dummyDeviceList = [
     {
       deviceBrand: "Xiaomi",
@@ -45,7 +45,7 @@ export default function SelectNearbyDevice() {
   return (
     <Container mt={5} mb={5} p={5} maxW="3xl" minH="50vh" border="1px" borderColor="gray.100" rounded="lg" boxShadow="lg" centerContent>
       <Heading fontWeight="bold" fontSize="xl" mb={5}>
-        Select a nearby Device
+        Select a Device
       </Heading>
 
       <Stack spacing={5} minW="full">
