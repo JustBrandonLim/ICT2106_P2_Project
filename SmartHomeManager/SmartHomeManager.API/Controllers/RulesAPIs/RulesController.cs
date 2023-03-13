@@ -15,9 +15,9 @@ namespace SmartHomeManager.API.Controllers.RulesAPIs;
 public class RulesController : ControllerBase
 {
     private readonly RuleServices _registerRuleService;
-    private readonly GetRulesServices _getRulesServices;
+    /*private readonly GetRulesServices _getRulesServices;*/
 
-    public RulesController(IGenericRepository<Rule> ruleRepository, IInformDirectorServices informDirectorServices)
+    public RulesController(IRuleRepository<Rule> ruleRepository, IInformDirectorServices informDirectorServices)
     {
         _registerRuleService = new(ruleRepository, informDirectorServices);
     }
@@ -52,6 +52,19 @@ public class RulesController : ControllerBase
         if(rule != null)
         {
             return StatusCode(200, rule);
+        }
+        return StatusCode(404, "rule not exist");
+    }
+
+    // GET api/Rules/GetByScenariosId/AC38AF14-9A57-4DF3-89F3-78F9CE9F4983
+    [HttpGet("GetByScenariosId/{scenarioId}")]
+    public async Task<ActionResult<Rule>> GetRulesByScenarioId(Guid scenarioId)
+    {
+        //TODO NOT SURE IF CORRECT
+        var rules = await _registerRuleService.GetAllRulesByScenarioId(scenarioId);
+        if (rules != null)
+        {
+            return Ok(rules);
         }
         return StatusCode(404, "rule not exist");
     }

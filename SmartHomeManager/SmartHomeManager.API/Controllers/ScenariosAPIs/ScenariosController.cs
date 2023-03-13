@@ -6,6 +6,8 @@ using SmartHomeManager.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
 using SmartHomeManager.Domain.SceneDomain.Interfaces;
+using Microsoft.Identity.Client;
+using SmartHomeManager.Domain.AccountDomain.Entities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -44,6 +46,19 @@ namespace SmartHomeManager.API.Controllers.ScenariosAPIs
         public async Task<ActionResult<Scenario>> GetScenario([FromBody] Guid id)
         {
             return null;
+        }
+
+        // GET Scenario by profileId
+        [HttpGet("profileId")]
+        public async Task<ActionResult<IEnumerable<Scenario?>>> GetScenarioByProfileId(Guid profileId)
+        {
+            //TODO
+             IEnumerable<Scenario?> scenario = await _scenarioServices.GetScenarioByIdAsync(profileId);
+
+            if (scenario == null)
+                return NotFound(1);
+
+            return Ok(scenario);
         }
 
         // POST api/Scenarios

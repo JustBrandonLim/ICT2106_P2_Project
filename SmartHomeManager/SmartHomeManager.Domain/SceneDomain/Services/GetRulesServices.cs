@@ -1,13 +1,14 @@
 ﻿using SmartHomeManager.Domain.SceneDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Interfaces;
 using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 
 namespace SmartHomeManager.Domain.SceneDomain.Services
 {
 	public class GetRulesServices: IGetRulesService
 	{
-        private readonly IGenericRepository<Rule> _ruleRepository;
-        public GetRulesServices(IGenericRepository<Rule> ruleRepository)
+        private readonly IRuleRepository<Rule> _ruleRepository;
+        public GetRulesServices(IRuleRepository<Rule> ruleRepository)
 		{
             _ruleRepository = ruleRepository;
 		}
@@ -17,10 +18,10 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
             return await _ruleRepository.GetAllAsync();
         }
 
-        public async Task<IEnumerable<Rule>> GetAllRulesByScenarioId(Guid ScenarioId)
+        /*public async Task<IEnumerable<Rule>> GetAllRulesByScenarioId(Guid ScenarioId)
         {
-            throw new NotImplementedException();
-        }
+            return await _ruleRepository.GetByScenarioId(ScenarioId);
+        }*/
 
         public async Task<Rule?> GetRuleById(Guid id)
         {

@@ -71,7 +71,6 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
             return Ok(account);
         }
 
-
         /* 
          * PUT: api/Accounts/11111111-1111-1111-1111-111111111111
          * Return:

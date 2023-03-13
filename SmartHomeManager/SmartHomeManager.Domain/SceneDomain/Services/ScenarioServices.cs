@@ -19,7 +19,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 
         public Boolean ShareScenarios(Guid id)
         {
-            IEnumerable<Scenario?> scenarios = _scenarioRepository.GetByProfileId(id);
+           /* IEnumerable<Scenario?> scenarios = _scenarioRepository.GetByProfileId(id);
             foreach(Scenario? s in scenarios)
             {
                 if (s != null)
@@ -31,13 +31,13 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
                 {
                     return false;
                 }
-            }
+            }*/
             return true;
         }
 
-        public async Task<Scenario?> GetScenarioByIdAsync(Guid id)
+        public async Task<IEnumerable<Scenario?>> GetScenarioByIdAsync(Guid id)
         {
-            return await _scenarioRepository.GetByIdAsync(id);
+            return await _scenarioRepository.GetByProfileId(id);
         }
 
     }

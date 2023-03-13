@@ -13,6 +13,5 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="src\pages\account\" />
-    <Folder Include="src\pages\profile\" />
   </ItemGroup>
 </Project>

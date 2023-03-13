@@ -9,11 +9,11 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
 {
 	public class RuleServices
 	{
-		private readonly IGenericRepository<Rule> _ruleRepository;
+		private readonly IRuleRepository<Rule> _ruleRepository;
 		private readonly IInformDirectorServices _informDirectorServices;
 
 		//Initialise the service by passing the repo
-		public RuleServices(IGenericRepository<Rule> ruleRepository, IInformDirectorServices informDirectorServices)
+		public RuleServices(IRuleRepository<Rule> ruleRepository, IInformDirectorServices informDirectorServices)
 		{
 			_ruleRepository = ruleRepository;
 			_informDirectorServices = informDirectorServices;
@@ -67,6 +67,12 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
             
 			return false;
         }
-	}
+
+        //TODO not sure what's the right way
+        public async Task<IEnumerable<Rule?>> GetAllRulesByScenarioId(Guid ScenarioId)
+        {
+            return await _ruleRepository.GetByScenarioId(ScenarioId);
+        }
+    }
 }
 

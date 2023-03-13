@@ -74,11 +74,11 @@ namespace SmartHomeManager.DataSource.RulesDataSource
             }
         }
 
-        public IEnumerable<Scenario?> GetByProfileId(Guid id)
+        public async Task<IEnumerable<Scenario?>> GetByProfileId(Guid id)
         {
             try
             {
-                IEnumerable<Scenario> scenarios = _applicationDbContext.Scenarios.Where(scenario => scenario.ProfileId == id);
+                IEnumerable<Scenario?> scenarios = _applicationDbContext.Scenarios.Where(scenario => scenario.ProfileId == id);
                 return scenarios;
             }
             catch
