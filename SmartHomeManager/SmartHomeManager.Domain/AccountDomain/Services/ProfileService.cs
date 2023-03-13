@@ -35,24 +35,20 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             /*newProfile.Scenarios = new List<Scenario>();*/
 
 
-            //previous method
-            /*Profile newProfile = new Profile();
-            newProfile.ProfileId = new Guid();
-            newProfile.AccountId = profile.AccountId;
-            newProfile.Account = profile.Account;
-            newProfile.Scenarios = profile.Scenarios;
-            newProfile.Devices = profile.Devices;*/
-
-            /*Debug.WriteLine(profile.Account);*/
-
             bool response = await _profileRepository.AddAsync(newProfile);
 
             if (response)
             {
                 int saveResponse = await _profileRepository.SaveAsync();
 
+
                 if (saveResponse > 0)
                 {
+                    Debug.WriteLine("Successfully created profile");
+                    Debug.WriteLine(newProfile.ProfileId);
+                    Debug.WriteLine(newProfile.Pin);
+                    Debug.WriteLine(ChildChecker(newProfile.ProfileId));
+
                     return 1;
                 }
             }
@@ -113,7 +109,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             profile.Name = updateProfileWebRequest.Name;
             profile.Description = updateProfileWebRequest.Description;
             profile.Pin = updateProfileWebRequest.Pin;
-           
+
 
             int updateResponse = await _profileRepository.UpdateAsync(profile);
             if (updateResponse == 1)
@@ -136,6 +132,24 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 
             return false;
             /*throw new NotImplementedException();*/
+        }
+
+        public async Task<bool> ChildChecker(Guid id)
+        {
+            Profile? profile = await _profileRepository.GetByIdAsync(id);
+            int Pin = profile.Pin;
+  
+
+            // when the profile has 4 digit pin field keyed in, meaning profile is for child 
+            if (Pin >= 0 && Pin <= 9999){
+                // restrict access to Device page and Account settings page, prompt to key in pin to access the pages
+                Debug.WriteLine("Child profile set: "+ profile.Pin);
+
+
+                return true;    // it's a child profile
+            }
+            Debug.WriteLine("Adult profile set");
+            return false;   // it's an adult
         }
 
     }

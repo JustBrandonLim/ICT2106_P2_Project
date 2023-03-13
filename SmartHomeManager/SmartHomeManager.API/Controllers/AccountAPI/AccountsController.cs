@@ -286,5 +286,6 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
 
             return Ok(response);
         }
+       
     }
 }
