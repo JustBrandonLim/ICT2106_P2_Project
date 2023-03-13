@@ -30,20 +30,9 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             newProfile.Name = profileWebRequest.Name;
             newProfile.Description = profileWebRequest.Description;
             newProfile.Pin = profileWebRequest.Pin;
-            //For testing set to the default accountId(how to get from frontend?)
             newProfile.AccountId = Guid.Parse(profileWebRequest.AccountId);
             /*newProfile.Scenarios = new List<Scenario>();*/
 
-
-            //previous method
-            /*Profile newProfile = new Profile();
-            newProfile.ProfileId = new Guid();
-            newProfile.AccountId = profile.AccountId;
-            newProfile.Account = profile.Account;
-            newProfile.Scenarios = profile.Scenarios;
-            newProfile.Devices = profile.Devices;*/
-
-            /*Debug.WriteLine(profile.Account);*/
 
             bool response = await _profileRepository.AddAsync(newProfile);
 

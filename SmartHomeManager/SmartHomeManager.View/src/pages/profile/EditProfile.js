@@ -38,13 +38,17 @@ function EditProfile() {
     }
 
     const handlePinChange = (event) => {
-        setInputPin(event.target.value)
+        const pin = event.target.value.trim().slice(0, 4); // Trims whitespace and limits input to 4 characters
+        setInputPin(pin || null);
     }
 
     const navigate = useNavigate();
 
     //JSO stringify to send to api controller
     const profileId = "22222222-2222-2222-2222-222222222222"
+    if (inputPin == "") {
+        setInputPin(null)
+    }
     const editProfileObj = {
         "Name": inputUserName, "Description": inputDescription, "Pin": inputPin
     }
