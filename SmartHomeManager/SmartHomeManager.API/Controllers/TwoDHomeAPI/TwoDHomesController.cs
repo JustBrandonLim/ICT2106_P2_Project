@@ -38,7 +38,7 @@ public class TwoDHomesController : ControllerBase
         return Ok(res);
     }
 
-    // for testing purposes
+    // for testing purposes only
     [HttpGet("GetAllDeviceCoordinates")]
     public async Task<IActionResult> GetAllDeviceCoordinates()
     {

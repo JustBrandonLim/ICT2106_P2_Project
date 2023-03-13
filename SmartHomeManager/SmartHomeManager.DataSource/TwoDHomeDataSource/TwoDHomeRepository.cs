@@ -8,8 +8,8 @@ namespace SmartHomeManager.DataSource.TwoDHomeDataSource;
 public class TwoDHomeRepository : ITwoDHomeRepository
 {
     private readonly ApplicationDbContext _db;
-    private readonly DbSet<Room> _dbSetRoom;
     private readonly DbSet<DeviceCoordinate> _dbSetDeviceCoordinate;
+    private readonly DbSet<Room> _dbSetRoom;
     private readonly DbSet<RoomCoordinate> _dbSetRoomCoordinate;
 
     public TwoDHomeRepository(ApplicationDbContext db)
@@ -29,83 +29,45 @@ public class TwoDHomeRepository : ITwoDHomeRepository
         var result = allRooms.Where(room => room.AccountId == accountId);
 
         var ret = new List<IRoomCoordinate>();
-        foreach (var room in result) ret.Add(room.RoomCoordinate);
+        foreach (var room in result)
+        {
+            if (room.RoomCoordinate == null)
+                continue;
+            ret.Add(room.RoomCoordinate);
+        }
+
         return ret;
-    }
-
-    public async Task<bool> AddDeviceCoordinate(IDeviceCoordinate deviceCoordinate)
-    {
-        _dbSetDeviceCoordinate.Add((DeviceCoordinate)deviceCoordinate);
-        await SaveChangesAsync();
-        return true;
-    }
-
-    public async Task<bool> AddRoomCoordinate(IRoomCoordinate roomCoordinate)
-    {
-        _dbSetRoomCoordinate.Add((RoomCoordinate)roomCoordinate);
-        await SaveChangesAsync();
-        return true;
-    }
-
-    public async Task<DeviceCoordinate?> GetDeviceCoordinate(Guid id)
-    {
-        var result = await _dbSetDeviceCoordinate.FindAsync(id);
-        return result;
-    }
-
-    public async Task<IEnumerable<DeviceCoordinate>> GetAllDeviceCoordinates()
-    {
-        IEnumerable<DeviceCoordinate> query = await _dbSetDeviceCoordinate.ToListAsync();
-        return query;
-    }
-
-    public void UpdateDeviceCoordinate(DeviceCoordinate deviceCoordinate)
-    {
-        _dbSetDeviceCoordinate.Update(deviceCoordinate);
-    }
-
-    public void RemoveDeviceCoordinate(DeviceCoordinate deviceCoordinate)
-    {
-        _dbSetDeviceCoordinate.Remove(deviceCoordinate);
-    }
-
-
-    public async Task<RoomCoordinate?> GetRoomCoordinate(Guid id)
-    {
-        var result = await _dbSetRoomCoordinate.FindAsync(id);
-        return result;
-    }
-
-    public async Task<IEnumerable<RoomCoordinate>> GetAllRoomCoordinates()
-    {
-        IEnumerable<RoomCoordinate> query = await _dbSetRoomCoordinate.ToListAsync();
-        return query;
     }
 
     public async Task AddRange(IEnumerable<IRoomCoordinate> entities)
     {
+        var roomCoordinates = entities.ToList();
         var entitiesToBeUpdated = new List<RoomCoordinate>();
-        foreach (var entity in entities) entitiesToBeUpdated.Add((RoomCoordinate)entity);
+        foreach (var entity in roomCoordinates) entitiesToBeUpdated.Add((RoomCoordinate)entity);
         _dbSetRoomCoordinate.AddRange(entitiesToBeUpdated);
         await SaveChangesAsync();
     }
 
     public async Task RemoveRange(IEnumerable<IRoomCoordinate> entities)
     {
+        var roomCoordinates = entities.ToList();
         var entitiesToBeUpdated = new List<RoomCoordinate>();
-        foreach (var entity in entities) entitiesToBeUpdated.Add((RoomCoordinate)entity);
+        foreach (var entity in roomCoordinates) entitiesToBeUpdated.Add((RoomCoordinate)entity);
         _dbSetRoomCoordinate.RemoveRange(entitiesToBeUpdated);
         await SaveChangesAsync();
     }
 
-    public void UpdateRoomCoordinate(RoomCoordinate roomCoordinate)
+    // for testing purposes
+    public async Task<IEnumerable<DeviceCoordinate>> GetAllDeviceCoordinates()
     {
-        _dbSetRoomCoordinate.Update(roomCoordinate);
+        IEnumerable<DeviceCoordinate> query = await _dbSetDeviceCoordinate.ToListAsync();
+        return query;
     }
 
-    public void RemoveRoomCoordinate(RoomCoordinate roomCoordinate)
+    public async Task<IEnumerable<RoomCoordinate>> GetAllRoomCoordinates()
     {
-        _dbSetRoomCoordinate.Remove(roomCoordinate);
+        IEnumerable<RoomCoordinate> query = await _dbSetRoomCoordinate.ToListAsync();
+        return query;
     }
 
     public async Task SaveChangesAsync()

@@ -6,6 +6,8 @@ namespace SmartHomeManager.Domain.TwoDHomeDomain.Entities;
 
 public class DeviceCoordinate : IDeviceCoordinate
 {
+    [ForeignKey("DeviceId")] public Device Device { get; set; }
+
     [Key]
     [Required]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -20,6 +22,4 @@ public class DeviceCoordinate : IDeviceCoordinate
     [Required] public int Height { get; set; }
 
     [Required] public Guid DeviceId { get; set; }
-
-    [ForeignKey("DeviceId")] public Device Device { get; set; }
 }

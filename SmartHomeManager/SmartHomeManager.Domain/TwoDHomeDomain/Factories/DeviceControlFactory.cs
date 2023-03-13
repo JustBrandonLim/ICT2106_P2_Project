@@ -1,5 +1,4 @@
 ﻿using SmartHomeManager.Domain.DeviceDomain.Entities;
-using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.TwoDHomeDomain.Entities;
 
 namespace SmartHomeManager.Domain.TwoDHomeDomain.Factories;

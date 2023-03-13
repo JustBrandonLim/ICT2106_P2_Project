@@ -1,6 +1,6 @@
 ﻿namespace SmartHomeManager.Domain.TwoDHomeDomain.Entities;
 
-public class DeviceControl : IDeviceControl
+public class DeviceControl
 {
     public Guid DeviceId { get; set; }
     public string DeviceName { get; set; }

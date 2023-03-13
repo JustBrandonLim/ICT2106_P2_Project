@@ -8,6 +8,12 @@ namespace SmartHomeManager.Domain.RoomDomain.Entities;
 
 public class Room : IRoom
 {
+    [ForeignKey("AccountId")] public Account Account { get; set; }
+
+    public RoomCoordinate? RoomCoordinate { get; set; }
+
+    public List<Device> Devices { get; set; }
+
     [Key]
     [Required]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -15,10 +21,4 @@ public class Room : IRoom
 
     [Required] public string Name { get; set; }
     [Required] public Guid AccountId { get; set; }
-
-    [ForeignKey("AccountId")] public Account Account { get; set; }
-    
-    public RoomCoordinate RoomCoordinate { get; set; }
-    
-    public List<Device> Devices { get; set; }
 }

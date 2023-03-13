@@ -6,6 +6,8 @@ namespace SmartHomeManager.Domain.TwoDHomeDomain.Entities;
 
 public class RoomCoordinate : IRoomCoordinate
 {
+    [ForeignKey("RoomId")] public Room Room { get; set; }
+
     [Key]
     [Required]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -20,8 +22,6 @@ public class RoomCoordinate : IRoomCoordinate
     [Required] public int Height { get; set; }
 
     [Required] public Guid RoomId { get; set; }
-
-    [ForeignKey("RoomId")] public Room Room { get; set; }
 
     public bool IsCollidedWith(IRoomCoordinate roomCoordinate)
     {

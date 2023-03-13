@@ -1,6 +1,6 @@
 ﻿namespace SmartHomeManager.Domain.TwoDHomeDomain.Entities;
 
-public class RoomGrid : IRoomGrid
+public class RoomGrid
 {
     public Guid RoomCoordinateId { get; set; }
     public Guid RoomId { get; set; }

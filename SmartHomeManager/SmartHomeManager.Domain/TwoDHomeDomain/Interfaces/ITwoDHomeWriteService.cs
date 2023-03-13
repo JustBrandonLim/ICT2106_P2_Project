@@ -1,5 +1,4 @@
-﻿using SmartHomeManager.Domain.TwoDHomeDomain.DTOs.Requests;
-using SmartHomeManager.Domain.TwoDHomeDomain.DTOs.Responses;
+﻿using SmartHomeManager.Domain.TwoDHomeDomain.DTOs.Responses;
 using SmartHomeManager.Domain.TwoDHomeDomain.Entities;
 
 namespace SmartHomeManager.Domain.TwoDHomeDomain.Interfaces;

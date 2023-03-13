@@ -1,6 +1,3 @@
-using System.Collections;
-using SmartHomeManager.Domain.DeviceDomain.Entities;
-using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Mocks;
 using SmartHomeManager.Domain.TwoDHomeDomain.DTOs.Responses;
@@ -12,9 +9,9 @@ namespace SmartHomeManager.Domain.TwoDHomeDomain.Services;
 
 public class TwoDHomeReadService : ITwoDHomeReadService
 {
-    private readonly ITwoDHomeRepository _twoDHomeRepository;
-    private readonly IRoomRepository _roomRepository;
     private readonly IDeviceInformationServiceMock _deviceInformationService;
+    private readonly IRoomRepository _roomRepository;
+    private readonly ITwoDHomeRepository _twoDHomeRepository;
 
     public TwoDHomeReadService(
         ITwoDHomeRepository twoDHomeRepository,
@@ -31,13 +28,13 @@ public class TwoDHomeReadService : ITwoDHomeReadService
     {
         var allRoomCoordinatesList = _twoDHomeRepository.GetAllRoomCoordinatesRelatedToAccount(accountId);
         if (!allRoomCoordinatesList.Any())
-            return TwoDHomeWebResponseFactory.CreateRoomWebResponse(new List<IRoomGrid>());
+            return TwoDHomeWebResponseFactory.CreateRoomWebResponse(new List<RoomGrid>());
 
         var allRooms = _roomRepository.GetRoomsRelatedToAccount(accountId).ToList();
-        var allRoomGrids = new List<IRoomGrid>();
+        var allRoomGrids = new List<RoomGrid>();
         foreach (var room in allRooms)
         {
-            // ignore warning, this handles the case where the room exists but do not have a room coordinate
+            // this handles the case where the room exists but do not have a room coordinate
             if (room.RoomCoordinate == null) continue;
             var devicesInRoom = _deviceInformationService.GetDevicesInRoom(room.RoomId).ToList();
             room.Devices = devicesInRoom;
