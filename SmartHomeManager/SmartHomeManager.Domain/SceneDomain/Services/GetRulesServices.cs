@@ -18,11 +18,6 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
             return await _ruleRepository.GetAllAsync();
         }
 
-        /*public async Task<IEnumerable<Rule>> GetAllRulesByScenarioId(Guid ScenarioId)
-        {
-            return await _ruleRepository.GetByScenarioId(ScenarioId);
-        }*/
-
         public async Task<Rule?> GetRuleById(Guid id)
         {
             return await _ruleRepository.GetByIdAsync(id);

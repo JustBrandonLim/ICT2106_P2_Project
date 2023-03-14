@@ -77,18 +77,18 @@ public class Program
         builder.Services.AddScoped<IGenericRepository<EnergyProfile>, EnergyProfileRepository>();
         builder.Services.AddScoped<IScenarioRepository<Scenario>, ScenarioRepository>();
 
-        builder.Services.AddScoped<IGetRulesService, GetRulesServices>();
-        
-        
         builder.Services.AddScoped<ScenarioServices>();
         builder.Services.AddScoped<IInformDirectorServices, DirectorServices>();
         builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
         builder.Services.AddScoped<IGenericRepository<HomeSecurity>, HomeSecurityRepository>();
         builder.Services.AddScoped<IGenericRepository<HomeSecuritySetting>, HomeSecuritySettingRepository>();
         builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
-        builder.Services.AddScoped<RuleServices>();
-        /*builder.Services.AddScoped<DirectorServices>();*/
+        builder.Services.AddScoped<RuleServicesMock>();
+
+        //builder.Services.AddScoped<RuleServices>();
+        //builder.Services.AddScoped<IGetRulesService, GetRulesServices>();
         //builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
+        /*builder.Services.AddScoped<DirectorServices>();*/
         // builder.Services.AddHostedService<DirectorServices>();
 
         // DEVICE
