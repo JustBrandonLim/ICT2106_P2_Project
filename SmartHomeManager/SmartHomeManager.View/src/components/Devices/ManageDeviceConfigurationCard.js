@@ -11,10 +11,6 @@ export default function ManageDeviceConfigurationCard(props) {
             return actualConfiguration.configurationKey == props.configurationKey;
         }));
 
-    const [selectedConfigurationValue, setSelectedConfigurationValue] = useState(actualConfigurationKey[0]);
-
-    console.log(selectedConfigurationValue)
-
     return (
         <Card>
             <CardHeader>
@@ -22,7 +18,12 @@ export default function ManageDeviceConfigurationCard(props) {
             </CardHeader>
 
             <CardBody>
-                <Select onChange={(e) => { setSelectedConfigurationValue(e.target.value) }} defaultValue={actualConfigurationKey[0] ? actualConfigurationKey[0].configurationValue : 0}>
+                <Select onChange={(e) => {
+                    props.handleDeviceConfiguration({
+                        configurationKey: props.configurationKey,
+                        configurationValue: e.target.value
+                    })
+                }} defaultValue={actualConfigurationKey[0] ? actualConfigurationKey[0].configurationValue : 0}>
                     {possibleConfigurations.length > 0 ? (
                         possibleConfigurations.map((configuration, i) => (
                             <option
@@ -38,12 +39,6 @@ export default function ManageDeviceConfigurationCard(props) {
                 </Select>
             </CardBody>
             <CardFooter flex="row" justifyContent="flex-end">
-                <Button onClick={() => {
-                    props.handleDeviceConfiguration({
-                        configurationKey: props.configurationKey,
-                        configurationValue: selectedConfigurationValue
-                    })
-                }} colorScheme="green">Apply Changes</Button>
             </CardFooter>
         </Card>
     );
