@@ -34,10 +34,10 @@ public class TwoDHomeWriteService : ITwoDHomeWriteService
             updatedRoomCoordinates.Add(RoomCoordinateFactory.CreateRoomCoordinate
                 (
                     room.RoomCoordinateId,
-                    room.XCoordinate,
-                    room.YCoordinate,
-                    room.Width,
-                    room.Height,
+                    room.x,
+                    room.y,
+                    room.w,
+                    room.h,
                     room.RoomId
                 )
             );

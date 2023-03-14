@@ -16,10 +16,10 @@ public class RoomGridFactory
             RoomId = room.RoomId,
             RoomCoordinateId = room.RoomCoordinate.RoomCoordinateId,
             RoomName = room.Name,
-            XCoordinate = room.RoomCoordinate.XCoordinate,
-            YCoordinate = room.RoomCoordinate.YCoordinate,
-            Width = room.RoomCoordinate.Width,
-            Height = room.RoomCoordinate.Height,
+            x = room.RoomCoordinate.XCoordinate,
+            y = room.RoomCoordinate.YCoordinate,
+            w = room.RoomCoordinate.Width,
+            h = room.RoomCoordinate.Height,
             DeviceControls = DeviceControlFactory.CreateDeviceControl(room.Devices, deviceStates)
         };
     }

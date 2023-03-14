@@ -52,6 +52,7 @@ public class RoomsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<IRoomWebResponse>> PostRoom(PostRoomWebRequest roomWebRequest)
     {
+        if (roomWebRequest.AccountId == Guid.Empty) return BadRequest("AccountId cannot be empty");
         var resp = await _roomWriteService.AddRoom(roomWebRequest.Name, roomWebRequest.AccountId);
 
         // routeValues specifies the action to be called and the route values to be used for that action

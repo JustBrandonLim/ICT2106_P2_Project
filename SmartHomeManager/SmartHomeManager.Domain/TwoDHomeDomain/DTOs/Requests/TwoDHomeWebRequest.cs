@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using SmartHomeManager.Domain.TwoDHomeDomain.Entities;
 
 namespace SmartHomeManager.Domain.TwoDHomeDomain.DTOs.Requests;
@@ -8,5 +9,5 @@ namespace SmartHomeManager.Domain.TwoDHomeDomain.DTOs.Requests;
 // thus we decided to use the concrete class instead
 public class TwoDHomeWebRequest
 {
-    public List<RoomGrid> RoomGrids { get; set; }
+    [Required] public List<RoomGrid> RoomGrids { get; set; }
 }
