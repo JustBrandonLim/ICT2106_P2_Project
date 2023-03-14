@@ -106,10 +106,16 @@ public class Program
         builder.Services.AddScoped<IGenericRepository<Account>, MockAccountRepository>();
 
         // ROOM
+        builder.Services.AddScoped<IRoomReadService, RoomReadService>();
+        builder.Services.AddScoped<IRoomWriteService, RoomWriteService>();
         builder.Services.AddScoped<IRoomRepository, RoomRepository>();
         builder.Services.AddScoped<IDeviceInformationServiceMock, DeviceRepositoryMock>();
-        builder.Services.AddScoped<IDeviceProductsRepository,DeviceProductRepository>();
 
+        // 2DHOME
+        builder.Services.AddScoped<ITwoDHomeRepository, TwoDHomeRepository>();
+        builder.Services.AddScoped<ITwoDHomeReadService, TwoDHomeReadService>();
+        builder.Services.AddScoped<ITwoDHomeWriteService, TwoDHomeWriteService>();
+        builder.Services.AddScoped<IControlDeviceServiceMock, ControlDeviceServiceMock>();
 
         // ACCOUNT
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
