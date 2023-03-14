@@ -14,7 +14,7 @@ function ProfileCard({ profileName, imgSrc, Description, profileId }) {
     }`;
     const handleEditProfileClick = (profileName, imgSrc, Description, profileId) => {
         // Handle edit profile click
-        navigate(`/edit-profile`, { state: { profileName, imgSrc, Description, profileId } });
+        navigate(`/edit-profile`, { state: { profileId, profileName, imgSrc, Description, profileId } });
     }
 
     const handleAddProfileClick = () => {
@@ -23,7 +23,6 @@ function ProfileCard({ profileName, imgSrc, Description, profileId }) {
     }
 
     function handleCardClick(profileId) {
-        console.log(profileId)
         navigate(`/profile-selected`, { state: { profileId } })
     }
     return (

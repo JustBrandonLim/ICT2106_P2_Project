@@ -10,7 +10,6 @@ import user5 from "./img/user5.png"
 import user6 from "./img/user6.png"
 
 export default function ProfileLanding() {
-    const navigate = useNavigate();
 
     const [profileDetails, updateProfileDetails] = useState([])
     const getAllProfiles = async () => {
@@ -32,11 +31,6 @@ export default function ProfileLanding() {
 
     getAllProfiles()
 
-    function handleCardClick(profileId) {
-        console.log(profileId);
-        navigate("/profile-selected", { state: { profileId } });
-    // Do something with the profileId
-    }
     return (
         <>
             <Grid templateColumns='repeat(3, 1fr)' templateRows="repeat(2, 300px)" gap={3} paddingTop="3em" paddingRight="3em" >
@@ -47,7 +41,6 @@ export default function ProfileLanding() {
                                                   >
                             
                             <CardComponent
-                                onClick={() => handleCardClick(item.profileId)}
                                 profileId={item.profileId }
                                     imgSrc={user1}
                                     profileName={item.name}

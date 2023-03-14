@@ -15,20 +15,45 @@ import {
     IconButton,
     Center,
     CloseButton,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure,
 } from '@chakra-ui/react';
 import { ModalComponent } from "components/Profile/Modal";
 import { SmallCloseIcon } from '@chakra-ui/icons';
+import user1 from "./img/user1.png"
 
 function EditProfile() {
-    const { state } = useLocation()
-    const profileName = state?.profileName
-    const description = state?.Description
-    const imgSrc = state?.imgSrc
-    const profileId = state?.profileId
-
     const [inputUserName, setInputUserName] = useState('');
     const [inputDescription, setInputDescription] = useState('');
     const [inputPin, setInputPin] = useState('');
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const [profileDetails, updateProfileDetails] = useState([])
+    const location = useLocation();
+    const profileId = location.state?.profileId;
+    const getProfileDetails = async () => {
+        await fetch(`https://localhost:7140/api/Profiles/${profileId}`, {
+            method: 'GET',
+            headers: {
+                accept: 'text/plain'
+            },
+        })
+            .then(async response => {
+                const data = await response.json()
+
+                if (response.ok) {
+                    updateProfileDetails(data)
+                }
+            })
+    }
+    getProfileDetails()
 
     const handleUserNameChange = (event) => {
         setInputUserName(event.target.value)
@@ -112,7 +137,7 @@ function EditProfile() {
                 <Stack direction='row'>
                     <Flex justify="space-between" align="center" w="100%">
                         <Heading lineHeight={1.1} fontSize={{ base: '2xl', sm: '3xl' }} >
-                            Edit {profileName}
+                            Edit {profileDetails.name}
                         </Heading>
                         <CloseButton onClick={handleCloseClick } />
                     </Flex>
@@ -122,7 +147,7 @@ function EditProfile() {
                     <FormLabel >Profile Picture</FormLabel>
                     <Stack direction={['column', 'row']} spacing={2}>
                         <Center>
-                            <Avatar size="xl" src={imgSrc} marginRight="15px" />
+                            <Avatar size="xl" src={user1} marginRight="15px" />
                         </Center>
                         <Center>
                             <ModalComponent />
@@ -132,7 +157,7 @@ function EditProfile() {
                 <FormControl id="userName" isRequired>
                     <FormLabel>Name</FormLabel>
                     <Input
-                        placeholder="UserName"
+                        placeholder={profileDetails.name || "UserName" }
                         _placeholder={{ color: 'gray.500' }}
                         type="text"
                         value={inputUserName}
@@ -142,7 +167,7 @@ function EditProfile() {
                 <FormControl id="description" isRequired>
                     <FormLabel>Description</FormLabel>
                     <Input
-                        placeholder="Enter profile description"
+                        placeholder={ profileDetails.description || "Enter the description here"}
                         _placeholder={{ color: 'gray.500' }}
                         type="text"
                         style={{ height: "150px", whiteSpace: "pre-wrap" }}
@@ -153,7 +178,7 @@ function EditProfile() {
                 <FormControl id="userPin">
                     <FormLabel>Set Pin</FormLabel>
                     <Input
-                        placeholder="set pin if you want parental controls"
+                        placeholder={profileDetails.pin || "Set Parental Controls Here"}
                         _placeholder={{ color: 'gray.500' }}
                         type="number"
                         maxLength={4}
@@ -171,9 +196,26 @@ function EditProfile() {
                         _hover={{
                             bg: 'red.500',
                         }}
-                        onClick={handleDeleteClick}>
+                        onClick={onOpen}>
                         Delete
                     </Button>
+                    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+                        <ModalOverlay />
+                        <ModalContent>
+                            <ModalHeader>Delete Profile</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody>
+                                Confirm that you want to delete the profile?
+                            </ModalBody>
+
+                            <ModalFooter>
+                                <Button colorScheme='red' mr={3} onClick={handleDeleteClick}>
+                                    Confirm
+                                </Button>
+                                <Button colorScheme='green' onClick={onClose}> Cancel</Button>
+                            </ModalFooter>
+                        </ModalContent>
+                    </Modal>
                     <Button
                         bg={'blue.400'}
                         color={'white'}

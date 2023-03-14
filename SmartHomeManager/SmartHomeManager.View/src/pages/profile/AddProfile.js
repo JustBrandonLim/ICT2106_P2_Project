@@ -47,7 +47,6 @@ function AddedProfilePage() {
     }
     //Access API to create profile
     const handleSubmitClick = () => {
-        console.log(inputPin)
         //JSO stringify to send to api controller
         const accountId = "11111111111111111111111111111111";
         if (inputPin == "") {
@@ -56,7 +55,6 @@ function AddedProfilePage() {
         const addProfileObj = {
             "Name": inputUserName, "Description": inputDescription, "Pin": inputPin, "AccountId": accountId
         }
-        console.log(addProfileObj.Pin)
 
         fetch('https://localhost:7140/api/Profiles', {
             method: 'POST',

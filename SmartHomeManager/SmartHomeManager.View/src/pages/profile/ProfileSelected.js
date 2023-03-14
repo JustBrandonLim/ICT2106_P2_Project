@@ -31,7 +31,6 @@ export default function ProfileSelected(): JSX.Element {
     const [profileDetails, updateProfileDetails] = useState([])
     const location = useLocation();
     const profileId = location.state?.profileId;
-    console.log(profileId)
     const getAllProfiles = async () => {
         await fetch(`https://localhost:7140/api/Profiles/${profileId}`, {
             method: 'GET',
