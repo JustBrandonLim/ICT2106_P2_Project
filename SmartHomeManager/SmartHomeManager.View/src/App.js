@@ -44,7 +44,7 @@ export function App() {
 
             <Route path="/rooms" element={<Rooms />} />
             <Route path="/room2D" element={<Room2D />} />
-
+						<Route path="/store" element={<Store />} />
             <Route path="/profiles" element={<Profiles />} />
             <Route path="/forgetpw" element={<ForgetPassword />} />
             <Route path="/login" element={<Login />} />
@@ -76,4 +76,4 @@ export function App() {
     </>
   );
 }
-export default App;
+export default App
