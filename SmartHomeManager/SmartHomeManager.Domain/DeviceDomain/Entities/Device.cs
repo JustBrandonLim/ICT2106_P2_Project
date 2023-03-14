@@ -3,6 +3,7 @@ using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using SmartHomeManager.Domain.TwoDHomeDomain.Entities;
 
 namespace SmartHomeManager.Domain.DeviceDomain.Entities
 {
