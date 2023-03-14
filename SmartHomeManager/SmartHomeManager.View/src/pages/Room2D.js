@@ -51,8 +51,8 @@ export default function Room2D() {
 		setRoomName('')
 	}
 
-	const onAddItem = (roomName) => {
-		const newItem = {
+	const onAddRoom = (roomName) => {
+		const newRoom = {
 			i: `room-${rooms.length + 1}`,
 			x: 0,
 			y: Infinity,
@@ -61,13 +61,13 @@ export default function Room2D() {
 			add: true,
 			name: roomName,
 		}
-		setLayout([...layout, newItem])
+		setLayout([...layout, newRoom])
 	}
 
 	const handleDialogSubmit = () => {
 		const newRoom = roomName
 		setRooms([...rooms, newRoom])
-		onAddItem(newRoom)
+		onAddRoom(newRoom)
 		setIsDialogOpen(false)
 		setRoomName('')
 	}
@@ -83,14 +83,14 @@ export default function Room2D() {
 		setRooms(newRooms)
 
 		const newLayout = [...layout]
-		const itemToRemove = newLayout[roomIndex]
+		const roomToRemove = newLayout[roomIndex]
 		newLayout.splice(roomIndex, 1)
 		setLayout(newLayout)
 
 		// shift the layout items above the removed item up by one row
-		newLayout.forEach((item) => {
-			if (item.y > itemToRemove.y) {
-				item.y -= itemToRemove.h
+		newLayout.forEach((room) => {
+			if (room.y > roomToRemove.y) {
+				room.y -= roomToRemove.h
 			}
 		})
 	}
