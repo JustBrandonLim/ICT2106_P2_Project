@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using SmartHomeManager.Domain.DeviceDomain;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Entities.DTOs;
 using SmartHomeManager.Domain.DeviceDomain.Interfaces;
@@ -37,15 +40,17 @@ namespace SmartHomeManager.API.Controllers.DeviceAPI
 	    }
 
         [HttpGet("GetDevicePossibleConfigurations/{deviceBrand}/{deviceModel}")]
-        public async Task<IEnumerable<DeviceConfigurationLookUp>> GetDevicePossibleConfigurations(string deviceBrand, string deviceModel) 
-	    {
-            return await _manageDeviceService.GetDevicePossibleConfigurationsAsync(deviceBrand, deviceModel);
+        public async Task<string> GetDevicePossibleConfigurations(string deviceBrand, string deviceModel)
+        {
+            JArray jsonArray  = new DeviceConfigurationLookUpAdapter(await _manageDeviceService.GetDevicePossibleConfigurationsAsync(deviceBrand, deviceModel)).ConvertToJson();
+            return JsonConvert.SerializeObject(jsonArray, Formatting.Indented);
 	    }
 
         [HttpGet("GetDeviceConfigurations/{deviceId}/{deviceBrand}/{deviceModel}")]
-        public async Task<IEnumerable<DeviceConfiguration>> GetDeviceConfigurations(Guid deviceId, string deviceBrand, string deviceModel) 
+        public async Task<string> GetDeviceConfigurations(Guid deviceId, string deviceBrand, string deviceModel) 
 	    {
-            return await _manageDeviceService.GetDeviceConfigurationsAsync(deviceId, deviceBrand, deviceModel);
+            JArray jsonArray  = new DeviceConfigurationAdapter(await _manageDeviceService.GetDeviceConfigurationsAsync(deviceId, deviceBrand, deviceModel)).ConvertToJson();
+            return JsonConvert.SerializeObject(jsonArray, Formatting.Indented);
 	    }
 
         [HttpPost("ApplyDeviceConfiguration")]
