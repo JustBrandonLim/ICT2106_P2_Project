@@ -31,6 +31,7 @@ import ManageDeviceConfiguration from "pages/device/manage-device/ManageDeviceCo
 import ManageDeviceSettings from "pages/device/manage-device/ManageDeviceSettings";
 import "/node_modules/react-grid-layout/css/styles.css";
 import "/node_modules/react-resizable/css/styles.css";
+import Store from "pages/Store"
 
 export function App() {
   return (
