@@ -87,9 +87,7 @@ export default function ManageDeviceConfiguration() {
               <ManageDeviceConfigurationCard
                     key={i}
                     actualConfigurations={deviceActualConfigurations}
-                    configurationKey={configuration.configurationKey}
-                    configurationValue={configuration.configurationValue}
-                    valueMeaning={configuration.valueMeaning}
+                    possibleConfigurations={configuration}
                     handleDeviceConfiguration={(deviceConfiguration) => handleDeviceConfiguration(deviceConfiguration)}
               />
             ))
