@@ -188,7 +188,6 @@ function fetchData() {
 
 useEffect(() => {
     const id = JSON.parse(localStorage.getItem('accountId'));
-    console.log(id);
     if (id) setAccountId(id)
     else setAccountId(tempId);
     fetchData();
