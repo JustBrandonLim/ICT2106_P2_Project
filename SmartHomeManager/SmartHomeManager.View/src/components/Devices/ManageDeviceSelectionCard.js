@@ -21,7 +21,7 @@ export default function ManageDeviceSelectionCard(props) {
         }
       </CardHeader>
 
-      <CardBody>
+      <CardBody py={0}>
         <Text mt={2}>{props.deviceSerialNumber}</Text>
         <Text mt={2}>{props.deviceBrand}</Text>
         <Text mt={2}>{props.deviceModel}</Text>

@@ -198,8 +198,8 @@ useEffect(() => {
 }, [accountId])
 
 return (
-  <Container mt={5} mb={5} p={5} maxW="3xl" minH="50vh" border="1px" borderColor="gray.100" rounded="lg" boxShadow="lg" centerContent>
-    <Text fontWeight="bold" fontSize="xl" mb={5}>
+  <Container mt={5} mb={5} p={5} maxW="2xl" minH="50vh" border="1px" borderColor="gray.100" rounded="lg" boxShadow="lg" centerContent>
+    <Text fontWeight="bold" fontSize="xl" textTransform="uppercase" mb={5}>
       Manage Devices
     </Text>
 

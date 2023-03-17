@@ -44,7 +44,7 @@ export default function SelectDevice() {
 
   return (
     <Container mt={5} mb={5} p={5} maxW="3xl" minH="50vh" border="1px" borderColor="gray.100" rounded="lg" boxShadow="lg" centerContent>
-      <Heading fontWeight="bold" fontSize="xl" mb={5}>
+      <Heading fontWeight="bold" fontSize="xl" textTransform="uppercase" mb={5}>
         Select a Device
       </Heading>
 
