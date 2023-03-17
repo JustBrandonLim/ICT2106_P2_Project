@@ -12,12 +12,9 @@ export default function ManageDeviceConfiguration() {
   const [devicePossibleConfigurations, setDevicePossibleConfigurations] = useState([]);
   const [deviceActualConfigurations, setDeviceActualConfigurations] = useState([]);
 
-      // for export device
-  const [exportDevice, setExportDevice] = useState("");
-
       // for import device
   const [showImportDeviceModal, setShowImportDeviceModal] = useState(false);
-
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const toast = useToast();
 
@@ -91,40 +88,50 @@ export default function ManageDeviceConfiguration() {
     function handleExportDevice(e) {
       e.preventDefault();
       fetch(`https://localhost:7140/api/ManageDevice/ExportDeviceConfigurations/${deviceId}/${deviceBrand}/${deviceModel}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            deviceId: deviceId,
-            deviceBrand: deviceBrand,
-            deviceModel: deviceModel,
-          }),
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          deviceId: deviceId,
+          deviceBrand: deviceBrand,
+          deviceModel: deviceModel,
+        }),
       })
-          .then((response) => {
-              if (response.ok) {
-                  toast({
-                      title: "Success",
-                      description: "Device has been exported successfully.",
-                      status: "success",
-                      duration: 9000,
-                      isClosable: true,
-                  });
-                  return response.json(); // parse the response and return data
-              } else {
-                  toast({
-                      title: "Error",
-                      description: "Device export failed.",
-                      status: "error",
-                      duration: 9000,
-                      isClosable: true,
-                  });
-              }
-          })
-          .then((data) => {
-            setExportDevice(data);
-          })
-          .catch((error) => {
-              console.error('Error exporting device:', error);
+      .then((response) => {
+        if (response.ok) {
+          toast({
+            title: "Success",
+            description: "Device has been exported successfully.",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
           });
+          return response.json(); // parse the response and return data
+        } else {
+          toast({
+            title: "Error",
+            description: "Device export failed.",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      })
+      .then((data) => {
+        downloadJson(data, `${deviceName}_config.json`);
+      })
+      .catch((error) => {
+        console.error('Error exporting device:', error);
+      });
+    }
+    
+    function downloadJson(data, fileName) {
+      const jsonData = JSON.stringify(data);
+      const blob = new Blob([jsonData], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      link.click();
     }
 
 function setImportDevice(e) {
@@ -134,38 +141,51 @@ function setImportDevice(e) {
 }
 
     
-function handleImportDevice(e, deviceConfigurationJson ) {
+function handleImportDevice(e) {
   e.preventDefault();
-  fetch(`https://localhost:7140/api/ManageDevice/ImportDeviceConfigurations/${deviceId}/${deviceConfigurationJson}`, {
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    const deviceConfigurationJson = event.target.result;
+    fetch(`https://localhost:7140/api/ManageDevice/ImportDeviceConfigurations/${deviceId}/${deviceConfigurationJson}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        deviceId: deviceId,
         deviceBrand: deviceBrand,
         deviceModel: deviceModel,
+        deviceConfigurationJson: deviceConfigurationJson,
       }),
-  })
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
       .then((response) => {
-          if (response.ok) {
-              toast({
-                  title: "Success",
-                  description: "Device has been imported successfully.",
-                  status: "success",
-                  duration: 9000,
-                  isClosable: true,
-              });
-              return response.json(); // parse the response and return data
-          } else {
-              toast({
-                  title: "Error",
-                  description: "Device import failed.",
-                  status: "error",
-                  duration: 9000,
-                  isClosable: true,
-              });
-          }
+        if (response.ok) {
+          toast({
+            title: "Success",
+            description: "Device has been imported successfully.",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+          return response.json(); // parse the response and return data
+        } else {
+          toast({
+            title: "Error",
+            description: "Device import failed.",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
       })
+      .finally(() => {
+        setSelectedFile(null);
+        handleCloseModal();
+        fetchDeviceConfigurations();
+      });
+  };
+  reader.readAsText(selectedFile);
 }
+
 
 
   if (devicePossibleConfigurations.length <= 0 || deviceActualConfigurations.length <= 0) {
@@ -186,22 +206,21 @@ function handleImportDevice(e, deviceConfigurationJson ) {
           <ModalCloseButton />
           <ModalBody>
             <form
-              id="set-password-form"
+              id="import-device-form"
               onSubmit={(e) => handleImportDevice(e)}
             >
               <FormControl isRequired>
                 <FormLabel> File </FormLabel>
-                <Input type="password" />
+                <Input type="file" onChange={(e) => setSelectedFile(e.target.files[0])} sx={{ border: 'none', boxShadow: 'none', '&:focus': { boxShadow: 'none' } }}/>
                 <FormHelperText>
                   Ensure your file is in the proper format
                 </FormHelperText>
               </FormControl>
             </form>
           </ModalBody>
-
           <ModalFooter>
-            <Button type="submit" form="set-password-form" colorScheme='green' mr={3}>
-              Set
+            <Button type="submit" form="import-device-form" colorScheme='green' mr={3}>
+              Import Device Configuration
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -220,8 +239,8 @@ function handleImportDevice(e, deviceConfigurationJson ) {
           ) : (
             <p>None available.</p>
           )}
-              <Button mr={3} onClick={setImportDevice} colorScheme="red">Import Device Details</Button>
-              <Button onClick={handleExportDevice} colorScheme="yellow">Export Device Details</Button>
+              <Button mr={3} onClick={setImportDevice} colorScheme="red">Import Device Configurations</Button>
+              <Button onClick={handleExportDevice} colorScheme="yellow">Export Device Configurations</Button>
         </Stack>
       </Container>
     );
