@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Text, Tabs, TabList, Tab, TabPanels, TabPanel, Stack, useToast, useDisclosure } from "@chakra-ui/react";
+import { Container, Text, Tabs, TabList, Tab, TabPanels, TabPanel, Button, Stack, useToast, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, FormHelperText } from "@chakra-ui/react";
 import { useSearchParams } from "react-router-dom";
 import ManageDeviceConfigurationCard from "../../../components/Devices/ManageDeviceConfigurationCard";
 
@@ -10,14 +10,27 @@ export default function ManageDeviceConfiguration() {
   const deviceBrand = searchParams.get("deviceBrand");
   const deviceModel = searchParams.get("deviceModel");
   const [devicePossibleConfigurations, setDevicePossibleConfigurations] = useState([]);
-    const [deviceActualConfigurations, setDeviceActualConfigurations] = useState([]);
+  const [deviceActualConfigurations, setDeviceActualConfigurations] = useState([]);
 
-    const toast = useToast();
+      // for import device
+  const [showImportDeviceModal, setShowImportDeviceModal] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
 
+  const toast = useToast();
 
-    const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111");
+
+  function handleCloseModal() {
+    onClose();
+    resetImportHooks();
+  }
+
+  function resetImportHooks() {
+    setShowImportDeviceModal(false);
+    
+    }
 
   useEffect(() => {
       fetchDeviceConfigurations()
@@ -72,6 +85,108 @@ export default function ManageDeviceConfiguration() {
             });
     }
 
+    function handleExportDevice(e) {
+      e.preventDefault();
+      fetch(`https://localhost:7140/api/ManageDevice/ExportDeviceConfigurations/${deviceId}/${deviceBrand}/${deviceModel}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          deviceId: deviceId,
+          deviceBrand: deviceBrand,
+          deviceModel: deviceModel,
+        }),
+      })
+      .then((response) => {
+        if (response.ok) {
+          toast({
+            title: "Success",
+            description: "Device has been exported successfully.",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+          return response.json(); // parse the response and return data
+        } else {
+          toast({
+            title: "Error",
+            description: "Device export failed.",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      })
+      .then((data) => {
+        downloadJson(data, `${deviceName}_config.json`);
+      })
+      .catch((error) => {
+        console.error('Error exporting device:', error);
+      });
+    }
+    
+    function downloadJson(data, fileName) {
+      const jsonData = JSON.stringify(data);
+      const blob = new Blob([jsonData], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      link.click();
+    }
+
+function setImportDevice(e) {
+  e.preventDefault();
+  setShowImportDeviceModal(true);
+  onOpen();
+}
+
+    
+function handleImportDevice(e) {
+  e.preventDefault();
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    const deviceConfigurationJson = event.target.result;
+    fetch(`https://localhost:7140/api/ManageDevice/ImportDeviceConfigurations/${deviceId}/${deviceConfigurationJson}`, {
+      method: "POST",
+      body: JSON.stringify({
+        deviceBrand: deviceBrand,
+        deviceModel: deviceModel,
+        deviceConfigurationJson: deviceConfigurationJson,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          toast({
+            title: "Success",
+            description: "Device has been imported successfully.",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+          return response.json(); // parse the response and return data
+        } else {
+          toast({
+            title: "Error",
+            description: "Device import failed.",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      })
+      .finally(() => {
+        setSelectedFile(null);
+        handleCloseModal();
+        fetchDeviceConfigurations();
+      });
+  };
+  reader.readAsText(selectedFile);
+}
+
+
 
   if (devicePossibleConfigurations.length <= 0 || deviceActualConfigurations.length <= 0) {
     return <Text> Loading </Text>;
@@ -81,21 +196,51 @@ export default function ManageDeviceConfiguration() {
         <Text fontWeight="bold" fontSize="xl" mb={5}>
           {`Manage ${deviceName} configurations`}
         </Text>
+
+        
+    {showImportDeviceModal &&
+      <Modal isOpen={isOpen} onClose={handleCloseModal}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Upload your Device Configuration File</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <form
+              id="import-device-form"
+              onSubmit={(e) => handleImportDevice(e)}
+            >
+              <FormControl isRequired>
+                <FormLabel> File </FormLabel>
+                <Input type="file" onChange={(e) => setSelectedFile(e.target.files[0])} sx={{ border: 'none', boxShadow: 'none', '&:focus': { boxShadow: 'none' } }}/>
+                <FormHelperText>
+                  Ensure your file is in the proper format
+                </FormHelperText>
+              </FormControl>
+            </form>
+          </ModalBody>
+          <ModalFooter>
+            <Button type="submit" form="import-device-form" colorScheme='green' mr={3}>
+              Import Device Configuration
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    }
         <Stack spacing={5}>
           {devicePossibleConfigurations.length > 0 ? (
             devicePossibleConfigurations.map((configuration, i) => (
               <ManageDeviceConfigurationCard
                     key={i}
                     actualConfigurations={deviceActualConfigurations}
-                    configurationKey={configuration.configurationKey}
-                    configurationValue={configuration.configurationValue}
-                    valueMeaning={configuration.valueMeaning}
+                    possibleConfigurations={configuration}
                     handleDeviceConfiguration={(deviceConfiguration) => handleDeviceConfiguration(deviceConfiguration)}
               />
             ))
           ) : (
             <p>None available.</p>
           )}
+              <Button mr={3} onClick={setImportDevice} colorScheme="red">Import Device Configurations</Button>
+              <Button onClick={handleExportDevice} colorScheme="yellow">Export Device Configurations</Button>
         </Stack>
       </Container>
     );

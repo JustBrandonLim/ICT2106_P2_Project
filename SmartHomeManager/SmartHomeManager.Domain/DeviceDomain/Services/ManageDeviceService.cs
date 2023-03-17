@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Interfaces;
 
@@ -10,12 +12,14 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services
 		private readonly IDeviceRepository _deviceRepository;
 		private readonly IDeviceConfigurationLookUpRepository _deviceConfigurationLookUpRepository;
 		private readonly IDeviceConfigurationRepository _deviceConfigurationRepository;
+		private readonly IDeviceTypeRepository _deviceTypeRepository;
 
-		public ManageDeviceService(IDeviceRepository deviceRepository, IDeviceConfigurationLookUpRepository deviceConfigurationLookUpRepository, IDeviceConfigurationRepository deviceConfigurationRepository)
+		public ManageDeviceService(IDeviceRepository deviceRepository, IDeviceConfigurationLookUpRepository deviceConfigurationLookUpRepository, IDeviceConfigurationRepository deviceConfigurationRepository, IDeviceTypeRepository deviceTypeRepository)
 		{
 			_deviceRepository = deviceRepository;
 			_deviceConfigurationLookUpRepository = deviceConfigurationLookUpRepository;
 			_deviceConfigurationRepository = deviceConfigurationRepository;
+			_deviceTypeRepository = deviceTypeRepository;
 		}
 
 		public async Task<IEnumerable<Device>> GetAllDevicesByAccountAsync(Guid accountId) 
@@ -30,21 +34,25 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services
 			return await _deviceRepository.GetAsync(deviceId);
 		}
 
-		public async Task<IEnumerable<DeviceConfigurationLookUp>> GetDevicePossibleConfigurationsAsync(string deviceBrand, string deviceModel)
+		public async Task<string> GetDevicePossibleConfigurationsAsync(string deviceBrand, string deviceModel)
 		{
 			IEnumerable<DeviceConfigurationLookUp> deviceConfigurationLookUps = (await _deviceConfigurationLookUpRepository.GetAllAsync()).Where(deviceConfigurationLookUp => deviceConfigurationLookUp.DeviceBrand == deviceBrand && deviceConfigurationLookUp.DeviceModel == deviceModel);
 
-			return deviceConfigurationLookUps;
+			JArray jsonArray  = new DeviceConfigurationLookUpAdapter(deviceConfigurationLookUps).ConvertToJson();
+
+            return JsonConvert.SerializeObject(jsonArray, Formatting.Indented);
 		}
 
-		public async Task<IEnumerable<DeviceConfiguration>> GetDeviceConfigurationsAsync(Guid deviceId, string deviceBrand, string deviceModel)
+		public async Task<string> GetDeviceConfigurationsAsync(Guid deviceId, string deviceBrand, string deviceModel)
 		{
 			IEnumerable<DeviceConfiguration> deviceConfigurations = (await _deviceConfigurationRepository.GetAllAsync()).Where(deviceConfiguration => deviceConfiguration.DeviceId == deviceId && deviceConfiguration.DeviceBrand == deviceBrand && deviceConfiguration.DeviceModel == deviceModel);
 
-			return deviceConfigurations;
+			JArray jsonArray  = new DeviceConfigurationAdapter(deviceConfigurations).ConvertToJson();
+
+			return JsonConvert.SerializeObject(jsonArray, Formatting.Indented);
 		}
 
-		public async Task<bool> ApplyDeviceConfiguration(string configurationKey, string deviceBrand, string deviceModel, Guid deviceId, int configurationValue)
+		public async Task<bool> ApplyDeviceConfigurationAsync(string configurationKey, string deviceBrand, string deviceModel, Guid deviceId, int configurationValue)
 		{ 
 			try
             {
@@ -78,7 +86,7 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services
             }
 		}
 
-		public async Task<bool> ApplyDeviceSettings(Guid deviceId, string deviceName, string devicePassword, string deviceTypeName)
+		public async Task<bool> ApplyDeviceMetadataAsync(Guid deviceId, string deviceName, string devicePassword, string deviceTypeName)
 		{
             try
             {
@@ -109,7 +117,7 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services
             }
         }
 
-		public async Task<bool> SetDevicePasswordById(Guid deviceId, string devicePassword)
+		public async Task<bool> SetDevicePasswordByIdAsync(Guid deviceId, string devicePassword)
 		{
             try
             {
@@ -135,6 +143,94 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services
                 return false;
             }
         }
+
+		public async Task<string> ExportDeviceConfigurationsAsync(Guid deviceId, string deviceBrand, string deviceModel) 
+		{
+			IDeviceConfigurationExportBuilder deviceConfigurationExportBuilder = new DeviceConfigurationExportBuilder();
+
+			Device deviceFromDb = (await _deviceRepository.GetAsync(deviceId))!;
+
+			deviceConfigurationExportBuilder.BuildDeviceMetadata(deviceFromDb);
+
+			IEnumerable<DeviceConfiguration> deviceConfigurations = (await _deviceConfigurationRepository.GetAllAsync()).Where(deviceConfiguration => deviceConfiguration.DeviceId == deviceId && deviceConfiguration.DeviceBrand == deviceBrand && deviceConfiguration.DeviceModel == deviceModel);
+			JArray deviceConfigurationsJson = new DeviceConfigurationAdapter(deviceConfigurations).ConvertToJson();
+
+			deviceConfigurationExportBuilder.BuildDeviceConfigurations(deviceConfigurationsJson);
+
+			return JsonConvert.SerializeObject(deviceConfigurationExportBuilder.Build(), Formatting.Indented);	
+		}
+
+		public async Task<bool> ImportDeviceConfigurationsAsync(Guid deviceId, string deviceConfigurationJson) 
+		{
+			try
+			{
+				//JArray jsonArray  = new DeviceConfigurationAdapter(deviceConfigurations).ConvertToJson();
+				JObject jObject = JObject.Parse(deviceConfigurationJson);
+
+                Device? existingDevice = await _deviceRepository.GetAsync(deviceId);
+				if (existingDevice != null)
+				{
+					existingDevice.DeviceName = (string)(jObject["deviceMetadata"]!["deviceName"])!;
+					existingDevice.DeviceBrand = (string)(jObject["deviceMetadata"]!["deviceBrand"])!;
+					existingDevice.DeviceModel = (string)(jObject["deviceMetadata"]!["deviceModel"])!;
+
+					existingDevice.DeviceName = (string)(jObject["deviceMetadata"]!["deviceName"])!;
+
+					bool deviceTypeNameExist = (await _deviceTypeRepository.GetAllAsync()).Where(deviceType => deviceType.DeviceTypeName == (string)(jObject["deviceMetadata"]!["deviceTypeName"])!).Count() == 1;
+
+					if (!deviceTypeNameExist)
+					{
+						DeviceType deviceType = new()
+						{
+							DeviceTypeName = (string)(jObject["deviceMetadata"]!["deviceTypeName"])!
+						};
+
+						await _deviceTypeRepository.AddAsync(deviceType);
+
+						await _deviceTypeRepository.SaveAsync();
+					}
+
+					existingDevice.DeviceTypeName = (string)(jObject["deviceMetadata"]!["deviceTypeName"])!;
+
+					_deviceRepository.Update(existingDevice);
+					await _deviceRepository.SaveAsync();
+
+					JArray deviceConfigurations = (JArray)jObject["deviceConfigurations"]!;
+
+					foreach (JObject deviceConfiguration in deviceConfigurations)
+					{
+						DeviceConfiguration newDeviceConfiguration = new()
+						{
+							ConfigurationKey = (string)deviceConfiguration["configurationKey"]!,
+							DeviceBrand = existingDevice.DeviceBrand,
+							DeviceModel = existingDevice.DeviceModel,
+							DeviceId = deviceId,
+							ConfigurationValue = (int)deviceConfiguration["configurationValue"]!,
+						};
+
+						DeviceConfiguration? existingDeviceConfiguration = await _deviceConfigurationRepository.GetAsync(newDeviceConfiguration.ConfigurationKey, deviceId);
+						if (existingDeviceConfiguration != null)
+						{
+							existingDeviceConfiguration.ConfigurationValue = newDeviceConfiguration.ConfigurationValue;
+
+							_deviceConfigurationRepository.Update(existingDeviceConfiguration);
+						}
+						else
+						{
+							await _deviceConfigurationRepository.AddAsync(newDeviceConfiguration);
+						}
+
+						await _deviceRepository.SaveAsync();
+					}
+				}
+
+				return true;
+			}
+			catch (Exception e)
+			{
+				return false;
+			}
+		}
 	}
 }
 

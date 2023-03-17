@@ -46,6 +46,10 @@ using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.NotificationDomain.Entities;
 using SmartHomeManager.Domain.NotificationDomain.Interfaces;
+using SmartHomeManager.DataSource.DeviceStoreDataSource;
+using SmartHomeManager.Domain.DeviceStoreDomain.Entities;
+using SmartHomeManager.Domain.DeviceStoreDomain.Interfaces;
+
 
 namespace SmartHomeManager.API;
 
@@ -104,6 +108,8 @@ public class Program
         // ROOM
         builder.Services.AddScoped<IRoomRepository, RoomRepository>();
         builder.Services.AddScoped<IDeviceInformationServiceMock, DeviceRepositoryMock>();
+        builder.Services.AddScoped<IDeviceProductsRepository,DeviceProductRepository>();
+
 
         // ACCOUNT
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();

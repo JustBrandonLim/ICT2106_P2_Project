@@ -25,9 +25,13 @@ import RegisterDevice from "./pages/device/register-device/RegisterDevice";
 import SelectDevice from "pages/device/register-device/SelectDevice";
 import DeviceConfig from "./pages/DeviceConfig";
 import Report from "pages/Analytics";
+import Room2D from "pages/Room2D";
 import ManageDevices from "pages/device/manage-device/ManageDevices";
 import ManageDeviceConfiguration from "pages/device/manage-device/ManageDeviceConfiguration";
 import ManageDeviceSettings from "pages/device/manage-device/ManageDeviceSettings";
+import "/node_modules/react-grid-layout/css/styles.css";
+import "/node_modules/react-resizable/css/styles.css";
+import Store from "pages/Store"
 
 export function App() {
   return (
@@ -38,7 +42,10 @@ export function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/devices" element={<Devices />} />
+
             <Route path="/rooms" element={<Rooms />} />
+            <Route path="/room2D" element={<Room2D />} />
+						<Route path="/store" element={<Store />} />
             <Route path="/profiles" element={<Profiles />} />
             <Route path="/forgetpw" element={<ForgetPassword />} />
             <Route path="/login" element={<Login />} />
@@ -47,7 +54,6 @@ export function App() {
             <Route path="/edit-profile" element={<UserProfileEdit />} />
             <Route path="/profile-landing" element={<ProfileLanding />} />
             <Route path="/register" element={<Register />} />
-
             <Route path="/selectnearbydevice" element={<SelectDevice />} />
             <Route path="/registerdevice" element={<RegisterDevice />} />
             <Route path="/managedevices" element={<ManageDevices />} />
@@ -71,4 +77,4 @@ export function App() {
     </>
   );
 }
-export default App;
+export default App
