@@ -9,8 +9,6 @@ export default function ManageDeviceConfigurationCard(props) {
             return actualConfiguration.configurationKey == props.possibleConfigurations.name;
         }));
 
-    console.log(possibleConfigurations.name)
-
     return (
         <Card>
             <CardHeader>
