@@ -19,9 +19,6 @@ export default function ManageDevices() {
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
 
-  // for export device
-  const [exportDevice, setExportDevice] = useState("");
-
   // for modal usage
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -188,46 +185,6 @@ function fetchData() {
   });
 }
 
-function handleExportDevice(e, device ) {
-  e.preventDefault();
-  fetch(`https://localhost:7140/api/ManageDevice/ExportDeviceConfigurations/${device.deviceId}/${device.deviceBrand}/${device.deviceModel}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        deviceId: device.deviceId,
-        deviceBrand: device.deviceBrand,
-        deviceModel: device.deviceModel,
-      }),
-  })
-      .then((response) => {
-          if (response.ok) {
-              toast({
-                  title: "Success",
-                  description: "Device has been exported successfully.",
-                  status: "success",
-                  duration: 9000,
-                  isClosable: true,
-              });
-              return response.json(); // parse the response and return data
-          } else {
-              toast({
-                  title: "Error",
-                  description: "Device export failed.",
-                  status: "error",
-                  duration: 9000,
-                  isClosable: true,
-              });
-          }
-      })
-      .then((data) => {
-        setExportDevice(data);
-      })
-      .catch((error) => {
-          console.error('Error exporting device:', error);
-      });
-}
-
-
 useEffect(() => {
   fetchData()
 }, []);
@@ -312,7 +269,6 @@ return (
                   handleSetPassword={!device.devicePassword ? (event) => handleSetPassword(event, i) : null}
                   handleManageSettings={(event) => handleManageSettings(event, device, i)}
                   handleManageConfiguration={(event) => handleManageConfiguration(event, device, i)}
-                  handleExportDevice={(event) => handleExportDevice(event, device)}
                   key={i}
                   deviceId={device.deviceId}
                   deviceSerialNumber={device.deviceSerialNumber}
