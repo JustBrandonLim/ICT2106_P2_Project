@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Text, Tabs, TabList, Tab, TabPanels, TabPanel, Stack, Heading, Card, CardHeader, CardBody, CardFooter, Button, Input, Select, useDisclosure, useToast } from "@chakra-ui/react";
+import { Container, Text, Tabs, TabList, Tab, TabPanels, TabPanel, Stack, Heading, Card, CardHeader, CardBody, CardFooter, Button, Input, Select, useDisclosure, useToast, FormControl, Checkbox, FormLabel, Box, Flex } from "@chakra-ui/react";
 import { useSearchParams } from "react-router-dom";
 
 export default function ManageDeviceSettings() {
@@ -36,15 +36,15 @@ export default function ManageDeviceSettings() {
             .then((response) => response.json())
             .then((data) => {
                 setDeviceSettings(data);
+                setNewDeviceName(data.deviceName);
+                setNewDevicePassword(data.devicePassword);
+                setNewDeviceType(data.deviceTypeName);
             });
         fetch(`https://localhost:7140/api/RegisterDevice/GetAllDeviceTypes/`)
             .then((response) => response.json())
             .then((data) => {
                 setDeviceTypes(data);
             });
-        setNewDeviceName(deviceSettings?.deviceName || "");
-        setNewDevicePassword(deviceSettings?.devicePassword || "");
-        setNewDeviceType(deviceSettings?.deviceTypeName || "");
     }
 
     function handleDeviceSettings(e) {
@@ -53,8 +53,8 @@ export default function ManageDeviceSettings() {
         if (newDevicePassword == "") {
             setNewDevicePassword(null)
         }
-
-        fetch("https://localhost:7140/api/ManageDevice/ApplyDeviceSettings", {
+        
+        fetch("https://localhost:7140/api/ManageDevice/ApplyDeviceMetadata", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -94,8 +94,68 @@ export default function ManageDeviceSettings() {
     return (
         <div>
             {deviceSettings ? (
-                <Container mt={5} mb={5} p={5} maxW="3xl" minH="50vh" border="1px" borderColor="gray.100" rounded="lg" boxShadow="lg" centerContent>
-                    <Heading fontWeight="bold" fontSize="3xl" mb={5}>
+                <Container mt={5}>
+
+                    <Flex
+                        align={'center'}
+                        justify={'center'}>
+                        <Stack spacing={8} mx={'auto'} minW={'lg'} maxW={'xl'} py={12} px={6}>
+                            <Stack align={'center'}>
+                                <Heading fontSize={'4xl'}>{deviceName} Settings</Heading>
+                            </Stack>
+                            <Box
+                                rounded={'lg'}
+                                bg='white'
+                                boxShadow={'lg'}
+                                p={8}>
+                                <Stack spacing={4}>
+                                    <FormControl>
+                                        <FormLabel>Device Name</FormLabel>
+                                        <Input onChange={(e) => setNewDeviceName(e.target.value)} defaultValue={deviceName} />
+                                    </FormControl>
+                                    <FormControl>
+                                        <FormLabel>Device Password</FormLabel>
+                                        <Input onChange={(e) => setNewDevicePassword(e.target.value)} defaultValue={devicePassword} />
+                                    </FormControl>
+                                    <FormControl>
+                                        <FormLabel>Device Type</FormLabel>
+                                        <Select onChange={(e) => setNewDeviceType(e.target.value)} defaultValue={deviceTypeName ? deviceTypeName : null}>
+                                            {deviceTypes.length > 0 ? (
+                                                deviceTypes.map((types, i) => (
+                                                    <option
+                                                        key={i}
+                                                        value={types}
+                                                    >
+                                                        {types}
+                                                    </option>
+                                                ))
+                                            ) : (
+                                                <p>None available.</p>
+                                            )}
+                                        </Select>
+                                    </FormControl>
+                                    <Stack spacing={10}>
+                                        <Stack
+                                            direction={{ base: 'column', sm: 'row' }}
+                                            align={'start'}
+                                            justify={'space-between'}>
+                                            <Checkbox fontStyle="italic">Apply to all</Checkbox>
+                                        </Stack>
+                                        <Button
+                                            bg={'blue.400'}
+                                            color={'white'}
+                                            _hover={{
+                                                bg: 'blue.500',
+                                            }}
+                                            onClick={handleDeviceSettings}>
+                                            Apply Changes
+                                        </Button>
+                                    </Stack>
+                                </Stack>
+                            </Box>
+                        </Stack>
+                    </Flex>
+                    {/* <Heading fontWeight="bold" fontSize="3xl" mb={5}>
                         {`Manage ${deviceName} settings`}
                     </Heading>
                     <Stack spacing={5}>
@@ -127,7 +187,7 @@ export default function ManageDeviceSettings() {
                                 <Button onClick={handleDeviceSettings} colorScheme="green">Apply Changes</Button>
                             </CardFooter>
                         </Card>
-                    </Stack>
+                    </Stack> */}
                 </Container>
             )
                 : (
