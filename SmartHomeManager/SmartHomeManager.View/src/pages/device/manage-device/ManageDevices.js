@@ -5,6 +5,7 @@ import ManageDeviceSelectionCard from "components/Devices/ManageDeviceSelectionC
 import axios from "axios";
 
 export default function ManageDevices() {
+  const tempId = "11111111-1111-1111-1111-111111111111";  
   const [devices, setDevices] = useState([]);
   const [assignedDevices, setAssignedDevices] = useState([]);
   const [unassignedDevices, setUnassignedDevices] = useState([]);
@@ -15,7 +16,7 @@ export default function ManageDevices() {
   const [showSetPasswordModal, setShowSetPasswordModal] = useState(false);
   const [showCheckPasswordModal, setShowCheckPasswordModal] = useState(false);
 
-  const [accountId, setAccountId] = useState("11111111-1111-1111-1111-111111111111");
+  const [accountId, setAccountId] = useState("");
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
 
@@ -186,8 +187,16 @@ function fetchData() {
 }
 
 useEffect(() => {
-  fetchData()
-}, []);
+    const id = JSON.parse(localStorage.getItem('accountId'));
+    console.log(id);
+    if (id) setAccountId(id)
+    else setAccountId(tempId);
+    fetchData();
+  }, [])
+  
+useEffect(() => {
+    if (accountId) fetchData();
+}, [accountId])
 
 return (
   <Container mt={5} mb={5} p={5} maxW="3xl" minH="50vh" border="1px" borderColor="gray.100" rounded="lg" boxShadow="lg" centerContent>
@@ -287,8 +296,8 @@ return (
             {assignedDevices.length > 0 ? (
               assignedDevices.map((device, i) => (
                 <ManageDeviceSelectionCard
-                  handleManageSettings={(event) => handleManageConfiguration(event, navigate, device)}
-                  handleManageConfiguration={(event) => handleManageConfiguration(event, navigate, device)}
+                  handleManageSettings={(event) => handleManageConfiguration(event, device, i)}
+                  handleManageConfiguration={(event) => handleManageConfiguration(event, device, i)}
                   key={i}
                   deviceId={device.deviceId}
                   deviceSerialNumber={device.deviceSerialNumber}
@@ -307,8 +316,8 @@ return (
             {unassignedDevices.length > 0 ? (
               unassignedDevices.map((device, i) => (
                 <ManageDeviceSelectionCard
-                  handleManageSettings={(event) => handleManageConfiguration(event, navigate, device)}
-                  handleManageConfiguration={(event) => handleManageConfiguration(event, navigate, device)}
+                  handleManageSettings={(event) => handleManageConfiguration(event, device, i)}
+                  handleManageConfiguration={(event) => handleManageConfiguration(event, device, i)}
                   key={i}
                   deviceId={device.deviceId}
                   deviceSerialNumber={device.deviceSerialNumber}
