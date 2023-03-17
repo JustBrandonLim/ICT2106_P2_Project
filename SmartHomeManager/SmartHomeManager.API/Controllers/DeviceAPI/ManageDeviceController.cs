@@ -20,9 +20,9 @@ namespace SmartHomeManager.API.Controllers.DeviceAPI
     {
         private readonly ManageDeviceService _manageDeviceService;
 
-        public ManageDeviceController(IDeviceRepository deviceRepository, IDeviceConfigurationLookUpRepository deviceConfigurationLookUpRepository, IDeviceConfigurationRepository deviceConfigurationRepository) 
+        public ManageDeviceController(IDeviceRepository deviceRepository, IDeviceConfigurationLookUpRepository deviceConfigurationLookUpRepository, IDeviceConfigurationRepository deviceConfigurationRepository, IDeviceTypeRepository deviceTypeRepository) 
 	    {
-            _manageDeviceService = new(deviceRepository, deviceConfigurationLookUpRepository, deviceConfigurationRepository);
+            _manageDeviceService = new(deviceRepository, deviceConfigurationLookUpRepository, deviceConfigurationRepository, deviceTypeRepository);
 	    }
 
         [HttpGet("GetAllDevicesByAccount/{accountId}")]
@@ -42,21 +42,19 @@ namespace SmartHomeManager.API.Controllers.DeviceAPI
         [HttpGet("GetDevicePossibleConfigurations/{deviceBrand}/{deviceModel}")]
         public async Task<string> GetDevicePossibleConfigurations(string deviceBrand, string deviceModel)
         {
-            JArray jsonArray  = new DeviceConfigurationLookUpAdapter(await _manageDeviceService.GetDevicePossibleConfigurationsAsync(deviceBrand, deviceModel)).ConvertToJson();
-            return JsonConvert.SerializeObject(jsonArray, Formatting.Indented);
+            return await _manageDeviceService.GetDevicePossibleConfigurationsAsync(deviceBrand, deviceModel); 
 	    }
 
         [HttpGet("GetDeviceConfigurations/{deviceId}/{deviceBrand}/{deviceModel}")]
         public async Task<string> GetDeviceConfigurations(Guid deviceId, string deviceBrand, string deviceModel) 
 	    {
-            JArray jsonArray  = new DeviceConfigurationAdapter(await _manageDeviceService.GetDeviceConfigurationsAsync(deviceId, deviceBrand, deviceModel)).ConvertToJson();
-            return JsonConvert.SerializeObject(jsonArray, Formatting.Indented);
+            return await _manageDeviceService.GetDeviceConfigurationsAsync(deviceId, deviceBrand, deviceModel);
 	    }
 
         [HttpPost("ApplyDeviceConfiguration")]
         public async Task<ActionResult> ApplyDeviceConfiguration([FromBody] DeviceConfigurationWebRequest deviceConfigurationWebRequest) 
 	    {
-            if (await _manageDeviceService.ApplyDeviceConfiguration(deviceConfigurationWebRequest.ConfigurationKey, deviceConfigurationWebRequest.DeviceBrand, deviceConfigurationWebRequest.DeviceModel, deviceConfigurationWebRequest.DeviceId, deviceConfigurationWebRequest.ConfigurationValue))
+            if (await _manageDeviceService.ApplyDeviceConfigurationAsync(deviceConfigurationWebRequest.ConfigurationKey, deviceConfigurationWebRequest.DeviceBrand, deviceConfigurationWebRequest.DeviceModel, deviceConfigurationWebRequest.DeviceId, deviceConfigurationWebRequest.ConfigurationValue))
             {
                 return Ok("ApplyDeviceConfiguration() success!");
             }
@@ -64,27 +62,44 @@ namespace SmartHomeManager.API.Controllers.DeviceAPI
             return BadRequest("AppleDeviceConfiguration() failed!");
 	    }
 
-        [HttpPost("ApplyDeviceSettings")]
-        public async Task<ActionResult> ApplyDeviceSettings([FromBody] DeviceSettingsWebRequest deviceSettingsWebRequest)
+        [HttpPost("ApplyDeviceMetadata")]
+        public async Task<ActionResult> ApplyDeviceMetadata([FromBody] DeviceMetadataWebRequest deviceMetadataWebRequest)
         {
-            if (await _manageDeviceService.ApplyDeviceSettings(deviceSettingsWebRequest.DeviceId, deviceSettingsWebRequest.DeviceName, deviceSettingsWebRequest.DevicePassword, deviceSettingsWebRequest.DeviceTypeName))
+            if (await _manageDeviceService.ApplyDeviceMetadataAsync(deviceMetadataWebRequest.DeviceId, deviceMetadataWebRequest.DeviceName, deviceMetadataWebRequest.DevicePassword, deviceMetadataWebRequest.DeviceTypeName))
             {
-                return Ok("ApplyDeviceSettings() success!");
+                return Ok("ApplyDeviceMetadata() success!");
             }
 
-            return BadRequest("AppleDeviceSettings() failed!");
+            return BadRequest("AppleDeviceMetadata() failed!");
         }
 
         [HttpPost("SetDevicePasswordById")]
         public async Task<ActionResult> SetDevicePasswordById([FromBody] DevicePasswordWebRequest devicePasswordWebRequest)
         {
-            if (await _manageDeviceService.SetDevicePasswordById(devicePasswordWebRequest.DeviceId, devicePasswordWebRequest.DevicePassword))
+            if (await _manageDeviceService.SetDevicePasswordByIdAsync(devicePasswordWebRequest.DeviceId, devicePasswordWebRequest.DevicePassword))
             {
                 return Ok("SetDevicePasswordById() success!");
             }
 
             return BadRequest("SetDevicePasswordById() failed!");
         }
+
+        [HttpPost("ExportDeviceConfigurations/{deviceId}/{deviceBrand}/{deviceModel}")]
+        public async Task<string> ExportDeviceConfigurations(Guid deviceId, string deviceBrand, string deviceModel)
+        {
+            return await _manageDeviceService.ExportDeviceConfigurationsAsync(deviceId, deviceBrand, deviceModel); 
+	    }
+
+        [HttpPost("ImportDeviceConfigurations/{deviceId}/{deviceConfigurationJson}")]
+        public async Task<ActionResult> ImportDeviceConfigurations(Guid deviceId, string deviceConfigurationJson) 
+	    {
+            if (await _manageDeviceService.ImportDeviceConfigurationsAsync(deviceId, deviceConfigurationJson))
+            {
+                return Ok("ImportDeviceConfigurations() success!");
+	        }
+
+            return BadRequest("ImportDeviceConfigurations() failed!");
+	    }
     }
 }
 

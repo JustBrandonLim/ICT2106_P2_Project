@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SmartHomeManager.Domain.DeviceDomain.Entities.DTOs
 {
-	public class DeviceSettingsWebRequest
+	public class DeviceMetadataWebRequest
 	{
         [Required]
         public Guid DeviceId { get; set; }
