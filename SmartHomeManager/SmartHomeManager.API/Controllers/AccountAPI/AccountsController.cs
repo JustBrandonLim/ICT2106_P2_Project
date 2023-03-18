@@ -24,14 +24,15 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
     {
         // dependency injection is just saying this class can use this thing
         // in this context - accounts controller can use account service
-        private readonly AccountService _accountService;
+        private readonly AccountReadService _accountReadService;
+        private readonly AccountWriteService _accountWriteService;
         private readonly EmailService _emailService;
         private readonly TwoFactorAuthService _twoFactorAuthService;
 
-        public AccountsController(IAccountRepository accountRepository, IAccountService accountService, 
-            IEmailBuilder emailBuilder, ITwoFactorAuthService twoFactorAuthService)
+        public AccountsController(IAccountRepository accountRepository, IEmailBuilder emailBuilder, IAccountPasswordHashService accountPasswordHashService)
         {
-            _accountService = new(accountRepository);
+            _accountReadService = new(accountRepository);
+            _accountWriteService = new(accountRepository, accountPasswordHashService);
             _emailService = new(accountRepository, emailBuilder);
             _twoFactorAuthService = new();
         }
@@ -46,7 +47,7 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
         {
-            IEnumerable<Account> accounts = await _accountService.GetAccounts();
+            IEnumerable<Account> accounts = await _accountReadService.GetAccounts();
 
             if (!accounts.Any())
             {
@@ -65,7 +66,7 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         [HttpGet("{accountId}")]
         public async Task<ActionResult<Account>> GetAccountByAccountId(Guid accountId)
         {
-            Account? account = await _accountService.GetAccountByAccountId(accountId);
+            Account? account = await _accountReadService.GetAccountByAccountId(accountId);
 
             if (account == null)
             {
@@ -86,13 +87,13 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         [HttpPut("{accountId}")]
         public async Task<IActionResult> PutAccount(Guid accountId, [FromBody] AccountWebRequest accountWebRequest)
         {
-            Account? account = await _accountService.GetAccountByAccountId(accountId);
+            Account? account = await _accountReadService.GetAccountByAccountId(accountId);
             if (account == null)
             {
                 return NotFound(1);
             }
 
-            if (await _accountService.UpdateAccount(account, accountWebRequest))
+            if (await _accountWriteService.UpdateAccount(account, accountWebRequest))
             {
                 return Ok(1);
             }
@@ -114,7 +115,7 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         {
 
             // controller will invoke a service function
-            int response = await _accountService.CreateAccount(accountWebRequest);
+            int response = await _accountWriteService.CreateAccount(accountWebRequest);
 
             // if create account is successful
             if (response == 1)
@@ -153,7 +154,7 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         [HttpPost("login")]
         public async Task<ActionResult<Account>> VerifyLogin([FromBody]LoginWebRequest login)
         {
-            LoginResponse? loginResponse = await _accountService.VerifyLogin(login);
+            LoginResponse? loginResponse = await _accountReadService.VerifyLogin(login);
 
             // login successful
             if (loginResponse != null)
@@ -174,7 +175,7 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         [HttpPost("passwordVerification")]
         public async Task<ActionResult> VerifyPassword([FromBody] PasswordWebRequest passwordWebRequest)
         {
-            bool verified = await _accountService.VerifyPassword(passwordWebRequest);
+            bool verified = await _accountReadService.VerifyPassword(passwordWebRequest);
 
             // password match
             if (verified)
@@ -198,7 +199,7 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         public async Task<IActionResult> PutNewPassword([FromBody] PasswordWebRequest passwordWebRequest)
         {
 
-            if (await _accountService.UpdatePassword(passwordWebRequest))
+            if (await _accountWriteService.UpdatePassword(passwordWebRequest))
             {
                 return Ok();
             }
@@ -218,13 +219,13 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         public async Task<IActionResult> DeleteAccount(Guid accountId)
         {
 
-            Account? account = await _accountService.GetAccountByAccountId(accountId);
+            Account? account = await _accountReadService.GetAccountByAccountId(accountId);
             if (account == null)
             {
                 return NotFound(1);
             }
 
-            if (await _accountService.DeleteAccount(account))
+            if (await _accountWriteService.DeleteAccount(account))
             {
                 return Ok(1);
             }
@@ -277,7 +278,7 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         [HttpGet("security/get-2fa-flag")]
         public async Task<ActionResult<bool>> GetTwoFactorFlag(Guid accountId)
         {
-            bool? response = await _accountService.GetTwoFactorFlag(accountId);
+            bool? response = await _accountReadService.GetTwoFactorFlag(accountId);
 
             if (response == null)
             {
@@ -294,7 +295,7 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         [HttpPut("security/update-2fa-flag")]
         public async Task<ActionResult<bool>> GetTwoFactorFlag(Guid accountId, bool twoFactorFlag)
         {
-            bool? response = await _accountService.UpdateTwoFactorFlag(accountId, twoFactorFlag);
+            bool? response = await _accountWriteService.UpdateTwoFactorFlag(accountId, twoFactorFlag);
 
             if (response == null)
             {

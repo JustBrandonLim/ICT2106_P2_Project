@@ -20,7 +20,7 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
     {
         private readonly ProfileService _profileService;
 
-        public ProfilesController(IProfileRepository profileRepository, IProfileService profileService)
+        public ProfilesController(IProfileRepository profileRepository)
         {
             _profileService = new(profileRepository);
         }
