@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.AccountDomain.DTOs;
 using SmartHomeManager.Domain.AccountDomain.Entities;
+using SmartHomeManager.Domain.AccountDomain.Factory;
 using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Interfaces;
@@ -25,16 +26,25 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 
         public async Task<int> CreateProfile(ProfileWebRequest profileWebRequest)
         {
-            Profile newProfile = new Profile();
+            //Insert profileWebRequest into Factory
+
+            var profileFactory = ProfileFactory.makeProfile(profileWebRequest);
+
+            /*Profile newProfile = new Profile();
             newProfile.ProfileId = Guid.NewGuid();
             newProfile.Name = profileWebRequest.Name;
             newProfile.Description = profileWebRequest.Description;
             newProfile.Pin = profileWebRequest.Pin;
-            newProfile.AccountId = Guid.Parse(profileWebRequest.AccountId);
-            /*newProfile.Scenarios = new List<Scenario>();*/
+            newProfile.AccountId = profileWebRequest.AccountId;
+            *//*newProfile.Scenarios = new List<Scenario>();*/
 
+            //The repo and db is using the profile entity,
+            //end up doing the same thing with DTO but extra steps
+            //Another way is to 
+            
 
-            bool response = await _profileRepository.AddAsync(newProfile);
+            //Need new addAsync functions for different profiles
+            bool response = await _profileRepository.AddAsync(profileFactory);
 
             if (response)
             {

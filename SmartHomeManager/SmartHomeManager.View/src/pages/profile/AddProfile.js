@@ -48,7 +48,7 @@ function AddedProfilePage() {
     //Access API to create profile
     const handleSubmitClick = () => {
         //JSO stringify to send to api controller
-        const accountId = "11111111111111111111111111111111";
+        const accountId = "11111111-1111-1111-1111-111111111111";
         if (inputPin == "") {
             setInputPin(null)
         }
