@@ -20,21 +20,21 @@ namespace SmartHomeManager.Domain.AccountDomain.Builder
         private const string From = "1004companyemail@gmail.com";
         private const string GoogleAppPassword = "alirejlqrkfqisji";
 
-        private string givenBody = "";
-        private string givenRecipient = "";
-        private string givenSubject = "";
+        private string GivenBody = "";
+        private string GivenRecipient = "";
+        private string GivenSubject = "";
 
-        private EmailProduct emailProduct = new EmailProduct();
+        private EmailProduct ReusableEmailProduct = new EmailProduct();
 
         // Reset function for builder
         public void Reset()
         {
-            emailProduct = new EmailProduct();
+            ReusableEmailProduct = new EmailProduct();
         }
 
         public EmailProduct GetProduct()
         {
-            EmailProduct resultProduct = emailProduct;
+            EmailProduct resultProduct = ReusableEmailProduct;
             Reset();
 
             return resultProduct;
@@ -44,9 +44,9 @@ namespace SmartHomeManager.Domain.AccountDomain.Builder
         {
             Reset();
 
-            this.givenBody = givenBody;
-            this.givenRecipient = givenRecipient;
-            this.givenSubject = givenSubject;
+            GivenBody = givenBody;
+            GivenRecipient = givenRecipient;
+            GivenSubject = givenSubject;
 
             BuildSmtpClient();
             BuildMailMessage();
@@ -61,7 +61,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Builder
                 EnableSsl = true,
             };
 
-            emailProduct.Client = smtpClient;
+            ReusableEmailProduct.Client = smtpClient;
         }
 
         public void BuildMailMessage()
@@ -69,14 +69,14 @@ namespace SmartHomeManager.Domain.AccountDomain.Builder
             var mailMessage = new MailMessage
             {
                 From = new MailAddress(From),
-                Subject = givenSubject,
-                Body = givenBody,
+                Subject = GivenSubject,
+                Body = GivenBody,
                 IsBodyHtml = true,
             };
 
-            mailMessage.To.Add(new MailAddress(givenRecipient));
+            mailMessage.To.Add(new MailAddress(GivenRecipient));
 
-            emailProduct.Message = mailMessage;
+            ReusableEmailProduct.Message = mailMessage;
         }
 
 
