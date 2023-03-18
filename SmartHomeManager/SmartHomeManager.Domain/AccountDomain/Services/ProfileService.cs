@@ -26,24 +26,10 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 
         public async Task<int> CreateProfile(ProfileWebRequest profileWebRequest)
         {
-            //Insert profileWebRequest into Factory
+            //Insert profileWebRequest into Factory to create profile
 
             var profileFactory = ProfileFactory.makeProfile(profileWebRequest);
 
-            /*Profile newProfile = new Profile();
-            newProfile.ProfileId = Guid.NewGuid();
-            newProfile.Name = profileWebRequest.Name;
-            newProfile.Description = profileWebRequest.Description;
-            newProfile.Pin = profileWebRequest.Pin;
-            newProfile.AccountId = profileWebRequest.AccountId;
-            *//*newProfile.Scenarios = new List<Scenario>();*/
-
-            //The repo and db is using the profile entity,
-            //end up doing the same thing with DTO but extra steps
-            //Another way is to 
-            
-
-            //Need new addAsync functions for different profiles
             bool response = await _profileRepository.AddAsync(profileFactory);
 
             if (response)
