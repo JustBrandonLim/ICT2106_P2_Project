@@ -24,22 +24,35 @@ namespace SmartHomeManager.Domain.AccountDomain.Builder
         private string givenRecipient = "";
         private string givenSubject = "";
 
-        public EmailProduct BuildEmailProduct(string givenBody, string givenRecipient, string givenSubject)
+        private EmailProduct emailProduct = new EmailProduct();
+
+        // Reset function for builder
+        public void Reset()
         {
+            emailProduct = new EmailProduct();
+        }
+
+        public EmailProduct GetProduct()
+        {
+            EmailProduct resultProduct = emailProduct;
+            Reset();
+
+            return resultProduct;
+        }
+
+        public void BuildEmailProduct(string givenBody, string givenRecipient, string givenSubject)
+        {
+            Reset();
+
             this.givenBody = givenBody;
             this.givenRecipient = givenRecipient;
             this.givenSubject = givenSubject;
 
-            EmailProduct newEmailProduct = new()
-            {
-                Client = BuildSmtpClient(),
-                Message = BuildMailMessage()
-            };
-
-            return newEmailProduct;
+            BuildSmtpClient();
+            BuildMailMessage();
         }
 
-        public SmtpClient BuildSmtpClient()
+        public void BuildSmtpClient()
         {
             var smtpClient = new SmtpClient("smtp.gmail.com")
             {
@@ -48,10 +61,10 @@ namespace SmartHomeManager.Domain.AccountDomain.Builder
                 EnableSsl = true,
             };
 
-            return smtpClient;
+            emailProduct.Client = smtpClient;
         }
 
-        public MailMessage BuildMailMessage()
+        public void BuildMailMessage()
         {
             var mailMessage = new MailMessage
             {
@@ -63,7 +76,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Builder
 
             mailMessage.To.Add(new MailAddress(givenRecipient));
 
-            return mailMessage;
+            emailProduct.Message = mailMessage;
         }
 
 
