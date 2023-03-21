@@ -37,7 +37,7 @@ export default function ManageDeviceSettings() {
             .then((data) => {
                 setDeviceSettings(data);
                 setNewDeviceName(data.deviceName);
-                setNewDevicePassword(data.devicePassword);
+                setNewDevicePassword(data.devicePassword || "");
                 setNewDeviceType(data.deviceTypeName);
             });
         fetch(`https://localhost:7140/api/RegisterDevice/GetAllDeviceTypes/`)
@@ -51,7 +51,7 @@ export default function ManageDeviceSettings() {
         e.preventDefault();
 
         if (newDevicePassword == "") {
-            setNewDevicePassword(null)
+            setNewDevicePassword("")
         }
 
         fetch("https://localhost:7140/api/ManageDevice/ApplyDeviceMetadata", {
