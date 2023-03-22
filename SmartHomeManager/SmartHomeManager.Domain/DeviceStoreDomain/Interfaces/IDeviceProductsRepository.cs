@@ -6,9 +6,9 @@ namespace SmartHomeManager.Domain.DeviceStoreDomain.Interfaces;
 
 public interface IDeviceProductsRepository
 {
-    Task<DeviceProduct?> Get(int deviceId);
-    Task<IEnumerable<DeviceProduct>> GetAllDeviceProducts();
-    void UpdateQuantity(DeviceProduct device);
+    Task<IDeviceProducts?> Get(int deviceId);
+    Task<IEnumerable<IDeviceProducts>> GetAllDeviceProducts();
+    void UpdateQuantity(IDeviceProducts device);
     Task SaveChangesAsync();
 }
 

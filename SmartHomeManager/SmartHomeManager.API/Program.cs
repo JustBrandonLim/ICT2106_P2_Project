@@ -49,13 +49,12 @@ using SmartHomeManager.Domain.NotificationDomain.Interfaces;
 using SmartHomeManager.DataSource.DeviceStoreDataSource;
 using SmartHomeManager.DataSource.TwoDHomeDataSource;
 using SmartHomeManager.Domain.DeviceStoreDomain.Entities;
+using SmartHomeManager.Domain.DeviceStoreDomain.Services;
 using SmartHomeManager.Domain.DeviceStoreDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Services;
 using SmartHomeManager.Domain.TwoDHomeDomain.Interfaces;
 using SmartHomeManager.Domain.TwoDHomeDomain.Mocks;
 using SmartHomeManager.Domain.TwoDHomeDomain.Services;
-
-
 namespace SmartHomeManager.API;
 
 public class Program
@@ -115,6 +114,10 @@ public class Program
         builder.Services.AddScoped<IRoomWriteService, RoomWriteService>();
         builder.Services.AddScoped<IRoomRepository, RoomRepository>();
         builder.Services.AddScoped<IDeviceInformationServiceMock, DeviceRepositoryMock>();
+
+        //DEVICE PRODUCT STORE
+        builder.Services.AddScoped<IDeviceProductsRepository, DeviceProductRepository>();
+        builder.Services.AddScoped<IDeviceProductService, DeviceProductService>();
 
         // 2DHOME
         builder.Services.AddScoped<ITwoDHomeRepository, TwoDHomeRepository>();

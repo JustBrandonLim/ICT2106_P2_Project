@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.DeviceStoreDomain.Entities;
 using SmartHomeManager.Domain.DeviceStoreDomain.Interfaces;
+using SmartHomeManager.Domain.DeviceStoreDomain.Decorator;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 
 namespace SmartHomeManager.DataSource.DeviceStoreDataSource;
@@ -19,23 +20,29 @@ public class DeviceProductRepository : IDeviceProductsRepository
     }
 
 
-    public async Task<DeviceProduct?> Get(int id)
+    public async Task<IDeviceProducts?> Get(int id)
     {
         var result = await _dbSet.FindAsync(id);
+    
 
         return result;
     }
 
-    public async Task<IEnumerable<DeviceProduct>> GetAllDeviceProducts()
+    public async Task<IEnumerable<IDeviceProducts>> GetAllDeviceProducts()
     {
         IEnumerable<DeviceProduct> query = await _dbSet.ToListAsync();
+        
         return query;
     }
 
-    public void UpdateQuantity(DeviceProduct device)
+    public void UpdateQuantity(IDeviceProducts device)
     {
-
-        _dbSet.Update(device);
+        if (device is ProductDiscountDecorator decorator)
+        {
+            DeviceProduct undecoratedDevice = decorator.UndecoratedProduct;
+            _dbSet.Update(undecoratedDevice);
+        }
+        // _dbSet.Update(device);
     }
 
     public async Task SaveChangesAsync()
