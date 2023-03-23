@@ -38,7 +38,7 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
 
             if (!profiles.Any())
                 return NotFound();
-           
+
             return Ok(profiles);
         }
 
@@ -95,6 +95,22 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
 
             return Ok(listOfDeviceIds);
         }
+
+        [HttpPost("check-Pin")] // Go to check-pin method. if it's check-pin/{profileId} means need to key in profileId
+        public async Task<ActionResult> ValidatePinByProfileId([FromBody] ParentControlPin pinInfo)
+        {
+            int response = await _profileService.CheckPinByProfileId(pinInfo);
+                if (response == 1)
+            {
+                return Ok(1);   // child profile correct pin
+            }
+                else if (response == 2)
+            {
+                return Ok(2);   // child profile wrong pin
+            }
+                return BadRequest(3);   // adult profile 
+        }
+
 
         /*
                 * POST: api/Profiles

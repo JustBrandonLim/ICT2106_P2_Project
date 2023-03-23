@@ -46,8 +46,6 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
                     Debug.WriteLine("Successfully created profile");
                     Debug.WriteLine(newProfile.ProfileId);
                     Debug.WriteLine(newProfile.Pin);
-                    Debug.WriteLine(ChildChecker(newProfile.ProfileId));
-
                     return 1;
                 }
             }
@@ -133,23 +131,27 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             /*throw new NotImplementedException();*/
         }
 
-        public async Task<bool> ChildChecker(Guid id)
+        public async Task<int> CheckPinByProfileId(ParentControlPin PinInfo)
         {
-            Profile? profile = await _profileRepository.GetByIdAsync(id);
-            int Pin = profile.Pin;
-  
-
-            // when the profile has 4 digit pin field keyed in, meaning profile is for child 
-            if (Pin >= 0 && Pin <= 9999){
+            // Get the profile with the profileId
+            Profile? profile = await _profileRepository.GetByIdAsync(PinInfo.ProfileId);
+            int? UserPin = PinInfo.Pin; // user keyed in 
+            
+            if (UserPin >= 0 && UserPin <= 9999)    // child profile since theres pin 
+            {
                 // restrict access to Device page and Account settings page, prompt to key in pin to access the pages
-                Debug.WriteLine("Child profile set: "+ profile.Pin);
+                /*Debug.WriteLine("Child profile: " + profile.Pin)*/
 
-
-                return true;    // it's a child profile
+                if (profile.Pin == UserPin) {
+                    return 1;    // child profile with correct pin
+                }
+                return 2;    // child profile with wrong pin
             }
-            Debug.WriteLine("Adult profile set");
-            return false;   // it's an adult
+            Debug.WriteLine("Adult profile ");
+            return 3;   // it's an adult
+
         }
+
 
     }
 }
