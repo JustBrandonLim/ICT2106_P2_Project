@@ -62,6 +62,17 @@ namespace SmartHomeManager.API.Controllers.DeviceAPI
             return BadRequest("AppleDeviceConfiguration() failed!");
 	    }
 
+        [HttpPost("ApplyDeviceConfigurationsSameType")]
+        public async Task<ActionResult> ApplyDeviceConfigurationsSameType([FromBody] DeviceConfigurationWebRequest deviceConfigurationWebRequest) 
+	    { 
+            if (await _manageDeviceService.ApplyDeviceConfigurationsSameTypeAsync(deviceConfigurationWebRequest.ConfigurationKey, deviceConfigurationWebRequest.DeviceBrand, deviceConfigurationWebRequest.DeviceModel, deviceConfigurationWebRequest.DeviceId, deviceConfigurationWebRequest.ConfigurationValue))
+            {
+                return Ok("ApplyDeviceConfigurationsSameType() success!");
+            }
+
+            return BadRequest("AppleDeviceConfigurationsSameType() failed!");
+	    }
+
         [HttpPost("ApplyDeviceMetadata")]
         public async Task<ActionResult> ApplyDeviceMetadata([FromBody] DeviceMetadataWebRequest deviceMetadataWebRequest)
         {
