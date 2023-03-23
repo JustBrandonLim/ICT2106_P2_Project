@@ -7,7 +7,7 @@ public abstract class ProductDiscountDecorator : IDeviceProducts
     protected readonly IDeviceProducts _product;
     protected double? _discountedPrice;
 
-    public ProductDiscountDecorator(IDeviceProducts product)
+    protected ProductDiscountDecorator(IDeviceProducts product)
     {
         _product = product;
         ApplyDiscount();
