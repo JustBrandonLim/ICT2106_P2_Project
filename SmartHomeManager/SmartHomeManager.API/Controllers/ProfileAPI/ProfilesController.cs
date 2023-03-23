@@ -102,15 +102,30 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
         {
             int response = await _profileService.CheckPinByProfileId(pinInfo);
                 Debug.WriteLine("response is : " + response);
-                if (response == 1)
+            if (response == 1)
             {
                 return Ok(1);   // child profile correct pin
             }
-                else if (response == 2)
+            else if (response == 2)
             {
                 return Ok(2);   // child profile wrong pin
             }
-                return BadRequest(3);   // adult profile 
+            return BadRequest(3); 
+        }
+
+        // check if the profile holder is adult or child
+        [HttpPost("adult-checker")] 
+        public async Task<ActionResult> ValidateAdult([FromBody] ProfileIdRequest profileIdInfo)
+        {
+            int response = await _profileService.CheckAdultProfile(profileIdInfo);
+            Debug.WriteLine("response is : " + response);
+            if (response == 1)
+            {
+                return Ok(1);   // adult profile
+            }
+            else {
+                return Ok(2);   // child profile 
+            }
         }
 
 

@@ -28,6 +28,13 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import user1 from "./img/user1.png";
@@ -37,12 +44,16 @@ export default function ProfileSelected(): JSX.Element {
   const location = useLocation();
   const profileId = location.state?.profileId;
 
+
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
   const pinCheckRef = useRef();
   const [inputPin, setInputPin] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+
+  // Function to retrieve all the profile
   const getAllProfiles = async () => {
     await fetch(`https://localhost:7140/api/Profiles/${profileId}`, {
       method: "GET",
@@ -58,13 +69,53 @@ export default function ProfileSelected(): JSX.Element {
     });
   };
 
+ // Function to check if it's adult profile
+  const checkAdultProfile = async () =>{
+    console.log("running check adult profile function ")
+    const idObj = {"ProfileId": profileId}
+    await fetch('https://localhost:7140/api/Profiles/adult-checker',{
+      method: "POST",
+      body: JSON.stringify(idObj),
+      headers:{
+        "Content-Type": "application/problem+json; charset=utf-8 ",
+      },
+    }).then(async (response) => {
+
+      if (response.ok){
+        const result = await response.json()
+        if (result == 1){
+          // adult profile\
+          console.log("adult");
+          navigate("/selectnearbydevice");
+
+        }
+        else{
+          // child profile
+          console.log("child");
+          onOpen();
+
+        }
+      }
+    }) ;
+  };
+
   getAllProfiles();
+
 
   const handlePinChange = (event) => {
     const pin = event.target.value.trim().slice(0, 4); // Trims whitespace and limits input to 4 characters
     setInputPin(pin || null);
   };
 
+
+  // modals
+  function handleOpenModal() {
+    setIsModalOpen(true);
+  }
+
+  function handleCloseModal() {
+    setIsModalOpen(false);
+  }
 
   // Function to verify pin details
   const pinObject = { "Pin": inputPin, "ProfileId": profileId };
@@ -80,16 +131,17 @@ export default function ProfileSelected(): JSX.Element {
       if (response.ok) {
         // find the result of the response 
         var result = await response.json();
+        console.log("the result is " + result)
         if (result == 1) {
           // child profile with correct pin
-          navigate("/analytics");
+          navigate("/selectnearbydevice");
         } else if (result == 2) {
           {
-            navigate("/rooms");
+            handleOpenModal();
           } // child profile with wrong pin
-        }
-      } else { // adult profile
-        navigate("/selectnearbydevice");
+        }      
+      }else{
+        // do nothing for now
       }
     });
   };
@@ -135,7 +187,7 @@ export default function ProfileSelected(): JSX.Element {
                 <Button variant="solid" colorScheme="green" marginRight="10px">
                   Share Profile
                 </Button>
-                <Button colorScheme="red" onClick={onOpen}>
+                <Button colorScheme="red" onClick={checkAdultProfile}>
                   Add devices
                 </Button>
 
@@ -143,6 +195,7 @@ export default function ProfileSelected(): JSX.Element {
                   isOpen={isOpen}
                   leastDestructiveRef={cancelRef}
                   onClose={onClose}
+                  isCentered
                 >
                   <AlertDialogOverlay>
                     <AlertDialogContent>
@@ -168,6 +221,26 @@ export default function ProfileSelected(): JSX.Element {
                         <Button ref={pinCheckRef} onClick={handleSubmitClick}>
                           Submit
                         </Button>
+
+                        <Modal isOpen={isModalOpen} onClose={handleCloseModal} isCentered>
+                        <ModalOverlay />
+                        <ModalContent>
+                            <ModalHeader fontSize="lg" fontWeight="bold"
+                            >Error!</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody fontSize="lg" >
+                                You have keyed in the wrong PIN,
+                                please try again. 
+                            </ModalBody>
+
+                            <ModalFooter>
+                                <Button colorScheme='red' mr={3} onClick={handleCloseModal}>
+                                    Ok
+                                </Button>
+                            </ModalFooter>
+                        </ModalContent>
+                    </Modal>
+
                         <Button
                           ref={cancelRef}
                           colorScheme="red"

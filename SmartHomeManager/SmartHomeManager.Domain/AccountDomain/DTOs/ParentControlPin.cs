@@ -14,4 +14,10 @@ namespace SmartHomeManager.Domain.AccountDomain.DTOs
 
         public int? Pin { get; set; }
     }
+
+    public class ProfileIdRequest
+    {
+        [Required]
+        public Guid ProfileId { get; set; }
+    }
 }

@@ -129,6 +129,13 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             // Get the profile with the profileId
             Profile? profile = await _profileRepository.GetByIdAsync(PinInfo.ProfileId);
             int? UserPin = PinInfo.Pin; // user keyed in 
+            Debug.WriteLine(" profile is " + profile);
+
+            if (profile.Pin == null)
+            { 
+                Debug.WriteLine("Adult profile ");
+                return 3;    // it's an adult
+            }
             
             if (UserPin >= 0 && UserPin <= 9999)    // child profile since theres pin 
             {
@@ -140,9 +147,20 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
                 }
                 return 2;    // child profile with wrong pin
             }
-            Debug.WriteLine("Adult profile ");
-            return 3;   // it's an adult
+         
+            return 4;  
 
+        }
+
+
+        public async Task<int> CheckAdultProfile(ProfileIdRequest ProfileIdInfo)
+        {
+            Profile? profile = await _profileRepository.GetByIdAsync(ProfileIdInfo.ProfileId);
+            if (profile.Pin == null)
+            {
+                return 1;
+            }
+            return 2;
         }
 
 
