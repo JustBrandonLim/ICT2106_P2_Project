@@ -1,6 +1,6 @@
 namespace SmartHomeManager.Domain.DeviceStoreDomain.Entities;
 
-public interface IDeviceProducts
+public interface IDeviceProduct
 {
     int ProductId { get; }
     string ProductName { get; }
@@ -11,5 +11,4 @@ public interface IDeviceProducts
     double ProductPrice { get; }
     int ProductQuantity { get; set; }
     string ProductImageUrl { get; }
-    
 }

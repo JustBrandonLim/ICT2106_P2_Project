@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using SmartHomeManager.Domain.DeviceStoreDomain.Interfaces;
 
 namespace SmartHomeManager.Domain.DeviceStoreDomain.Entities;
 
-public class DeviceProduct :IDeviceProducts
+public class DeviceProduct : IDeviceProduct
 {
     [Key]
     [Required]
@@ -26,5 +25,4 @@ public class DeviceProduct :IDeviceProducts
     [Required] public int ProductQuantity { get; set; }
 
     [Required] public string ProductImageUrl { get; set; }
-
 }

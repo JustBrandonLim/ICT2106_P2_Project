@@ -1,14 +1,11 @@
-﻿using System;
-using SmartHomeManager.Domain.DeviceStoreDomain.Entities;
-using SmartHomeManager.Domain.RoomDomain.Entities;
+﻿using SmartHomeManager.Domain.DeviceStoreDomain.Entities;
 
 namespace SmartHomeManager.Domain.DeviceStoreDomain.Interfaces;
 
 public interface IDeviceProductsRepository
 {
-    Task<IDeviceProducts?> Get(int deviceId);
-    Task<IEnumerable<IDeviceProducts>> GetAllDeviceProducts();
-    void UpdateQuantity(IDeviceProducts device);
+    Task<IDeviceProduct?> Get(int deviceId);
+    Task<IEnumerable<IDeviceProduct>> GetAllDeviceProducts();
+    void UpdateQuantity(IDeviceProduct device);
     Task SaveChangesAsync();
 }
-

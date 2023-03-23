@@ -1,16 +1,11 @@
-﻿using System;
-using SmartHomeManager.Domain.DeviceStoreDomain.Entities;
+﻿using SmartHomeManager.Domain.DeviceStoreDomain.Entities;
 
-namespace SmartHomeManager.Domain.DeviceStoreDomain.Interfaces
+namespace SmartHomeManager.Domain.DeviceStoreDomain.Interfaces;
+
+public interface IDeviceProductService
 {
-	public interface IDeviceProductService
-	{
-        Task<IEnumerable<IDeviceProducts>> GetAllDeviceProducts();
-        Task<IEnumerable<IDeviceProducts>> GetAllDeviceProductsWithSummerDiscount();
-        Task<IEnumerable<IDeviceProducts>> GetAllDeviceProductsWithWinterDiscount();
-        Task PurchaseDevice(int device_id, int quantity);
-
-
-    }
+    Task<IEnumerable<IDeviceProduct>> GetAllDeviceProducts();
+    Task<IEnumerable<IDeviceProduct>> GetAllDeviceProductsWithSummerDiscount();
+    Task<IEnumerable<IDeviceProduct>> GetAllDeviceProductsWithWinterDiscount();
+    Task PurchaseDevice(int deviceProductId, int quantity);
 }
-
