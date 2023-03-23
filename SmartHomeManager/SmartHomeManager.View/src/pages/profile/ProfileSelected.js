@@ -1,5 +1,4 @@
-import { React, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { React, useState } from 'react';
 import {
   Button,
   Flex,
@@ -38,7 +37,10 @@ export default function ProfileSelected(): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
   const pinCheckRef = useRef();
-  const [inputPin, setInputPin] = useState("");
+    const [inputPin, setInputPin] = useState("");
+    const [profileDetails, updateProfileDetails] = useState([])
+    const location = useLocation();
+    const profileId = location.state?.profileId;
 
   const getAllProfiles = async () => {
     const profileId = "22222222-2222-2222-2222-222222222222";

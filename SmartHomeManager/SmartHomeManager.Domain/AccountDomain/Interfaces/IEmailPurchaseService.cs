@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace SmartHomeManager.Domain.AccountDomain.Interfaces
 {
-    public interface IEmailService
+    public interface IEmailPurchaseService
     {
-        public bool SendRegistrationEmail(string username, string recipient);
         public Task<bool> SendPurchaseEmailConfirmation(Guid accountId);
-
     }
 }

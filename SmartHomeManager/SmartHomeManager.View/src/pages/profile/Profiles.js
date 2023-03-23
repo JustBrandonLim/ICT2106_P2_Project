@@ -1,4 +1,5 @@
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from "react-router-dom"
 import { CardComponent, } from "components/Profile/Card";
 import { Grid, GridItem, Box } from "@chakra-ui/react"
 import user1 from "./img/user1.png"
@@ -11,24 +12,22 @@ import user6 from "./img/user6.png"
 export default function ProfileLanding() {
 
     const [profileDetails, updateProfileDetails] = useState([])
-    const getAllProfiles = async () => {
+
+    useEffect(() => {
         const accountId = "11111111-1111-1111-1111-111111111111";
-        await fetch(`https://localhost:7140/api/Profiles/get-profiles/${accountId}`, {
-            method: 'GET',
-            headers: {
-                accept: 'text/plain'
-            },
-        })
-            .then(async response => {
-                const data = await response.json()
-
-                if (response.ok) {
-                    updateProfileDetails(data)
-                }
-            })
-    }
-
-    getAllProfiles()
+        const fetchProfiles = async () => {
+            const response = await fetch(`https://localhost:7140/api/Profiles/get-profiles/${accountId}`, {
+                headers: {
+                    accept: 'application/json'
+                },
+            });
+            const data = await response.json();
+            if (response.ok) {
+                updateProfileDetails(data);
+            }
+        };
+        fetchProfiles();
+    }, []);
 
     return (
         <>
@@ -36,11 +35,15 @@ export default function ProfileLanding() {
 
                 {
                     profileDetails.map((item) => (
-                            <Box key={item.profileId}  w="100%" padding="10dp" marginBottom="10dp" maxW="400px" h="100px" bg="gray.50">
-                                <CardComponent
+                        <Box key={item.profileId} w="100%" padding="10dp" marginBottom="10dp" maxW="400px" h="100px" bg="gray.50"
+                                                  >
+                            
+                            <CardComponent
+                                profileId={item.profileId }
                                     imgSrc={user1}
                                     profileName={item.name}
                                     description={item.description}
+                                    
                                 >
                                 </CardComponent>
                             </Box>

@@ -14,7 +14,7 @@ using SmartHomeManager.Domain.AccountDomain.Product;
 
 namespace SmartHomeManager.Domain.AccountDomain.Services
 {
-    public class EmailService : IEmailService
+    public class EmailService : IEmailPurchaseService, IEmailRegistrationService
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IEmailBuilder _emailBuilder;
@@ -30,7 +30,8 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             string messageBody = $"<div><h2>Hello {username},</h2>  <h2>Thank you for registering an account with Company, we hope you enjoy your experience.</h2></div>";
             string subject = "Company Account Registration";
 
-            EmailProduct emailProduct = _emailBuilder.BuildEmailProduct(messageBody, recipient, subject);
+            _emailBuilder.BuildEmailProduct(messageBody, recipient, subject);
+            EmailProduct emailProduct = _emailBuilder.GetProduct();
 
             try
             {
@@ -60,7 +61,8 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             {
                 try
                 {
-                    EmailProduct emailProduct = _emailBuilder.BuildEmailProduct(messageBody, account.Email.ToString(), "Purchase Confirmation");
+                    _emailBuilder.BuildEmailProduct(messageBody, account.Email.ToString(), "Purchase Confirmation");
+                    EmailProduct emailProduct = _emailBuilder.GetProduct();
 
                     emailProduct.Client.Send(emailProduct.Message);
                     return true;

@@ -20,26 +20,39 @@ namespace SmartHomeManager.Domain.AccountDomain.Builder
         private const string From = "1004companyemail@gmail.com";
         private const string GoogleAppPassword = "alirejlqrkfqisji";
 
-        private string givenBody = "";
-        private string givenRecipient = "";
-        private string givenSubject = "";
+        private string GivenBody = "";
+        private string GivenRecipient = "";
+        private string GivenSubject = "";
 
-        public EmailProduct BuildEmailProduct(string givenBody, string givenRecipient, string givenSubject)
+        private EmailProduct ReusableEmailProduct = new EmailProduct();
+
+        // Reset function for builder
+        public void Reset()
         {
-            this.givenBody = givenBody;
-            this.givenRecipient = givenRecipient;
-            this.givenSubject = givenSubject;
-
-            EmailProduct newEmailProduct = new()
-            {
-                Client = BuildSmtpClient(),
-                Message = BuildMailMessage()
-            };
-
-            return newEmailProduct;
+            ReusableEmailProduct = new EmailProduct();
         }
 
-        public SmtpClient BuildSmtpClient()
+        public EmailProduct GetProduct()
+        {
+            EmailProduct resultProduct = ReusableEmailProduct;
+            Reset();
+
+            return resultProduct;
+        }
+
+        public void BuildEmailProduct(string givenBody, string givenRecipient, string givenSubject)
+        {
+            Reset();
+
+            GivenBody = givenBody;
+            GivenRecipient = givenRecipient;
+            GivenSubject = givenSubject;
+
+            BuildSmtpClient();
+            BuildMailMessage();
+        }
+
+        public void BuildSmtpClient()
         {
             var smtpClient = new SmtpClient("smtp.gmail.com")
             {
@@ -48,22 +61,22 @@ namespace SmartHomeManager.Domain.AccountDomain.Builder
                 EnableSsl = true,
             };
 
-            return smtpClient;
+            ReusableEmailProduct.Client = smtpClient;
         }
 
-        public MailMessage BuildMailMessage()
+        public void BuildMailMessage()
         {
             var mailMessage = new MailMessage
             {
                 From = new MailAddress(From),
-                Subject = givenSubject,
-                Body = givenBody,
+                Subject = GivenSubject,
+                Body = GivenBody,
                 IsBodyHtml = true,
             };
 
-            mailMessage.To.Add(new MailAddress(givenRecipient));
+            mailMessage.To.Add(new MailAddress(GivenRecipient));
 
-            return mailMessage;
+            ReusableEmailProduct.Message = mailMessage;
         }
 
 

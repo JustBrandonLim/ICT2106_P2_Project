@@ -3,7 +3,7 @@ import { Card, CardHeader, CardBody, CardFooter, Stack, Heading, Text, Button, I
 import { Link, useNavigate } from "react-router-dom"
 import { css } from '@emotion/react';
 
-function ProfileCard({ profileName, imgSrc, Description }) {
+function ProfileCard({ profileName, imgSrc, Description, profileId }) {
 
     const navigate = useNavigate();
 
@@ -12,19 +12,18 @@ function ProfileCard({ profileName, imgSrc, Description }) {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transform: translateY(-2px);
     }`;
-
-
-    const handleEditPinClick = () => {
-        //Handle edit pin click
-    }
-    const handleEditProfileClick = (profileName, imgSrc, Description) => {
+    const handleEditProfileClick = (profileName, imgSrc, Description, profileId) => {
         // Handle edit profile click
-        navigate(`/edit-profile`, { state: { profileName, imgSrc, Description } });
+        navigate(`/edit-profile`, { state: { profileId, profileName, imgSrc, Description, profileId } });
     }
 
     const handleAddProfileClick = () => {
         // Handle add profile click
         navigate(`/add-profile`)
+    }
+
+    function handleCardClick(profileId) {
+        navigate(`/profile-selected`, { state: { profileId } })
     }
     return (
 
@@ -34,8 +33,12 @@ function ProfileCard({ profileName, imgSrc, Description }) {
             direction={{ base: 'column', sm: 'row' }}
             size="sm"
             h="250px"
-            overflow='hidden'>
-            <Link to="/profile-selected">
+            overflow='hidden' >
+            <Button onClick={() => handleCardClick(profileId)}
+                bg={"transparent"}
+                boxSize='120px' marginLeft="10px" marginTop="10px"
+                borderRadius="50%"
+                object-position="center">
                 <Image
                     objectFit='cover'
                     borderRadius='full'
@@ -46,9 +49,10 @@ function ProfileCard({ profileName, imgSrc, Description }) {
                     maxW={{ base: '80%', sm: '150px' }}
                     src={imgSrc}
                     alt='img'
-                />
 
-            </Link>
+                />
+            </Button>
+
             <Stack>
                 <CardBody>
                     <Heading size='md' margin="10px">{profileName}</Heading>
@@ -62,7 +66,7 @@ function ProfileCard({ profileName, imgSrc, Description }) {
                         <Button
                             variant='solid'
                             colorScheme='blue'
-                            onClick={() => handleEditProfileClick(profileName, imgSrc, Description)}
+                            onClick={() => handleEditProfileClick(profileName, imgSrc, Description, profileId)}
                             marginLeft="10px">
                             Edit Profile
                         </Button>
@@ -79,6 +83,6 @@ function ProfileCard({ profileName, imgSrc, Description }) {
     )
 }
 
-export function CardComponent({ imgSrc, profileName, description }) {
-    return <ProfileCard profileName={profileName} imgSrc={imgSrc} Description={description} />
+export function CardComponent({ imgSrc, profileName, description, profileId }) {
+    return <ProfileCard profileName={profileName} imgSrc={imgSrc} Description={description} profileId={profileId} />
 }

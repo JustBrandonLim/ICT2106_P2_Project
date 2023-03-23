@@ -1,5 +1,6 @@
-import { React, useState } from 'react';
+import { React, useState, useRef, useEffect } from 'react';
 import { useNavigate, Link as RouterLink } from "react-router-dom";
+
 import {
     Flex,
     Box,
@@ -11,20 +12,50 @@ import {
     Heading,
     Text,
     useColorModeValue,
-
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogContent,
+    AlertDialogOverlay,
+    useDisclosure
 } from '@chakra-ui/react';
+
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { isDisabled } from '@testing-library/user-event/dist/utils';
 
 export default function MyAccount() {
     const accountId = localStorage.getItem('accountId');
-    const twoFactorFlag = (localStorage.getItem('twoFactorFlag') === "true");
+    const [twoFactorFlag, updateTwoFactorFlag] = useState(JSON.parse(localStorage.getItem('twoFactorFlag')))
     const [username, updateUsername] = useState("")
     const [email, updateEmail] = useState("")
     const [timezone, updateTimezone] = useState(0)
     const [address, updateAddress] = useState("")
 
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const cancelRef = useRef()
+
     const navigate = useNavigate()
+
+    const handleOnOpen = () => {
+        console.log(twoFactorFlag)
+        !twoFactorFlag ? navigate("/two-factor-auth-setup", { replace: true }) : ""
+    }
+
+    const handleOnClose = async () => {
+        twoFactorFlag ? await fetch(`https://localhost:7140/api/Accounts/security/update-2fa-flag?accountId=${accountId}&twoFactorFlag=false`, 
+        {
+            method: 'PUT',
+            headers: {
+                'Content-type': 'application/problem+json; charset=utf-8',
+            },
+        }).then(res => {
+            // console.log(res)
+            if (res.ok)
+                localStorage.setItem('twoFactorFlag', JSON.parse(false) === "false")
+            window.location.reload()
+        }) : ""
+    }
 
     //Retrieve account information
     const onLoad = () =>{
@@ -95,21 +126,55 @@ export default function MyAccount() {
                                 }}>
                                 Change Password
                             </Button>
-                            <Button 
-                                isDisabled = {twoFactorFlag}
-                                onClick={() => navigate("/two-factor-auth-setup", { replace: true })}
-                                bg={'green.400'}
-                                color={'white'}
-                                _hover={{
-                                    bg: 'green.500',
-                                }}>
-                                Enable 2FA
-                            </Button>
                             
+                                <Stack onClick={handleOnOpen}>
+                                    <Button 
+                                    onClick={onOpen}
+                                    bg={'green.400'}
+                                    color={'white'}
+                                    _hover={{
+                                        bg: 'green.500',
+                                    }}>
+                                        { !twoFactorFlag ? "Enable 2FA" : "Disable 2FA"}
+                                    </Button>
+                                </Stack>
                         </Stack>
                     </Stack>
                 </Box>
             </Stack>
+
+            <AlertDialog
+                isOpen={isOpen}
+                leastDestructiveRef={cancelRef}
+                onClose={onClose}
+              >
+                <AlertDialogOverlay>
+                  <AlertDialogContent>
+                    <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                      Disable 2FA
+                    </AlertDialogHeader>
+        
+                    <AlertDialogBody>
+                      Are you sure?
+                    </AlertDialogBody>
+        
+                    <AlertDialogFooter>
+                      <Button ref={cancelRef} onClick={onClose}>
+                        Cancel
+                      </Button>
+                      
+                    <Stack onClick={handleOnClose}>         
+                        <Button colorScheme='red' onClick={onClose} ml={3}>
+                            Disable
+                        </Button>
+                    </Stack>       
+                      
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialogOverlay>
+              </AlertDialog>
         </Flex>
     );
+
+    
 }

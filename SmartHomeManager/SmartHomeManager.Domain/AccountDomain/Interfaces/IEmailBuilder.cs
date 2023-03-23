@@ -10,8 +10,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Interfaces
 {
     public interface IEmailBuilder
     {
-        public EmailProduct BuildEmailProduct(string givenBody, string givenRecipient, string givenSubject);
-        public SmtpClient BuildSmtpClient();
-        public MailMessage BuildMailMessage();
+        public EmailProduct GetProduct();
+        public void BuildEmailProduct(string givenBody, string givenRecipient, string givenSubject);
     }
 }

@@ -108,8 +108,10 @@ public class Program
         // ACCOUNT
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
         builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
-        builder.Services.AddScoped<IAccountService, AccountService>();
-        builder.Services.AddScoped<IEmailService, EmailService>();
+        builder.Services.AddScoped<IAccountReadService, AccountReadService>();
+        builder.Services.AddScoped<IAccountPasswordHashService, AccountReadService>();
+        builder.Services.AddScoped<IEmailPurchaseService, EmailService>();
+        builder.Services.AddScoped<IEmailRegistrationService, EmailService>();
         builder.Services.AddScoped<IEmailBuilder, EmailBuilder>();
         builder.Services.AddScoped<Domain.AccountDomain.Interfaces.IProfileService, ProfileService>(); // specified due to mock IProfileService elsewhere
         builder.Services.AddScoped<ITwoFactorAuthService,TwoFactorAuthService>();
