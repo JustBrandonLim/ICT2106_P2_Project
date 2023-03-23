@@ -1,4 +1,5 @@
-import { React, useState } from 'react';
+import { React, useState, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Button,
   Flex,
@@ -33,17 +34,16 @@ import user1 from "./img/user1.png";
 
 export default function ProfileSelected(): JSX.Element {
   const [profileDetails, updateProfileDetails] = useState([]);
+  const location = useLocation();
+  const profileId = location.state?.profileId;
+
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
   const pinCheckRef = useRef();
-    const [inputPin, setInputPin] = useState("");
-    const [profileDetails, updateProfileDetails] = useState([])
-    const location = useLocation();
-    const profileId = location.state?.profileId;
+  const [inputPin, setInputPin] = useState("");
 
   const getAllProfiles = async () => {
-    const profileId = "22222222-2222-2222-2222-222222222222";
     await fetch(`https://localhost:7140/api/Profiles/${profileId}`, {
       method: "GET",
       headers: {
@@ -65,34 +65,33 @@ export default function ProfileSelected(): JSX.Element {
     setInputPin(pin || null);
   };
 
-  // Function to verify pin details
-  const profileId = "22222222-2222-2222-2222-222222222222";
-  const pinObject = {"Pin": inputPin, "ProfileId:":profileId}
-  const handleSubmitClick = async () => {
-    console.log(pinObject)
-    await fetch(
-      `https://localhost:7140/api/Profiles/check-Pin`,
-      {
-        method: "POST",
-        body: JSON.stringify(pinObject),
-        headers: {
-          'Content-Type': 'application/problem+json; charset=utf-8 ',
-        },
-      }
-    )
-      .then(async response => {
-        if (response.ok){
-            if (response.status == 1) // child profile with correct pin
-              {navigate("/profiles")}
-            else if (response.status == 2){
-              {navigate("/rooms")}  // child profile with wrong pin
-            }
-        }
-        else{
-            navigate("/selectnearbydevice")
-        }
 
-      })
+  // Function to verify pin details
+  const pinObject = { "Pin": inputPin, "ProfileId": profileId };
+  const handleSubmitClick = async () => {
+    console.log(pinObject);
+    await fetch(`https://localhost:7140/api/Profiles/check-Pin`, {
+      method: "POST",
+      body: JSON.stringify(pinObject),
+      headers: {
+        "Content-Type": "application/problem+json; charset=utf-8 ",
+      },
+    }).then(async (response) => {
+      if (response.ok) {
+        // find the result of the response 
+        var result = await response.json();
+        if (result == 1) {
+          // child profile with correct pin
+          navigate("/analytics");
+        } else if (result == 2) {
+          {
+            navigate("/rooms");
+          } // child profile with wrong pin
+        }
+      } else { // adult profile
+        navigate("/selectnearbydevice");
+      }
+    });
   };
 
   return (

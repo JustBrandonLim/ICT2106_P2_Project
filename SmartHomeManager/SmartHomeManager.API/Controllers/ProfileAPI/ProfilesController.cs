@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -100,6 +101,7 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
         public async Task<ActionResult> ValidatePinByProfileId([FromBody] ParentControlPin pinInfo)
         {
             int response = await _profileService.CheckPinByProfileId(pinInfo);
+                Debug.WriteLine("response is : " + response);
                 if (response == 1)
             {
                 return Ok(1);   // child profile correct pin

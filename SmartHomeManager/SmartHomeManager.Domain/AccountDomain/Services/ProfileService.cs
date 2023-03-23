@@ -39,9 +39,6 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 
                 if (saveResponse > 0)
                 {
-                    Debug.WriteLine("Successfully created profile");
-                    Debug.WriteLine(newProfile.ProfileId);
-                    Debug.WriteLine(newProfile.Pin);
                     return 1;
                 }
             }
