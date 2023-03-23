@@ -14,7 +14,6 @@ export default function ManageDeviceSettings() {
     const [newDeviceName, setNewDeviceName] = useState("");
     const [newDevicePassword, setNewDevicePassword] = useState("");
     const [newDeviceType, setNewDeviceType] = useState("");
-    const [applyAll, setApplyAll] = useState(false);
 
     const toast = useToast()
 
@@ -66,16 +65,13 @@ export default function ManageDeviceSettings() {
         })
             .then((response) => {
                 if (response.ok) {
-                    if (!applyAll) {
-                        toast({
-                            title: "Success",
-                            description: "Device Settings has been added successfully.",
-                            status: "success",
-                            duration: 9000,
-                            isClosable: true,
-                        });
-                    }
-                    else applySettingsToAll() // call api
+                    toast({
+                        title: "Success",
+                        description: "Device Settings has been added successfully.",
+                        status: "success",
+                        duration: 9000,
+                        isClosable: true,
+                    });                
                 } else {
                     toast({
                         title: "Error",
@@ -86,45 +82,6 @@ export default function ManageDeviceSettings() {
                     });
                 }
                 fetchDeviceSettings();
-            });
-    }
-
-    function applySettingsToAll() {
-        // remove after api implemented
-        toast({
-            title: "Success",
-            description: `Device Settings has been applied to all ${newDeviceType} successfully.`,
-            status: "success",
-            duration: 9000,
-            isClosable: true,
-        });
-        return
-        fetch("https://localhost:7140/api/ManageDevice/Apply...", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                deviceId: deviceId,
-                deviceTypeName: newDeviceType
-            }),
-        })
-            .then((response) => {
-                if (response.ok) {
-                    toast({
-                        title: "Success",
-                        description: `Device Settings has been applied to all ${newDeviceType} successfully.`,
-                        status: "success",
-                        duration: 9000,
-                        isClosable: true,
-                    });
-                } else {
-                    toast({
-                        title: "Error",
-                        description: `Failed to apply Device Settings to all ${newDeviceType}.`,
-                        status: "error",
-                        duration: 9000,
-                        isClosable: true,
-                    });
-                }
             });
     }
 
@@ -176,12 +133,6 @@ export default function ManageDeviceSettings() {
                                         </Select>
                                     </FormControl>
                                     <Stack spacing={10}>
-                                        <Stack
-                                            direction={{ base: 'column', sm: 'row' }}
-                                            align={'start'}
-                                            justify={'space-between'}>
-                                            <Checkbox fontStyle="italic" onChange={(e) => setApplyAll(e.target.checked)}>Apply to all</Checkbox>
-                                        </Stack>
                                         <Button
                                             bg={'blue.400'}
                                             color={'white'}

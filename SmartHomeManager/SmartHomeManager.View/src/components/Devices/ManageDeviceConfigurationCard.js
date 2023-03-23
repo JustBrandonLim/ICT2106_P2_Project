@@ -1,29 +1,47 @@
-import { FormControl, FormLabel, Select } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Checkbox, FormControl, FormLabel, Select } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 
 export default function ManageDeviceConfigurationCard(props) {
+    const [applyAll, setApplyAll] = useState(false);
+
     const possibleConfigurations = props.possibleConfigurations
     const actualConfigurations = props.actualConfigurations
-    const [actualConfigurationKey, setActualConfigurationKey] = useState
-        (actualConfigurations.filter((actualConfiguration) => {
-            return actualConfiguration.configurationKey == props.possibleConfigurations.name;
-        }));
+    let configKey = actualConfigurations.filter((actualConfiguration) => {
+        return actualConfiguration.configurationKey == possibleConfigurations.name;
+    })
+    const [actualConfigurationKey, setActualConfigurationKey] = useState(configKey);
+
+    function handleApplyAll() {
+        props.handleDeviceApplyAll({
+            configurationKey: possibleConfigurations.name,
+            configurationValue: actualConfigurationKey[0].configurationValue
+        })
+    }
+
+    useEffect(() => {
+        if (applyAll) handleApplyAll()
+    }, [applyAll])
+
+    useEffect(() => {
+        setActualConfigurationKey(configKey)
+        if (applyAll) handleApplyAll()
+    }, [actualConfigurations])
 
     return (
         <FormControl>
             <FormLabel>Configure {possibleConfigurations.name}</FormLabel>
             <Select onChange={(e) => {
-                const selectedIndex = possibleConfigurations.values.findIndex((value) => value === e.target.value);
+                // const selectedIndex = possibleConfigurations.values.findIndex((value) => value === e.target.value);
                 props.handleDeviceConfiguration({
                     configurationKey: possibleConfigurations.name,
-                    configurationValue: selectedIndex
+                    configurationValue: e.target.value
                 })
-            }} defaultValue={actualConfigurationKey[0] ? actualConfigurationKey[0].configurationValue : 0}>
+            }} defaultValue={actualConfigurationKey.length > 0 ? actualConfigurationKey[0].configurationValue : 0}>
                 {possibleConfigurations.values.length > 0 ? (
                     possibleConfigurations.values.map((configuration, i) => (
                         <option
                             key={i}
-                            value={configuration}
+                            value={i}
                         >
                             {configuration}
                         </option>
@@ -32,6 +50,7 @@ export default function ManageDeviceConfigurationCard(props) {
                     <p>None available.</p>
                 )}
             </Select>
+            <Checkbox fontStyle="italic" onChange={(e) => setApplyAll(e.target.checked)}>Apply to all</Checkbox>
         </FormControl>
         // <Card>
         //     <CardHeader>

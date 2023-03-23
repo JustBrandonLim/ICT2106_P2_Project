@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Text, Tabs, TabList, Tab, TabPanels, TabPanel, Button, Stack, useToast, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, FormHelperText, Flex, Heading, Box } from "@chakra-ui/react";
+import { Container, Text, Tabs, TabList, Tab, TabPanels, TabPanel, Button, Stack, useToast, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, FormHelperText, Flex, Heading, Box, Checkbox } from "@chakra-ui/react";
 import { useSearchParams } from "react-router-dom";
 import ManageDeviceConfigurationCard from "../../../components/Devices/ManageDeviceConfigurationCard";
 
@@ -82,6 +82,40 @@ export default function ManageDeviceConfiguration() {
         }
         fetchDeviceConfigurations();
         onClose();
+      });
+  }
+
+  function applySettingsToAll({ configurationKey, configurationValue }) {
+    let deviceType = deviceName.split(" ")[1]
+    fetch("https://localhost:7140/api/ManageDevice/ApplyDeviceConfigurationsSameType", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        configurationKey,
+        deviceBrand,
+        deviceModel,
+        deviceId,
+        configurationValue,
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          toast({
+            title: "Success",
+            description: `Device Settings has been applied to all ${deviceType} successfully.`,
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+        } else {
+          toast({
+            title: "Error",
+            description: `Failed to apply Device Settings to all ${deviceType}.`,
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
       });
   }
 
@@ -188,9 +222,10 @@ export default function ManageDeviceConfiguration() {
 
 
 
-  if (devicePossibleConfigurations.length <= 0 || deviceActualConfigurations.length <= 0) {
-    return <Text> Loading </Text>;
-  } else
+  // if (devicePossibleConfigurations.length <= 0 && deviceActualConfigurations.length <= 0) {
+  //   return <Text> Loading </Text>;
+  // } else
+  if (devicePossibleConfigurations.length > 0 && deviceActualConfigurations.length > 0)
     return (
       <Container mt={5}>
         <Flex
@@ -206,18 +241,15 @@ export default function ManageDeviceConfiguration() {
               boxShadow={'lg'}
               p={8}>
               <Stack spacing={4}>
-                {devicePossibleConfigurations.length > 0 ? (
-                  devicePossibleConfigurations.map((configuration, i) => (
-                    <ManageDeviceConfigurationCard
-                      key={i}
-                      actualConfigurations={deviceActualConfigurations}
-                      possibleConfigurations={configuration}
-                      handleDeviceConfiguration={(deviceConfiguration) => handleDeviceConfiguration(deviceConfiguration)}
-                    />
-                  ))
-                ) : (
-                  <p>None available.</p>
-                )}
+                {devicePossibleConfigurations.map((configuration, i) => (
+                  <ManageDeviceConfigurationCard
+                    key={i}
+                    actualConfigurations={deviceActualConfigurations}
+                    possibleConfigurations={configuration}
+                    handleDeviceConfiguration={(deviceConfiguration) => handleDeviceConfiguration(deviceConfiguration)}
+                    handleDeviceApplyAll={(deviceConfiguration) => applySettingsToAll(deviceConfiguration)}
+                  />
+                ))}
                 <Stack pt={5} spacing={6} direction={['column', 'row']} justifyContent="space-between">
                   <Button
                     bg={'blue.400'}
@@ -289,4 +321,6 @@ export default function ManageDeviceConfiguration() {
         </Stack> */}
       </Container>
     );
+
+  else return <Text> Loading </Text>;
 }
