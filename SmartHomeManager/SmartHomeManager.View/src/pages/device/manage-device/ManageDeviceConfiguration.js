@@ -225,41 +225,43 @@ export default function ManageDeviceConfiguration() {
   // if (devicePossibleConfigurations.length <= 0 && deviceActualConfigurations.length <= 0) {
   //   return <Text> Loading </Text>;
   // } else
-  if (devicePossibleConfigurations.length > 0 && deviceActualConfigurations.length > 0)
-    return (
-      <Container mt={5}>
-        <Flex
-          align={'center'}
-          justify={'center'}>
-          <Stack spacing={8} mx={'auto'} minW={'xl'} py={12} px={6}>
-            <Stack align={'center'}>
-              <Heading fontSize={'4xl'}>{deviceName} Configurations</Heading>
-            </Stack>
-            <Box
-              rounded={'lg'}
-              bg='white'
-              boxShadow={'lg'}
-              p={8}>
-              <Stack spacing={4}>
-                {devicePossibleConfigurations.map((configuration, i) => (
-                  <ManageDeviceConfigurationCard
-                    key={i}
-                    actualConfigurations={deviceActualConfigurations}
-                    possibleConfigurations={configuration}
-                    handleDeviceConfiguration={(deviceConfiguration) => handleDeviceConfiguration(deviceConfiguration)}
-                    handleDeviceApplyAll={(deviceConfiguration) => applySettingsToAll(deviceConfiguration)}
-                  />
-                ))}
-                <Stack pt={5} spacing={6} direction={['column', 'row']} justifyContent="space-between">
-                  <Button
-                    bg={'blue.400'}
-                    color={'white'}
-                    _hover={{
-                      bg: 'blue.500',
-                    }}
-                    onClick={setImportDevice}>
-                    Import Configurations
-                  </Button>
+  // if (devicePossibleConfigurations.length > 0 && deviceActualConfigurations.length > 0)
+  return (
+    <Container mt={5}>
+      <Flex
+        align={'center'}
+        justify={'center'}>
+        <Stack spacing={8} mx={'auto'} minW={'xl'} py={12} px={6}>
+          <Stack align={'center'}>
+            <Heading fontSize={'4xl'}>{deviceName} Configurations</Heading>
+          </Stack>
+          <Box
+            rounded={'lg'}
+            bg='white'
+            boxShadow={'lg'}
+            p={8}>
+            <Stack spacing={4}>
+              {devicePossibleConfigurations.length && devicePossibleConfigurations.map((configuration, i) => (
+                <ManageDeviceConfigurationCard
+                  key={i}
+                  actualConfigurations={deviceActualConfigurations}
+                  possibleConfigurations={configuration}
+                  handleDeviceConfiguration={(deviceConfiguration) => handleDeviceConfiguration(deviceConfiguration)}
+                  handleDeviceApplyAll={(deviceConfiguration) => applySettingsToAll(deviceConfiguration)}
+                />
+              ))}
+              {!devicePossibleConfigurations.length && <Text fontStyle="italic">No configurations currently...</Text>}
+              <Stack pt={5} spacing={6} direction={['column', 'row']} justifyContent="space-between">
+                <Button
+                  bg={'blue.400'}
+                  color={'white'}
+                  _hover={{
+                    bg: 'blue.500',
+                  }}
+                  onClick={setImportDevice}>
+                  Import Configurations
+                </Button>
+                {devicePossibleConfigurations.length &&
                   <Button
                     bg={'green.400'}
                     color={'white'}
@@ -269,41 +271,42 @@ export default function ManageDeviceConfiguration() {
                     onClick={handleExportDevice}>
                     Export Configurations
                   </Button>
-                </Stack>
+                }
               </Stack>
-            </Box>
-          </Stack>
-        </Flex>
+            </Stack>
+          </Box>
+        </Stack>
+      </Flex>
 
-        {showImportDeviceModal &&
-          <Modal isOpen={isOpen} onClose={handleCloseModal}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Upload your Device Configuration File</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <form
-                  id="import-device-form"
-                  onSubmit={(e) => handleImportDevice(e)}
-                >
-                  <FormControl isRequired>
-                    <FormLabel> File </FormLabel>
-                    <Input type="file" onChange={(e) => setSelectedFile(e.target.files[0])} sx={{ border: 'none', boxShadow: 'none', '&:focus': { boxShadow: 'none' } }} />
-                    <FormHelperText>
-                      Ensure your file is in the proper format
-                    </FormHelperText>
-                  </FormControl>
-                </form>
-              </ModalBody>
-              <ModalFooter>
-                <Button type="submit" form="import-device-form" colorScheme='green' mr={3}>
-                  Import Device Configuration
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        }
-        {/* <Stack spacing={5}>
+      {showImportDeviceModal &&
+        <Modal isOpen={isOpen} onClose={handleCloseModal}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Upload your Device Configuration File</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <form
+                id="import-device-form"
+                onSubmit={(e) => handleImportDevice(e)}
+              >
+                <FormControl isRequired>
+                  <FormLabel> File </FormLabel>
+                  <Input type="file" onChange={(e) => setSelectedFile(e.target.files[0])} sx={{ border: 'none', boxShadow: 'none', '&:focus': { boxShadow: 'none' } }} />
+                  <FormHelperText>
+                    Ensure your file is in the proper format
+                  </FormHelperText>
+                </FormControl>
+              </form>
+            </ModalBody>
+            <ModalFooter>
+              <Button type="submit" form="import-device-form" colorScheme='blue' mr={3}>
+                Import
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      }
+      {/* <Stack spacing={5}>
           {devicePossibleConfigurations.length > 0 ? (
             devicePossibleConfigurations.map((configuration, i) => (
               <ManageDeviceConfigurationCard
@@ -319,8 +322,6 @@ export default function ManageDeviceConfiguration() {
           <Button mr={3} onClick={setImportDevice} colorScheme="red">Import Device Configurations</Button>
           <Button onClick={handleExportDevice} colorScheme="yellow">Export Device Configurations</Button>
         </Stack> */}
-      </Container>
-    );
-
-  else return <Text> Loading </Text>;
+    </Container>
+  );
 }

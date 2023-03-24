@@ -2,11 +2,13 @@ import { Box, Checkbox, FormControl, FormLabel, Select, Slider, SliderFilledTrac
 import React, { useEffect, useState } from "react";
 
 export default function ManageDeviceConfigurationCard(props) {
-    const [applyAll, setApplyAll] = useState(false);
-    const [sliderValue, setSliderValue] = useState(null);
-
     const possibleConfigurations = props.possibleConfigurations
     const actualConfigurations = props.actualConfigurations
+
+    const [applyAll, setApplyAll] = useState(false);
+    const [sliderChangingValue, setSliderChangingValue] = useState(parseInt(possibleConfigurations.values[0]));
+    const [sliderValue, setSliderValue] = useState(null);
+
     let configKey = actualConfigurations.filter((actualConfiguration) => {
         return actualConfiguration.configurationKey == possibleConfigurations.name;
     })
@@ -35,23 +37,21 @@ export default function ManageDeviceConfigurationCard(props) {
 
     useEffect(() => {
         setActualConfigurationKey(configKey)
+        if (actualConfigurationKey.length) setSliderChangingValue(parseInt(actualConfigurationKey[0].configurationValue))
         if (applyAll) handleApplyAll()
+        console.log(actualConfigurations)
     }, [actualConfigurations])
-
-    useEffect(() => {
-
-    }, [sliderValue])
 
     return (
         <FormControl>
             <FormLabel>Configure {possibleConfigurations.name}</FormLabel>
             {!isNaN(possibleConfigurations.values[0]) ?
                 <Slider
-                    defaultValue={actualConfigurationKey[0].configurationValue}
+                    value={sliderChangingValue}
                     min={parseInt(possibleConfigurations.values[0])}
                     max={parseInt(possibleConfigurations.values[possibleConfigurations.values.length - 1])}
                     step={1}
-                    onChange={(val) => setSliderValue(val)}
+                    onChange={(val) => {setSliderValue(val); setSliderChangingValue(val)}}
                     onMouseLeave={() => applySliderConfig()}
                 >
                     {possibleConfigurations.values.map((configuration, i) => (
@@ -72,7 +72,7 @@ export default function ManageDeviceConfigurationCard(props) {
                         configurationKey: possibleConfigurations.name,
                         configurationValue: e.target.value
                     })
-                }} defaultValue={actualConfigurationKey.length > 0 ? actualConfigurationKey[0].configurationValue : 0}>
+                }} value={actualConfigurationKey.length > 0 ? actualConfigurationKey[0].configurationValue : 0}>
                     {possibleConfigurations.values.length > 0 ? (
                         possibleConfigurations.values.map((configuration, i) => (
                             <option
@@ -89,35 +89,5 @@ export default function ManageDeviceConfigurationCard(props) {
             }
             <Checkbox fontStyle="italic" mt={4} onChange={(e) => setApplyAll(e.target.checked)}>Apply to all</Checkbox>
         </FormControl>
-        // <Card>
-        //     <CardHeader>
-        //         <Heading size="md">{`Configure ${possibleConfigurations.name}`}</Heading>
-        //     </CardHeader>
-
-        //     <CardBody>
-        //         <Select onChange={(e) => {
-        //             const selectedIndex = possibleConfigurations.values.findIndex((value) => value === e.target.value);
-        //             props.handleDeviceConfiguration({
-        //                 configurationKey: possibleConfigurations.name,
-        //                 configurationValue: selectedIndex
-        //             })
-        //         }} defaultValue={actualConfigurationKey[0] ? actualConfigurationKey[0].configurationValue : 0}>
-        //             {possibleConfigurations.values.length > 0 ? (
-        //                 possibleConfigurations.values.map((configuration, i) => (
-        //                     <option
-        //                         key={i}
-        //                         value={configuration}
-        //                     >
-        //                         {configuration}
-        //                     </option>
-        //                 ))
-        //             ) : (
-        //                 <p>None available.</p>
-        //             )}
-        //         </Select>
-        //     </CardBody>
-        //     <CardFooter flex="row" justifyContent="flex-end">
-        //     </CardFooter>
-        // </Card>
     );
 }

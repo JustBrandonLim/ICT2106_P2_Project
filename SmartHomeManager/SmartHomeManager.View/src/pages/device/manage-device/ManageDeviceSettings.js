@@ -93,7 +93,6 @@ export default function ManageDeviceSettings() {
         <div>
             {deviceSettings ? (
                 <Container mt={5}>
-
                     <Flex
                         align={'center'}
                         justify={'center'}>
@@ -147,39 +146,6 @@ export default function ManageDeviceSettings() {
                             </Box>
                         </Stack>
                     </Flex>
-                    {/* <Heading fontWeight="bold" fontSize="3xl" mb={5}>
-                        {`Manage ${deviceName} settings`}
-                    </Heading>
-                    <Stack spacing={5}>
-                        <Card>
-                            <CardBody>
-                                <Heading size="md">Device Name</Heading>
-                                <Input onChange={(e) => setNewDeviceName(e.target.value)} defaultValue={deviceName} />
-
-                                <Heading mt={5} size="md">Device Password</Heading>
-                                <Input onChange={(e) => setNewDevicePassword(e.target.value)} defaultValue={devicePassword} />
-
-                                <Heading mt={5} size="md">Device Type</Heading>
-                                <Select onChange={(e) => setNewDeviceType(e.target.value)} defaultValue={deviceTypeName ? deviceTypeName : null}>
-                                    {deviceTypes.length > 0 ? (
-                                        deviceTypes.map((types, i) => (
-                                            <option
-                                                key={i}
-                                                value={types}
-                                            >
-                                                {types}
-                                            </option>
-                                        ))
-                                    ) : (
-                                        <p>None available.</p>
-                                    )}
-                                </Select>
-                            </CardBody>
-                            <CardFooter flex="row" justifyContent="flex-end">
-                                <Button onClick={handleDeviceSettings} colorScheme="green">Apply Changes</Button>
-                            </CardFooter>
-                        </Card>
-                    </Stack> */}
                 </Container>
             )
                 : (
