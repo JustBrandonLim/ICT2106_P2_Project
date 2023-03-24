@@ -100,9 +100,9 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services
 						DeviceConfiguration deviceConfiguration = new()
 						{
 							ConfigurationKey = configurationKey,
-							DeviceBrand = deviceBrand,
-							DeviceModel = deviceModel,
-							DeviceId = deviceId,
+							DeviceBrand = device.DeviceBrand,
+							DeviceModel = device.DeviceModel,
+							DeviceId = device.DeviceId,
 							ConfigurationValue = configurationValue,
 						};
 
