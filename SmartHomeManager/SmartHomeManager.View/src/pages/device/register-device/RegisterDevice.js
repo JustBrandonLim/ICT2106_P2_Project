@@ -94,7 +94,7 @@ export default function RegisterDevice() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         deviceName: deviceName,
-        deviceBrand: deviceBrand,
+        deviceBrand: deviceBrand.toLowerCase(),
         deviceModel: deviceModel,
         deviceWatts: deviceWatts,
         deviceTypeName: deviceTypeName,
