@@ -1,8 +1,9 @@
-import { Checkbox, FormControl, FormLabel, Select } from "@chakra-ui/react";
+import { Box, Checkbox, FormControl, FormLabel, Select, Slider, SliderFilledTrack, SliderMark, SliderThumb, SliderTrack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 export default function ManageDeviceConfigurationCard(props) {
     const [applyAll, setApplyAll] = useState(false);
+    const [sliderValue, setSliderValue] = useState(null);
 
     const possibleConfigurations = props.possibleConfigurations
     const actualConfigurations = props.actualConfigurations
@@ -18,6 +19,16 @@ export default function ManageDeviceConfigurationCard(props) {
         })
     }
 
+    function applySliderConfig() {
+        if (sliderValue && sliderValue != actualConfigurationKey[0].configurationValue) {
+            props.handleDeviceConfiguration({
+                configurationKey: possibleConfigurations.name,
+                configurationValue: sliderValue
+            })
+            setSliderValue(null);
+        }
+    }
+
     useEffect(() => {
         if (applyAll) handleApplyAll()
     }, [applyAll])
@@ -27,30 +38,56 @@ export default function ManageDeviceConfigurationCard(props) {
         if (applyAll) handleApplyAll()
     }, [actualConfigurations])
 
+    useEffect(() => {
+
+    }, [sliderValue])
+
     return (
         <FormControl>
             <FormLabel>Configure {possibleConfigurations.name}</FormLabel>
-            <Select onChange={(e) => {
-                // const selectedIndex = possibleConfigurations.values.findIndex((value) => value === e.target.value);
-                props.handleDeviceConfiguration({
-                    configurationKey: possibleConfigurations.name,
-                    configurationValue: e.target.value
-                })
-            }} defaultValue={actualConfigurationKey.length > 0 ? actualConfigurationKey[0].configurationValue : 0}>
-                {possibleConfigurations.values.length > 0 ? (
-                    possibleConfigurations.values.map((configuration, i) => (
-                        <option
-                            key={i}
-                            value={i}
-                        >
+            {!isNaN(possibleConfigurations.values[0]) ?
+                <Slider
+                    defaultValue={actualConfigurationKey[0].configurationValue}
+                    min={parseInt(possibleConfigurations.values[0])}
+                    max={parseInt(possibleConfigurations.values[possibleConfigurations.values.length - 1])}
+                    step={1}
+                    onChange={(val) => setSliderValue(val)}
+                    onMouseLeave={() => applySliderConfig()}
+                >
+                    {possibleConfigurations.values.map((configuration, i) => (
+                        <SliderMark key={i} value={parseInt(configuration)} mt={2}>
                             {configuration}
-                        </option>
-                    ))
-                ) : (
-                    <p>None available.</p>
-                )}
-            </Select>
-            <Checkbox fontStyle="italic" onChange={(e) => setApplyAll(e.target.checked)}>Apply to all</Checkbox>
+                        </SliderMark>
+                    ))}
+                    <SliderTrack bg='blue.100'>
+                        <Box position='relative' right={10} />
+                        <SliderFilledTrack bg='blue' />
+                    </SliderTrack>
+                    <SliderThumb boxSize={6} />
+                </Slider>
+                :
+                <Select onChange={(e) => {
+                    // const selectedIndex = possibleConfigurations.values.findIndex((value) => value === e.target.value);
+                    props.handleDeviceConfiguration({
+                        configurationKey: possibleConfigurations.name,
+                        configurationValue: e.target.value
+                    })
+                }} defaultValue={actualConfigurationKey.length > 0 ? actualConfigurationKey[0].configurationValue : 0}>
+                    {possibleConfigurations.values.length > 0 ? (
+                        possibleConfigurations.values.map((configuration, i) => (
+                            <option
+                                key={i}
+                                value={i}
+                            >
+                                {configuration}
+                            </option>
+                        ))
+                    ) : (
+                        <p>None available.</p>
+                    )}
+                </Select>
+            }
+            <Checkbox fontStyle="italic" mt={4} onChange={(e) => setApplyAll(e.target.checked)}>Apply to all</Checkbox>
         </FormControl>
         // <Card>
         //     <CardHeader>
