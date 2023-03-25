@@ -30,12 +30,18 @@ public class TwoDHomeReadService : ITwoDHomeReadService
         if (!allRoomCoordinatesList.Any())
             return TwoDHomeWebResponseFactory.CreateRoomWebResponse(new List<RoomGrid>());
 
+        // if there are room coordinates, then there are rooms due to database constraints
         var allRooms = _roomRepository.GetRoomsRelatedToAccount(accountId).ToList();
         var allRoomGrids = new List<RoomGrid>();
         foreach (var room in allRooms)
         {
             // this handles the case where the room exists but do not have a room coordinate
-            if (room.RoomCoordinate == null) continue;
+            if (room.RoomCoordinate == null)
+            {
+                allRoomGrids.Add(RoomGridFactory.CreateEmptyRoomGrid(room));
+                continue;
+            }
+
             var devicesInRoom = _deviceInformationService.GetDevicesInRoom(room.RoomId).ToList();
             room.Devices = devicesInRoom;
             var deviceStateMapping = new Dictionary<Guid, bool>();
