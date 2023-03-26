@@ -22,8 +22,11 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 export default function RegisterDevice() {
+  const tempId = "11111111-1111-1111-1111-111111111111";
+  
   const [deviceTypeNames, setDeviceTypeNames] = useState([]);
 
+  const [accountId, setAccountId] = useState("");
   const [newDeviceTypeName, setNewDeviceTypeName] = useState("");
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -46,8 +49,11 @@ export default function RegisterDevice() {
   }
 
   useEffect(() => {
+    const id = JSON.parse(localStorage.getItem('accountId'));
+    if (id) setAccountId(id)
+    else setAccountId(tempId);
     fetchDeviceTypes();
-  }, []);
+  }, [])
 
   function handleAddNewDeviceType(e) {
     e.preventDefault();
@@ -88,12 +94,12 @@ export default function RegisterDevice() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         deviceName: deviceName,
-        deviceBrand: deviceBrand,
+        deviceBrand: deviceBrand.toLowerCase(),
         deviceModel: deviceModel,
         deviceWatts: deviceWatts,
         deviceTypeName: deviceTypeName,
         deviceSerialNumber: deviceSerialNumber,
-        accountId: "11111111-1111-1111-1111-111111111111",
+        accountId: tempId,
       }),
     }).then((response) => {
       if (response.ok) {

@@ -12,6 +12,8 @@ namespace SmartHomeManager.Domain.DeviceDomain.Interfaces
 		public Task AddAsync(DeviceConfiguration deviceConfiguration);
 
 		public void Update(DeviceConfiguration deviceConfiguration);
+
+		public Task<bool> SaveAsync();
 	}
 }
 
