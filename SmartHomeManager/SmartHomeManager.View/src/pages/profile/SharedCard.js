@@ -38,17 +38,17 @@ function SharedProfileCard({ ProfileName, SName, SId, ProfilePic, Rules }) {
     <Card direction={{ base: "column", sm: "row" }} variant="outline">
       <Image
         objectFit="contain"
-        maxW={{ base: "100%", sm: "200px" }}
+        maxW={{ base: "100%", sm: "150px"}}
         src={ProfilePic}
         alt="Profile Pic"
+        marginLeft={{ base: "0", sm: "1rem" }}
       />
 
       <Stack>
         <CardBody>
-          <Heading size="md">{ProfileName} Profile</Heading>
+          <Heading size="md">{ProfileName}</Heading>
 
           <Text fontSize="lg">Scenario Name: {SName}</Text>
-          <Text fontSize="lg">Scenario Id: {SId}</Text>
         </CardBody>
         <CardFooter>
           <Popover>

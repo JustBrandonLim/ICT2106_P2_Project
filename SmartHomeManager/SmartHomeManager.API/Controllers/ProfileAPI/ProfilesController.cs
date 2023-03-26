@@ -12,6 +12,8 @@ using SmartHomeManager.Domain.AccountDomain.DTOs;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.AccountDomain.Services;
+using SmartHomeManager.Domain.SceneDomain.Entities;
+using SmartHomeManager.Domain.SceneDomain.Interfaces;
 using SmartHomeManager.Domain.SceneDomain.Services;
 
 namespace SmartHomeManager.API.Controllers.ProfileAPI
@@ -23,10 +25,11 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
         private readonly ProfileService _profileService;
         private readonly ScenarioServices _scenarioServices;
 
-        public ProfilesController(ProfileService profileService, ScenarioServices scenarioServices)
+        public ProfilesController(IScenarioRepository<Scenario> scenarioRepository, IProfileRepository profileRepository)
         {
-            _profileService = profileService ?? throw new ArgumentNullException("profile service null");
-            _scenarioServices = scenarioServices ?? throw new ArgumentNullException("scenario service null");
+            /*_profileService = profileService ?? throw new ArgumentNullException("profile service null");*/
+            _profileService = new(profileRepository);
+            _scenarioServices = new(scenarioRepository);
         }
 
         /* 
@@ -39,7 +42,7 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
         public async Task<ActionResult<IEnumerable<Profile>>> GetProfiles()
         {
             IEnumerable<Profile> profiles = await _profileService.GetProfiles();
-
+            
             if (!profiles.Any())
                 return NotFound();
 
@@ -199,6 +202,8 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
             }
 
             return BadRequest(1);
+        }
+
         [HttpPut("share-profile/{profileId}")]
         public ActionResult<string> Put(Guid profileId)
         {

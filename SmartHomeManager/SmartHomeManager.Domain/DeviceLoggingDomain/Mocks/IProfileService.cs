@@ -7,7 +7,7 @@ using SmartHomeManager.Domain.DeviceDomain.Entities;
 
 namespace SmartHomeManager.Domain.DeviceLoggingDomain.Mocks
 {
-    public interface IProfileService
+    public interface IProfileMockService
     {
         IEnumerable<Device> GetDevicesByProfile(Guid profileId);
     }

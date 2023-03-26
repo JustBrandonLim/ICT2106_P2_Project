@@ -27,7 +27,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             /*Console.WriteLine("Auth Code: " + authCode);*/
 
             TwoFactorAuthenticator tfa = new();
-            var setupInfo = tfa.GenerateSetupCode("Company", "Placeholder", authCode, false, 5);
+            var setupInfo = tfa.GenerateSetupCode("Smart Home Manager", "2FA", authCode, false, 5);
             QrResponse response = new();
 
             if (setupInfo != null)

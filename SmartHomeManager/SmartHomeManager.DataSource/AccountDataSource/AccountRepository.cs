@@ -50,7 +50,7 @@ namespace SmartHomeManager.DataSource.AccountDataSource
         {
             return await _dbContext.Accounts.FindAsync(id);
         }
-
+        
         public async Task<Account?> GetAccountByEmailAsync(string email)
         {
             Account? tempAcc = await _dbContext.Accounts.Where(acc => acc.Email == email).FirstOrDefaultAsync();

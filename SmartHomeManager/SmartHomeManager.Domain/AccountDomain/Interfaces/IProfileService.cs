@@ -19,7 +19,5 @@ namespace SmartHomeManager.Domain.AccountDomain.Interfaces
         public Task<bool> DeleteProfile(Profile profile);
         public Task<int> CheckPinByProfileId(ParentControlPin pinInfo);
         public Task<int> CheckAdultProfile(ProfileIdRequest ProfileIdInfo);
-
-
     }
 }

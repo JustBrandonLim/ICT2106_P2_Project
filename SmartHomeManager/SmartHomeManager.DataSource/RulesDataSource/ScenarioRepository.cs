@@ -6,6 +6,7 @@ using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Interfaces;
+using static QRCoder.PayloadGenerator;
 
 namespace SmartHomeManager.DataSource.RulesDataSource
 {
@@ -112,6 +113,25 @@ namespace SmartHomeManager.DataSource.RulesDataSource
                 return false;
             }
         }
+
+        public async Task<Scenario?> GetScenarioByProfileId(Guid id)
+        {
+            try
+            {
+                Scenario? scenario = await _applicationDbContext.Scenarios.Where(scenario => scenario.ProfileId == id).FirstOrDefaultAsync();
+                return scenario;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<Scenario>> GetByShareable()
+        {
+            List<Scenario> listOfScenario = (await _applicationDbContext.Scenarios.ToListAsync())
+                .Where(scenario => scenario.IsShareable == true).Select(scenario => scenario).ToList();
+            return listOfScenario;
+        }
     }
 }
-

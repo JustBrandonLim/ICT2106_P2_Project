@@ -27,7 +27,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 
         public bool SendRegistrationEmail(string username, string recipient)
         {
-            string messageBody = $"<div><h2>Hello {username},</h2>  <h2>Thank you for registering an account with Company, we hope you enjoy your experience.</h2></div>";
+            string messageBody = $"<div><h2>Hello {username},</h2>  <h2>Thank you for registering an account with Smart Home Manager, we hope you enjoy your experience.</h2></div>";
             string subject = "Company Account Registration";
 
             _emailBuilder.BuildEmailProduct(messageBody, recipient, subject);

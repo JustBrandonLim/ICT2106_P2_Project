@@ -17,6 +17,8 @@ namespace SmartHomeManager.Domain.SceneDomain.Interfaces
         //public async Task<Scenario?> GetByIdAsync(Guid id);
 
         public Task<IEnumerable<Scenario?>> GetByProfileId(Guid id);
+        public Task<Scenario?> GetScenarioByProfileId(Guid id);
+        public Task<IEnumerable<Scenario>> GetByShareable();
 
         //public async Task<bool> SaveAsync();
 

@@ -118,7 +118,7 @@ public class Program
         builder.Services.AddScoped<IEmailPurchaseService, EmailService>();
         builder.Services.AddScoped<IEmailRegistrationService, EmailService>();
         builder.Services.AddScoped<IEmailBuilder, EmailBuilder>();
-        builder.Services.AddScoped<Domain.AccountDomain.Interfaces.IProfileService, ProfileService>(); // specified due to mock IProfileService elsewhere
+        builder.Services.AddScoped<IProfileService, ProfileService>();
         builder.Services.AddScoped<ITwoFactorAuthService,TwoFactorAuthService>();
         #endregion DEPENDENCY INJECTIONS
 

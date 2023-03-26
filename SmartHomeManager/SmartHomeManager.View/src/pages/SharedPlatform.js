@@ -11,7 +11,7 @@ export default function SharedPlatform() {
     const getScenarios = async () => {
       const profileId = "22222222-2222-2222-2222-222222222222";
       const response = await fetch(
-        `https://localhost:7140/api/Scenarios/profileId?profileId=${profileId}`,
+        `https://localhost:7140/api/Scenarios/GetAllScenariosWithShareable`,
         {
           method: "GET",
           headers: {
@@ -78,8 +78,8 @@ export default function SharedPlatform() {
                     <br />
                     {"\nConfiguration Value: " + item.configurationValue}
                     <br />
-                    {"\nRule Id: " + item.ruleId}
-                    <br />
+                    {/* {"\nRule Id: " + item.ruleId}
+                    <br /> */}
                     <br />
                   </div>
                 ))}

@@ -20,7 +20,7 @@ namespace SmartHomeManager.Domain.DeviceLoggingDomain.Services
     public class DeviceLogReadService
     {
         private readonly IDeviceLogRepository _deviceLogRepository;
-        private readonly IProfileService _profileService;
+        private readonly IProfileMockService _profileService;
         //private readonly IDeviceWattsService _deviceWattsService;
 
         public DeviceLogReadService(IDeviceLogRepository deviceLogRepository)
