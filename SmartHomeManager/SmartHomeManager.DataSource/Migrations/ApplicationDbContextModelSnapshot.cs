@@ -751,6 +751,10 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.Property<Guid>("ProfileId")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ProfileName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ScenarioName")
                         .IsRequired()
                         .HasColumnType("TEXT");

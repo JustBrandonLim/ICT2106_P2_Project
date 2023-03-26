@@ -23,5 +23,8 @@ namespace SmartHomeManager.Domain.SceneDomain.Entities
 
         [Required]
         public Boolean IsShareable { get; set; }
+
+        [Required]
+        public string ProfileName { get; set; }
     }
 }

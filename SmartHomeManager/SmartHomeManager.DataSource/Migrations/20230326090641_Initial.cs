@@ -370,7 +370,8 @@ namespace SmartHomeManager.DataSource.Migrations
                     ScenarioName = table.Column<string>(type: "TEXT", nullable: false),
                     ProfileId = table.Column<Guid>(type: "TEXT", nullable: false),
                     IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
-                    IsShareable = table.Column<bool>(type: "INTEGER", nullable: false)
+                    IsShareable = table.Column<bool>(type: "INTEGER", nullable: false),
+                    ProfileName = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -22,7 +22,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { css } from "@emotion/react";
 
-function SharedProfileCard({ ProfileName, SName, SId, ProfilePic, Rules, IA }) {
+function SharedProfileCard({ ProfileName, SName, SId, ProfilePic, Rules }) {
   const textAreaRef = useRef(null);
 
   const handleCopyClick = () => {
@@ -47,9 +47,8 @@ function SharedProfileCard({ ProfileName, SName, SId, ProfilePic, Rules, IA }) {
         <CardBody>
           <Heading size="md">{ProfileName} Profile</Heading>
 
-          <Text>Scenario Name: {SName}</Text>
-          <Text>Scenario Id: {SId}</Text>
-          <Text>is Active: {IA}</Text>
+          <Text fontSize="lg">Scenario Name: {SName}</Text>
+          <Text fontSize="lg">Scenario Id: {SId}</Text>
         </CardBody>
         <CardFooter>
           <Popover>
@@ -87,11 +86,9 @@ export function SharedProfileCardComponent({
   SId,
   ProfilePic,
   Rules,
-  IA,
 }) {
   return (
     <SharedProfileCard
-      IA={IA}
       Rules={Rules}
       ProfileName={ProfileName}
       SName={SName}

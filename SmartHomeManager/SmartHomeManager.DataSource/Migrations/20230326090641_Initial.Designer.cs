@@ -11,7 +11,7 @@ using SmartHomeManager.DataSource;
 namespace SmartHomeManager.DataSource.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230313100444_Initial")]
+    [Migration("20230326090641_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -752,6 +752,10 @@ namespace SmartHomeManager.DataSource.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<Guid>("ProfileId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProfileName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ScenarioName")

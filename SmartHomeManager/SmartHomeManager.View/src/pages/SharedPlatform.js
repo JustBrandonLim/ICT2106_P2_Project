@@ -61,14 +61,14 @@ export default function SharedPlatform() {
     >
       {scenarios.map((item) => {
         if (item.isShareable) {
+          console.log(item);
           return (
             //Only display those profiles which are shareable to the community
-            <Box key={item.profileId} w="100%" m="0 auto" bg="gray.50">
+            <Box key={item.scenarioId} w="100%" m="0 auto" bg="gray.50">
               <SharedProfileCardComponent
-                ProfileName={item.profileId}
+                ProfileName={item.profileName}
                 SName={item.scenarioName}
                 SId={item.scenarioId}
-                IA={item.IsActive}
                 ProfilePic={user1}
                 Rules={scenarioData[item.scenarioId]?.map((item) => (
                   <div key={item.ruleName}>

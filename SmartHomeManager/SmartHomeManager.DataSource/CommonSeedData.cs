@@ -237,7 +237,8 @@ namespace SmartHomeManager.DataSource
                     ScenarioName = "Default",
                     ProfileId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
                     IsActive = false,
-                    IsShareable = false
+                    IsShareable = false,
+                    ProfileName = "Name"
                 }
             };
 
