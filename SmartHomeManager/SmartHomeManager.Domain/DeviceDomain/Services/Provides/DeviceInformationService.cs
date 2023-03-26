@@ -34,6 +34,11 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services.Provides
 
             return (await _deviceConfigurationRepository.GetAsync("Power", deviceId))?.ConfigurationValue == 1;
         }
+
+        public async Task<IEnumerable<Device>> GetAllDevicesByAccountAsync(Guid accountId) 
+	    { 
+            return (await _deviceRepository.GetAllAsync()).Where(device => device.AccountId == accountId);
+	    }
     }
 }
 

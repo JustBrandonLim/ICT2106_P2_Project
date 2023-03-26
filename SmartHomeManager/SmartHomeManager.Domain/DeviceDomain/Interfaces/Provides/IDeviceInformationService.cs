@@ -10,6 +10,8 @@ namespace SmartHomeManager.Domain.DeviceDomain.Interfaces.Provides
 		public Task<IEnumerable<Device>> GetDevicesInRoomAsync(Guid roomId);
 
 		public Task<bool> IsDeviceOnAsync(Guid deviceId);
-	}
+
+		public Task<IEnumerable<Device>> GetAllDevicesByAccountAsync(Guid accountId); 
+    }
 }
 
