@@ -33,6 +33,11 @@ namespace SmartHomeManager.DataSource.DeviceDataSource
         {
             _applicationDbContext.DeviceConfigurations.Update(deviceConfiguration);
         }
+
+        public async Task<bool> SaveAsync() 
+	    {
+            return await _applicationDbContext.SaveChangesAsync() > 0;
+	    }
     }
 }
 

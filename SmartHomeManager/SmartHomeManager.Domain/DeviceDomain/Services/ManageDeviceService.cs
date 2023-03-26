@@ -77,7 +77,50 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services
 					await _deviceConfigurationRepository.AddAsync(deviceConfiguration);
 				}
 
-                return await _deviceRepository.SaveAsync();
+                return await _deviceConfigurationRepository.SaveAsync();
+            }
+            catch (Exception e)
+	        {
+				Debug.WriteLine(e.Message);
+                return false;
+            }
+		}
+
+		public async Task<bool> ApplyDeviceConfigurationsSameTypeAsync(string configurationKey, string deviceBrand, string deviceModel, Guid deviceId, int configurationValue)
+		{ 
+			try
+            {
+				IEnumerable<DeviceConfigurationLookUp> deviceConfigurationLookUps = (await _deviceConfigurationLookUpRepository.GetAllAsync()).Where(deviceConfigurationLookUp => deviceConfigurationLookUp.DeviceBrand == deviceBrand && deviceConfigurationLookUp.DeviceModel == deviceModel);
+				IEnumerable<Device> devices = (IEnumerable<Device>)(await _deviceRepository.GetAllAsync());
+
+				foreach (Device device in devices) 
+				{
+					if (device.DeviceBrand == deviceBrand && device.DeviceModel == deviceModel) 
+					{
+						DeviceConfiguration deviceConfiguration = new()
+						{
+							ConfigurationKey = configurationKey,
+							DeviceBrand = device.DeviceBrand,
+							DeviceModel = device.DeviceModel,
+							DeviceId = device.DeviceId,
+							ConfigurationValue = configurationValue,
+						};
+
+						DeviceConfiguration? existingDeviceConfiguration = await _deviceConfigurationRepository.GetAsync(configurationKey, device.DeviceId);
+						if (existingDeviceConfiguration != null)
+						{
+							existingDeviceConfiguration.ConfigurationValue = configurationValue;
+
+							_deviceConfigurationRepository.Update(existingDeviceConfiguration);
+						}
+						else
+						{
+							await _deviceConfigurationRepository.AddAsync(deviceConfiguration);
+						}
+					}
+				}
+
+				return await _deviceConfigurationRepository.SaveAsync();
             }
             catch (Exception e)
 	        {
