@@ -26,7 +26,7 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services.Provides
             return (await _deviceRepository.GetAllAsync()).Where(device => device.RoomId == roomId);
         }
 
-        public async Task<bool> IsDeviceOn(Guid deviceId)
+        public async Task<bool> IsDeviceOnAsync(Guid deviceId)
         {
             Device? device = await _deviceRepository.GetAsync(deviceId);
             if (device is null)
