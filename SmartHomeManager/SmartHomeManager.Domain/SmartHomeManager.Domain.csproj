@@ -10,11 +10,15 @@
     <None Remove="SceneDomain\Services\" />
     <None Remove="SceneDomain\Entities\DTOs\" />
     <None Remove="SceneDomain\Interfaces\" />
+    <None Remove="DeviceDomain\Interfaces\Provides\" />
+    <None Remove="DeviceDomain\Services\Provides\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SceneDomain\Services\" />
     <Folder Include="SceneDomain\Entities\DTOs\" />
     <Folder Include="SceneDomain\Interfaces\" />
+    <Folder Include="DeviceDomain\Interfaces\Provides\" />
+    <Folder Include="DeviceDomain\Services\Provides\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="EnergyProfile\**" />
