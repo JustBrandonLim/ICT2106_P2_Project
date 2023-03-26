@@ -1,12 +1,13 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.Common;
+using SmartHomeManager.Domain.DirectorDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Entities;
 
 namespace SmartHomeManager.DataSource.RulesDataSource
 {
-    public class RuleRepository : IGenericRepository<Rule>
+    public class RuleRepository : IRuleRepository<Rule>
     {
         private readonly ApplicationDbContext _applicationDbContext;
         protected DbSet<Rule> _dbSet;
@@ -103,6 +104,12 @@ namespace SmartHomeManager.DataSource.RulesDataSource
             {
                 return false;
             }
+        }
+        //Get By ScenarioID
+        public async Task<IEnumerable<Rule>> GetByScenarioId(Guid id)
+        {
+            //NEED TO DO THIS PART NOT SURE IF CORRECT
+            return await _applicationDbContext.Rules.Where(s => s.ScenarioId == id).ToListAsync();
         }
     }
 }

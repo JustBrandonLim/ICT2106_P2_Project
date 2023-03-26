@@ -11,8 +11,8 @@ using SmartHomeManager.DataSource;
 namespace SmartHomeManager.DataSource.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230215114542_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230326090641_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -745,15 +745,22 @@ namespace SmartHomeManager.DataSource.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsShareable")
+                        .HasColumnType("INTEGER");
+
                     b.Property<Guid>("ProfileId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProfileName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ScenarioName")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("ScenarioId");
 

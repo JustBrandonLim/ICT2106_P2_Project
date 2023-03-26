@@ -30,6 +30,7 @@ import Report from "pages/Analytics";
 import TwoFactorAuthSetUp from "./pages/account/TwoFactorAuthSetUp";
 import TwoFactorAuthSetUpSuccess from "./pages/account/TwoFactorAuthSetUpSuccess";
 import TwoFactorAuthLogin from "./pages/account/TwoFactorAuthLogin";
+import SharedPlatform from "pages/SharedPlatform";
 
 export function App() {
   return (
@@ -54,6 +55,7 @@ export function App() {
             <Route path="/two-factor-auth-setup" element={<TwoFactorAuthSetUp />} />
             <Route path="/two-factor-auth-setup-success" element={<TwoFactorAuthSetUpSuccess />} />
             <Route path="/two-factor-auth-login" element={<TwoFactorAuthLogin />} />
+            <Route path="/sharedplatform" element={<SharedPlatform />} />
 
             <Route path="/selectnearbydevice" element={<SelectNearbyDevice />} />
             <Route path="/registerdevice" element={<RegisterDevice />} />

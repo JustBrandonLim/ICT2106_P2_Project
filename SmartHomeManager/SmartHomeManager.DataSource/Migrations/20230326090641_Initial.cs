@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SmartHomeManager.DataSource.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -369,7 +369,9 @@ namespace SmartHomeManager.DataSource.Migrations
                     ScenarioId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ScenarioName = table.Column<string>(type: "TEXT", nullable: false),
                     ProfileId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    isActive = table.Column<bool>(type: "INTEGER", nullable: false)
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsShareable = table.Column<bool>(type: "INTEGER", nullable: false),
+                    ProfileName = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

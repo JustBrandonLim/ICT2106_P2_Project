@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,6 +12,7 @@ using SmartHomeManager.Domain.AccountDomain.DTOs;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.AccountDomain.Services;
+using SmartHomeManager.Domain.SceneDomain.Services;
 
 namespace SmartHomeManager.API.Controllers.ProfileAPI
 {
@@ -20,10 +21,12 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
     public class ProfilesController : ControllerBase
     {
         private readonly ProfileService _profileService;
+        private readonly ScenarioServices _scenarioServices;
 
-        public ProfilesController(IProfileRepository profileRepository)
+        public ProfilesController(ProfileService profileService, ScenarioServices scenarioServices)
         {
-            _profileService = new(profileRepository);
+            _profileService = profileService ?? throw new ArgumentNullException("profile service null");
+            _scenarioServices = scenarioServices ?? throw new ArgumentNullException("scenario service null");
         }
 
         /* 
@@ -156,22 +159,22 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
          * NotFound(1) - Profile does not exist
          * 
         */
-        [HttpPut("{profileId}")]
-        public async Task<IActionResult> PutProfile(Guid profileId, [FromBody] UpdateProfileWebRequest updateProfileWebRequest)
-        {
-            Profile? profile = await _profileService.GetProfileByProfileId(profileId);
-            if (profile == null)
-            {
-                return NotFound(1);
-            }
+        // [HttpPut("{profileId}")]
+        // public async Task<IActionResult> PutProfile(Guid profileId, [FromBody] UpdateProfileWebRequest updateProfileWebRequest)
+        // {
+        //     Profile? profile = await _profileService.GetProfileByProfileId(profileId);
+        //     if (profile == null)
+        //     {
+        //         return NotFound(1);
+        //     }
 
-            if (await _profileService.UpdateProfile(profile, updateProfileWebRequest))
-            {
-                return Ok(1);
-            }
+        //     if (await _profileService.UpdateProfile(profile, updateProfileWebRequest))
+        //     {
+        //         return Ok(1);
+        //     }
 
-            return BadRequest(1);
-        }
+        //     return BadRequest(1);
+        // }
         /* 
          * DELETE: api/Profiles/11111111-1111-1111-1111-111111111111
          * Return:
@@ -196,6 +199,15 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
             }
 
             return BadRequest(1);
+        [HttpPut("share-profile/{profileId}")]
+        public ActionResult<string> Put(Guid profileId)
+        {
+            var success = _scenarioServices.ShareScenarios(profileId);
+            if (success)
+            {
+                return Ok("Scenarios shared!");
+            }
+            return BadRequest("Scenarios not shared");
         }
     }
 }

@@ -211,5 +211,9 @@ const NAV_ITEMS = [
     label: "Analytics",
     href: "/analytics",
   },
-
+  {
+    label: "Shared Platform",
+    href: "/sharedplatform",
+  },
+    
 ];

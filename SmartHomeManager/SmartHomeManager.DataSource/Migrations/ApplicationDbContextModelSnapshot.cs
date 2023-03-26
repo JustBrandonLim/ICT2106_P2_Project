@@ -752,15 +752,22 @@ namespace SmartHomeManager.DataSource.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsShareable")
+                        .HasColumnType("INTEGER");
+
                     b.Property<Guid>("ProfileId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProfileName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ScenarioName")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("ScenarioId");
 

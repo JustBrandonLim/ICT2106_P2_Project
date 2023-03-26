@@ -15,9 +15,8 @@ namespace SmartHomeManager.API.Controllers.RulesAPIs;
 public class RulesController : ControllerBase
 {
     private readonly RuleServices _registerRuleService;
-    private readonly GetRulesServices _getRulesServices;
 
-    public RulesController(IGenericRepository<Rule> ruleRepository, IInformDirectorServices informDirectorServices)
+    public RulesController(IRuleRepository<Rule> ruleRepository, IInformDirectorServices informDirectorServices)
     {
         _registerRuleService = new(ruleRepository, informDirectorServices);
     }
