@@ -1,6 +1,5 @@
 import { React, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import DialogMessage from './DialogMessage';
 import {
     Button,
     Flex,
@@ -66,11 +65,13 @@ export default function ProfileSelected(): JSX.Element {
             throw new Error(`Failed to update profile: ${response.status}`);
         }
         else {
-            //Navigate back to profile
-            setIsOpen(true);
+            //Navigate back to profile-selected
+            setIsOpen(false)
         }
     }
-    
+    const handleModalOpen = () => {
+        setIsOpen(true);
+    }
     const handleClose = () => {
         setIsOpen(false);
     };
@@ -207,15 +208,28 @@ export default function ProfileSelected(): JSX.Element {
                                 <Button variant="solid" colorScheme="blue" marginRight="10px">
                                     Add Scenario
                                 </Button>
-                                <Button variant="solid" colorScheme="green" marginRight="10px" onClick={handleShareClick}>
+                                <Button variant="solid" colorScheme="green" marginRight="10px" onClick={handleModalOpen}>
                                     Share Profile
                                 </Button>
-                                {isDialog && (
-                                    <DialogMessage
-                                        message="Profile Shared Successfully!"
-                                        onClose={handleClose}
-                                    />
-                                )}
+                                <Modal isOpen={isDialog} onClose={handleClose} isCentered>
+                                    <ModalOverlay />
+                                    <ModalContent>
+                                        <ModalHeader>Confirm Share Profile</ModalHeader>
+                                        <ModalCloseButton />
+                                        <ModalBody>
+                                            Are you sure you want to share your profile?
+                                        </ModalBody>
+
+                                        <ModalFooter>
+                                            <Button colorScheme="green" mr={3} onClick={handleShareClick}>
+                                                Share!
+                                            </Button>
+                                            <Button colorScheme="red" onClick={handleClose}>
+                                                Cancel
+                                            </Button>
+                                        </ModalFooter>
+                                    </ModalContent>
+                                </Modal>
                                 <Button colorScheme="red" onClick={checkAdultProfile}>
                                     Add devices
                                 </Button>
