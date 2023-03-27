@@ -17,24 +17,6 @@ namespace SmartHomeManager.Domain.SceneDomain.Services
             return await _scenarioRepository.GetAllAsync();
         }
 
-        public Boolean ShareScenarios(Guid id)
-        {
-           /* IEnumerable<Scenario?> scenarios = _scenarioRepository.GetByProfileId(id);
-            foreach(Scenario? s in scenarios)
-            {
-                if (s != null)
-                {
-                    s.IsShareable = true;
-                    _scenarioRepository.UpdateAsync(s);
-                }
-                else
-                {
-                    return false;
-                }
-            }*/
-            return true;
-        }
-
         public async Task<IEnumerable<Scenario?>> GetScenarioByIdAsync(Guid id)
         {
             return await _scenarioRepository.GetByProfileId(id);

@@ -22,15 +22,24 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
     [ApiController]
     public class ProfilesController : ControllerBase
     {
-        private readonly ProfileService _profileService;
+        private readonly ProfileReadService _profileReadService;
+        private readonly ProfileWriteService _profileWriteService;
         private readonly ScenarioServices _scenarioServices;
 
         public ProfilesController(IScenarioRepository<Scenario> scenarioRepository, IProfileRepository profileRepository)
         {
             /*_profileService = profileService ?? throw new ArgumentNullException("profile service null");*/
-            _profileService = new(profileRepository);
+            _profileReadService = new(profileRepository);
+            _profileWriteService = new(profileRepository);
             _scenarioServices = new(scenarioRepository);
         }
+
+        //public ProfilesController(IProfileReadInterface profileReadInterface, IProfileWriteInterface profileWriteInterface)
+        //{
+        //    /*_profileService = profileService ?? throw new ArgumentNullException("profile service null");*/
+        //    _profileService = profileReadInterface;
+        //    _scenarioServices = profileWriteInterface;
+        //}
 
         /* 
          * GET: api/Profiles
@@ -41,7 +50,7 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Profile>>> GetProfiles()
         {
-            IEnumerable<Profile> profiles = await _profileService.GetProfiles();
+            IEnumerable<Profile> profiles = await _profileReadService.GetProfiles();
             
             if (!profiles.Any())
                 return NotFound();
@@ -58,7 +67,7 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
         [HttpGet("{profileId}")]
         public async Task<ActionResult<Profile>> GetProfileByProfileId(Guid profileId)
         {
-            Profile? profile = await _profileService.GetProfileByProfileId(profileId);
+            Profile? profile = await _profileReadService.GetProfileByProfileId(profileId);
 
             if (profile == null)
                 return NotFound();
@@ -76,7 +85,7 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
         public async Task<ActionResult<IEnumerable<Profile>>> GetProfilesByAccountId(Guid accountId)
         {
             /*var realAccountId = Guid.Parse(accountId);*/
-            IEnumerable<Profile> profiles = (await _profileService.GetProfilesByAccountId(accountId))!;
+            IEnumerable<Profile> profiles = (await _profileReadService.GetProfilesByAccountId(accountId))!;
 
             if (profiles == null)
                 return NotFound(1);
@@ -93,7 +102,7 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
         [HttpGet("get-device-ids/{profileId}")]
         public async Task<ActionResult<IEnumerable<Guid>>> GetDevicesByProfileId(Guid profileId)
         {
-            IEnumerable<Guid> listOfDeviceIds = (await _profileService.GetDevicesByProfileId(profileId))!;
+            IEnumerable<Guid> listOfDeviceIds = (await _profileReadService.GetDevicesByProfileId(profileId))!;
 
             if (listOfDeviceIds == null)
             {
@@ -106,7 +115,7 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
         [HttpPost("check-Pin")] // Go to check-pin method. if it's check-pin/{profileId} means need to key in profileId
         public async Task<ActionResult> ValidatePinByProfileId([FromBody] ParentControlPin pinInfo)
         {
-            int response = await _profileService.CheckPinByProfileId(pinInfo);
+            int response = await _profileReadService.CheckPinByProfileId(pinInfo);
                 Debug.WriteLine("response is : " + response);
             if (response == 1)
             {
@@ -123,7 +132,7 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
         [HttpPost("adult-checker")] 
         public async Task<ActionResult> ValidateAdult([FromBody] ProfileIdRequest profileIdInfo)
         {
-            int response = await _profileService.CheckAdultProfile(profileIdInfo);
+            int response = await _profileReadService.CheckAdultProfile(profileIdInfo);
             Debug.WriteLine("response is : " + response);
             if (response == 1)
             {
@@ -144,7 +153,7 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
         [HttpPost]
         public async Task<ActionResult> PostProfile([FromBody] ProfileWebRequest profileWebRequest)
         {
-            int response = await _profileService.CreateProfile(profileWebRequest);
+            int response = await _profileWriteService.CreateProfile(profileWebRequest);
 
             if (response == 1)
             {
@@ -190,13 +199,13 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
         public async Task<IActionResult> DeleteProfile(Guid profileId)
         {
 
-            Profile? profile = await _profileService.GetProfileByProfileId(profileId);
+            Profile? profile = await _profileReadService.GetProfileByProfileId(profileId);
             if (profile == null)
             {
                 return NotFound(1);
             }
 
-            if (await _profileService.DeleteProfile(profile))
+            if (await _profileWriteService.DeleteProfile(profile))
             {
                 return Ok(1);
             }
@@ -205,9 +214,9 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
         }
 
         [HttpPut("share-profile/{profileId}")]
-        public ActionResult<string> Put(Guid profileId)
+        public async Task<ActionResult<string>> Put(Guid profileId)
         {
-            var success = _scenarioServices.ShareScenarios(profileId);
+            bool success = await _scenarioServices.UpdateScenarioByProfileId(profileId);
             if (success)
             {
                 return Ok("Scenarios shared!");
