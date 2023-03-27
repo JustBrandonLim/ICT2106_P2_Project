@@ -3,7 +3,7 @@ namespace SmartHomeManager.Domain.DeviceDomain.Interfaces.Provides
 {
 	public interface IDeviceWattsService
 	{
-		public Task<int> GetDeviceWatts(Guid deviceId);
+		public Task<int> GetDeviceWattsAsync(Guid deviceId);
 	}
 }
 

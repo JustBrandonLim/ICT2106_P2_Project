@@ -14,7 +14,7 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services.Provides
 			_deviceRepository = deviceRepository;
 		}
 
-        public async Task<int> GetDeviceWatts(Guid deviceId)
+        public async Task<int> GetDeviceWattsAsync(Guid deviceId)
         {
 			Device? device = await _deviceRepository.GetAsync(deviceId);
 			
