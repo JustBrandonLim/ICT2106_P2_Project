@@ -245,12 +245,21 @@ namespace SmartHomeManager.DataSource
                 new Scenario
                 {
                     ScenarioId = new("AC38AF14-9A57-4DF3-89F3-78F9CE9F4983"),
-                    ScenarioName = "Default",
+                    ScenarioName = "Default Child Scenario",
                     ProfileId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
                     IsActive = false,
                     IsShareable = false,
-                    ProfileName = "Name"
-                }
+                    ProfileName = "Child"
+                },
+                new Scenario
+                {
+                    ScenarioId = new("AC38AF14-9A57-4DF3-89F3-78F9CE9F4986"),
+                    ScenarioName = "Default Adult Scenario",
+                    ProfileId = Guid.Parse("66666666-6666-6666-6666-666666666666"),
+                    IsActive = false,
+                    IsShareable = false,
+                    ProfileName = "Adult"
+                },
             };
 
             await context.Scenarios.AddRangeAsync(scenarios);
@@ -276,6 +285,28 @@ namespace SmartHomeManager.DataSource
                     ConfigurationKey = "Oscillation",
                     ConfigurationValue = 1,
                     RuleName = "Fan Oscillation",
+                    StartTime = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
+                    EndTime = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
+                    DeviceId = devices[0].DeviceId
+                },
+                new Rule
+                {
+                    RuleId = Guid.NewGuid(),
+                    ScenarioId = scenarios[1].ScenarioId,
+                    ConfigurationKey = "Brightness",
+                    ConfigurationValue = 3,
+                    RuleName = "Light Brightness",
+                    StartTime = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
+                    EndTime = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
+                    DeviceId = devices[0].DeviceId
+                },
+                new Rule
+                {
+                    RuleId = Guid.NewGuid(),
+                    ScenarioId = scenarios[1].ScenarioId,
+                    ConfigurationKey = "Heater",
+                    ConfigurationValue = 5,
+                    RuleName = "Water Heater",
                     StartTime = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
                     EndTime = Convert.ToDateTime("2023-02-04T07:21:26.934Z"),
                     DeviceId = devices[0].DeviceId
