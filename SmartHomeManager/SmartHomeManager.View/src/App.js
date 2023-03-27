@@ -19,6 +19,7 @@ import ForgetPassword from "./pages/account/ForgetPassword";
 import ChangePassword from "./pages/account/ChangePassword";
 import Login from "./pages/account/Login";
 import RegisterOK from "./pages/account/RegisterOK";
+import OnboardDevice from "./pages/account/OnboardDevice";
 import MyAccount from "./pages/account/Setting";
 import UserProfileEdit from "./pages/profile/EditProfile";
 import AddProfile from "./pages/profile/AddProfile";
@@ -56,6 +57,7 @@ export function App() {
             <Route path="/two-factor-auth-setup-success" element={<TwoFactorAuthSetUpSuccess />} />
             <Route path="/two-factor-auth-login" element={<TwoFactorAuthLogin />} />
             <Route path="/sharedplatform" element={<SharedPlatform />} />
+            <Route path="/onboard-devices" element={<OnboardDevice />} />
 
             <Route path="/selectnearbydevice" element={<SelectNearbyDevice />} />
             <Route path="/registerdevice" element={<RegisterDevice />} />

@@ -40,8 +40,10 @@ export default function Login() {
                 if(accountDetails['twoFactorFlag'])
                     navigate("/two-factor-auth-login", { replace: true })
                 else {
-                    navigate("/", { replace: true })  
+                    // navigate("/", { replace: true }) 
+                    navigate("/onboard-devices", { replace: true })  
                     location.reload() 
+
                 }    
             }        
         }

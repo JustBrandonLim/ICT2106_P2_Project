@@ -108,7 +108,8 @@ export default function MyAccount() {
     //Function to update password
     const updatePassword = () => {
         //Check if current password is correct
-        if (currentPasswordInput.length >= 8 && newPasswordInput.length >= 8 && confirmNewPasswordInput.length >= 8) {
+        if (currentPasswordInput.length >= 8 && newPasswordInput.length >= 8 
+            && confirmNewPasswordInput.length >= 8 && passwordValid && confirmPasswordValid) {
             //Obj for PasswordObj
             const accountPasswordObj = {
                 "accountId": accountId, "password": currentPasswordInput
