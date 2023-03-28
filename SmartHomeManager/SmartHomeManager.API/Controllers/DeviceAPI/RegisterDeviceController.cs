@@ -12,11 +12,11 @@ namespace SmartHomeManager.API.Controllers.DeviceAPIs
     [ApiController]
     public class RegisterDeviceController : ControllerBase
     {
-        private readonly RegisterDeviceService _registerDeviceService;
+        private readonly IRegisterDeviceService _registerDeviceService;
 
-        public RegisterDeviceController(IDeviceRepository deviceRepository, IDeviceTypeRepository deviceTypeRepository) 
+        public RegisterDeviceController(IRegisterDeviceService registerDeviceService) 
         {
-            _registerDeviceService = new(deviceRepository, deviceTypeRepository);
+            _registerDeviceService = registerDeviceService;
         }
 
         // GET api/<RegisterDeviceController>/GetAllDeviceTypes

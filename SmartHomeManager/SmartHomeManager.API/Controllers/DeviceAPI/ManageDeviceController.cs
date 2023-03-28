@@ -18,11 +18,11 @@ namespace SmartHomeManager.API.Controllers.DeviceAPI
     [ApiController]
     public class ManageDeviceController : Controller
     {
-        private readonly ManageDeviceService _manageDeviceService;
+        private readonly IManageDeviceService _manageDeviceService;
 
-        public ManageDeviceController(IDeviceRepository deviceRepository, IDeviceConfigurationLookUpRepository deviceConfigurationLookUpRepository, IDeviceConfigurationRepository deviceConfigurationRepository, IDeviceTypeRepository deviceTypeRepository) 
+        public ManageDeviceController(IManageDeviceService manageDeviceService) 
 	    {
-            _manageDeviceService = new(deviceRepository, deviceConfigurationLookUpRepository, deviceConfigurationRepository, deviceTypeRepository);
+            _manageDeviceService = manageDeviceService; 
 	    }
 
         [HttpGet("GetAllDevicesByAccount/{accountId}")]
