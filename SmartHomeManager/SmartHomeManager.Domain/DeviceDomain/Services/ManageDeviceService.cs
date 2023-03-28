@@ -7,7 +7,7 @@ using SmartHomeManager.Domain.DeviceDomain.Interfaces;
 
 namespace SmartHomeManager.Domain.DeviceDomain.Services
 {
-	public class ManageDeviceService
+	public class ManageDeviceService : IManageDeviceService
 	{
 		private readonly IDeviceRepository _deviceRepository;
 		private readonly IDeviceConfigurationLookUpRepository _deviceConfigurationLookUpRepository;

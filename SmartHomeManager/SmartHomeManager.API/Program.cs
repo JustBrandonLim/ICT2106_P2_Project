@@ -49,7 +49,7 @@ using SmartHomeManager.Domain.NotificationDomain.Interfaces;
 using SmartHomeManager.DataSource.DeviceStoreDataSource;
 using SmartHomeManager.Domain.DeviceStoreDomain.Entities;
 using SmartHomeManager.Domain.DeviceStoreDomain.Interfaces;
-
+using SmartHomeManager.Domain.DeviceDomain.Services;
 
 namespace SmartHomeManager.API;
 
@@ -95,6 +95,8 @@ public class Program
         builder.Services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();
         builder.Services.AddScoped<IDeviceConfigurationLookUpRepository, DeviceConfigurationLookUpRepository>();
         builder.Services.AddScoped<IDeviceConfigurationRepository, DeviceConfigurationRepository>();
+        builder.Services.AddScoped<IRegisterDeviceService, RegisterDeviceService>();
+        builder.Services.AddScoped<IManageDeviceService, ManageDeviceService>();
 
         // DEVICELOG
         builder.Services.AddScoped<IDeviceLogRepository, DeviceLogRepository>();
