@@ -20,6 +20,7 @@ import {
 	useDisclosure,
 } from '@chakra-ui/react'
 import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 export default function Rooms() {
 	const [rooms, setRooms] = useState([])
@@ -31,13 +32,16 @@ export default function Rooms() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const res = await fetch('https://localhost:7140/api/Rooms', {
-					method: 'GET',
-					headers: {
-						accept: 'text/plain',
-					},
-				})
-				const data = await res.json()
+				const accountId = '11111111-1111-1111-1111-111111111111'
+				const res = await axios.get(
+					`https://localhost:7140/api/Rooms/GetRoomsRelatedToAccount/${accountId}`,
+					{
+						headers: {
+							Accept: 'text/json',
+						},
+					}
+				)
+				const data = res.data
 				setRooms(data)
 			} catch (error) {
 				console.error(error)
@@ -102,7 +106,7 @@ export default function Rooms() {
 				},
 				body: JSON.stringify({
 					name: newRoomName,
-					accountId: 'C03F4271-BAF9-4E08-8853-F5B3291676B7',
+					accountId: '11111111-1111-1111-1111-111111111111',
 				}),
 			})
 			if (res.ok) {
