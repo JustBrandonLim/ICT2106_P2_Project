@@ -375,59 +375,9 @@ export default function ProfileSelected(): JSX.Element {
                         >
                             <Stack>
                                 <CardBody>
-                                    <Heading size="md">Scenario 1</Heading>
-
-                                    <Text py="2">Night Settings for fans, lights</Text>
-                                </CardBody>
-
-                                <CardFooter>
-                                    <Button variant="solid" colorScheme="blue" marginLeft="10px">
-                                        Edit Scenario
-                                    </Button>
-                                    <Button variant="solid" colorScheme="red" marginLeft="10px">
-                                        Delete Scenario
-                                    </Button>
-                                </CardFooter>
-                            </Stack>
-                        </Card>
-                    </Box>
-                    <Box width="330px">
-                        <Card
-                            direction={{ base: "column", sm: "row" }}
-                            overflow="hidden"
-                            variant="outline"
-                            size="sm"
-                        >
-                            <Stack>
-                                <CardBody>
-                                    <Heading size="md">Scenario 2</Heading>
+                                    <Heading size="md">Default Adult Scenario</Heading>
 
                                     <Text py="2">Day settings for fans, lights, television</Text>
-                                </CardBody>
-
-                                <CardFooter>
-                                    <Button variant="solid" colorScheme="blue" marginLeft="10px">
-                                        Edit Scenario
-                                    </Button>
-                                    <Button variant="solid" colorScheme="red" marginLeft="10px">
-                                        Delete Scenario
-                                    </Button>
-                                </CardFooter>
-                            </Stack>
-                        </Card>
-                    </Box>
-                    <Box width="330px">
-                        <Card
-                            direction={{ base: "column", sm: "row" }}
-                            overflow="hidden"
-                            variant="outline"
-                            size="sm"
-                        >
-                            <Stack>
-                                <CardBody>
-                                    <Heading size="md">Scenario 3</Heading>
-
-                                    <Text py="2">Night settings for hot weather</Text>
                                 </CardBody>
 
                                 <CardFooter>
