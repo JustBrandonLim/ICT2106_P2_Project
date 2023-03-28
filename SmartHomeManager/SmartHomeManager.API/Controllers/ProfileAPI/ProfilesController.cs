@@ -171,22 +171,22 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
          * NotFound(1) - Profile does not exist
          * 
         */
-        // [HttpPut("{profileId}")]
-        // public async Task<IActionResult> PutProfile(Guid profileId, [FromBody] UpdateProfileWebRequest updateProfileWebRequest)
-        // {
-        //     Profile? profile = await _profileService.GetProfileByProfileId(profileId);
-        //     if (profile == null)
-        //     {
-        //         return NotFound(1);
-        //     }
+        [HttpPut("{profileId}")]
+        public async Task<IActionResult> PutProfile(Guid profileId, [FromBody] UpdateProfileWebRequest updateProfileWebRequest)
+        {
+           Profile? profile = await _profileReadService.GetProfileByProfileId(profileId);
+             if (profile == null)
+             {
+                 return NotFound(1);
+             }
 
-        //     if (await _profileService.UpdateProfile(profile, updateProfileWebRequest))
-        //     {
-        //         return Ok(1);
-        //     }
+             if (await _profileWriteService.UpdateProfile(profile, updateProfileWebRequest))
+             {
+                 return Ok(1);
+             }
 
-        //     return BadRequest(1);
-        // }
+             return BadRequest(1);
+        }
         /* 
          * DELETE: api/Profiles/11111111-1111-1111-1111-111111111111
          * Return:
