@@ -5,7 +5,7 @@ using SmartHomeManager.Domain.AccountDomain.Factory;
 
 namespace SmartHomeManager.Domain.AccountDomain.Interfaces
 {
-	public interface IProfileWriteInterface
+	public interface IProfileWriteService
 	{
         public Task<int> CreateProfile(ProfileWebRequest profileWebRequest);
 

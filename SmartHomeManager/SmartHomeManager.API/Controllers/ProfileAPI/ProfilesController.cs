@@ -22,16 +22,17 @@ namespace SmartHomeManager.API.Controllers.ProfileAPI
     [ApiController]
     public class ProfilesController : ControllerBase
     {
-        private readonly ProfileReadService _profileReadService;
-        private readonly ProfileWriteService _profileWriteService;
-        private readonly ScenarioServices _scenarioServices;
+        private readonly IProfileReadService _profileReadService;
+        private readonly IProfileWriteService _profileWriteService;
+        private readonly IScenarioServices _scenarioServices;
 
-        public ProfilesController(IScenarioRepository<Scenario> scenarioRepository, IProfileRepository profileRepository)
+        public ProfilesController(IProfileReadService profileReadService, IProfileWriteService profileWriteService, 
+            IScenarioServices scenarioServices)
         {
             /*_profileService = profileService ?? throw new ArgumentNullException("profile service null");*/
-            _profileReadService = new(profileRepository);
-            _profileWriteService = new(profileRepository);
-            _scenarioServices = new(scenarioRepository);
+            _profileReadService = profileReadService;
+            _profileWriteService = profileWriteService;
+            _scenarioServices = scenarioServices;
         }
 
         //public ProfilesController(IProfileReadInterface profileReadInterface, IProfileWriteInterface profileWriteInterface)

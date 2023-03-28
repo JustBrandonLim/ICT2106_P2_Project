@@ -14,7 +14,7 @@ using SmartHomeManager.Domain.AccountDomain.Product;
 
 namespace SmartHomeManager.Domain.AccountDomain.Services
 {
-    public class EmailService : IEmailPurchaseService, IEmailRegistrationService
+    public class EmailService : IEmailService, IEmailPurchaseService, IEmailRegistrationService
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IEmailBuilder _emailBuilder;

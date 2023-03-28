@@ -78,7 +78,7 @@ public class Program
         builder.Services.AddScoped<IGenericRepository<EnergyProfile>, EnergyProfileRepository>();
         builder.Services.AddScoped<IScenarioRepository<Scenario>, ScenarioRepository>();
 
-        builder.Services.AddScoped<ScenarioServices>();
+        builder.Services.AddScoped<IScenarioServices, ScenarioServices>();
         builder.Services.AddScoped<IInformDirectorServices, DirectorServices>();
         builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
         builder.Services.AddScoped<IGenericRepository<HomeSecurity>, HomeSecurityRepository>();
@@ -114,11 +114,15 @@ public class Program
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
         builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
         builder.Services.AddScoped<IAccountReadService, AccountReadService>();
+        builder.Services.AddScoped<IAccountWriteService, AccountWriteService>();
         builder.Services.AddScoped<IAccountPasswordHashService, AccountReadService>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
         builder.Services.AddScoped<IEmailPurchaseService, EmailService>();
         builder.Services.AddScoped<IEmailRegistrationService, EmailService>();
         builder.Services.AddScoped<IEmailBuilder, EmailBuilder>();
-        builder.Services.AddScoped<IProfileService, ProfileService>();
+        builder.Services.AddScoped<IProfileDeviceReadService, ProfileReadService>();
+        builder.Services.AddScoped<IProfileReadService, ProfileReadService>();
+        builder.Services.AddScoped<IProfileWriteService, ProfileWriteService>();
         builder.Services.AddScoped<ITwoFactorAuthService,TwoFactorAuthService>();
         #endregion DEPENDENCY INJECTIONS
 

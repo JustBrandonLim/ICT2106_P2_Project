@@ -6,7 +6,7 @@ using SmartHomeManager.Domain.AccountDomain.Interfaces;
 
 namespace SmartHomeManager.Domain.AccountDomain.Services
 {
-	public class ProfileWriteService : IProfileWriteInterface
+	public class ProfileWriteService : IProfileWriteService
     {
         private readonly IProfileRepository _profileRepository;
 

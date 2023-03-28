@@ -24,17 +24,21 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
     {
         // dependency injection is just saying this class can use this thing
         // in this context - accounts controller can use account service
-        private readonly AccountReadService _accountReadService;
-        private readonly AccountWriteService _accountWriteService;
-        private readonly EmailService _emailService;
-        private readonly TwoFactorAuthService _twoFactorAuthService;
+        private readonly IAccountReadService _accountReadService;
+        private readonly IAccountWriteService _accountWriteService;
+        private readonly IAccountPasswordHashService _accountPasswordHashService;
+        private readonly IEmailService _emailService;
+        private readonly ITwoFactorAuthService _twoFactorAuthService;
 
-        public AccountsController(IAccountRepository accountRepository, IEmailBuilder emailBuilder, IAccountPasswordHashService accountPasswordHashService)
+        public AccountsController(IAccountReadService accountReadService, IAccountWriteService accountWriteService, 
+            IAccountPasswordHashService accountPasswordHashService, 
+            IEmailService emailService, ITwoFactorAuthService twoFactorAuthService)
         {
-            _accountReadService = new(accountRepository);
-            _accountWriteService = new(accountRepository, accountPasswordHashService);
-            _emailService = new(accountRepository, emailBuilder);
-            _twoFactorAuthService = new();
+            _accountReadService = accountReadService;
+            _accountWriteService = accountWriteService;
+            _accountPasswordHashService = accountPasswordHashService;
+            _emailService = emailService;
+            _twoFactorAuthService = twoFactorAuthService;
         }
 
         /* 

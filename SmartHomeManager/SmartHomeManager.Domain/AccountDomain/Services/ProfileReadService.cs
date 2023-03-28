@@ -5,7 +5,7 @@ using SmartHomeManager.Domain.AccountDomain.Entities;
 
 namespace SmartHomeManager.Domain.AccountDomain.Interfaces
 {
-	public class ProfileReadService : IProfileReadService
+	public class ProfileReadService : IProfileReadService, IProfileDeviceReadService
 	{
         private readonly IProfileRepository _profileRepository;
 
