@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Interfaces;
 
@@ -16,65 +15,49 @@ public class RoomRepository : IRoomRepository
         _dbSet = _db.Set<Room>();
     }
 
-    public async Task<Room?> Get(Guid id)
+    public async Task<IRoom?> Get(Guid id)
     {
         var result = await _dbSet.FindAsync(id);
-
         return result;
     }
 
-    public async Task<IEnumerable<Room>> GetAll()
+    public async Task<IEnumerable<IRoom>> GetAll()
     {
         IEnumerable<Room> query = await _dbSet.ToListAsync();
         return query;
     }
 
-    public void Add(Room entity)
+    public async Task Add(IRoom entity)
     {
-        _dbSet.Add(entity);
+        _dbSet.Add((Room)entity);
+        await SaveChangesAsync();
     }
 
-    public void AddRange(IEnumerable<Room> entities)
+    public async Task Remove(IRoom entity)
     {
-        _dbSet.AddRange(entities);
+        _dbSet.Remove((Room)entity);
+        await SaveChangesAsync();
     }
 
-    public void Remove(Room entity)
+    public async Task Update(IRoom room)
     {
-        _dbSet.Remove(entity);
+        _dbSet.Update((Room)room);
+        await SaveChangesAsync();
     }
 
-    public void RemoveRange(IEnumerable<Room> entities)
-    {
-        _dbSet.RemoveRange(entities);
-    }
-
-    public void Update(Room room)
-    {
-        _dbSet.Update(room);
-    }
-
-    public IEnumerable<Room> Find(Expression<Func<Room, bool>> predicate)
-    {
-        // this might be a dangerous method because the function assumes that the data is loaded already
-        IQueryable<Room> query = _dbSet;
-        var result = query.Where(predicate);
-        return result.ToList();
-    }
-
-    public async Task SaveChangesAsync()
-    {
-        await _db.SaveChangesAsync();
-    }
-
-    public IEnumerable<Room> GetRoomsRelatedToAccount(Guid accountId)
+    // this is used by team 2
+    public IEnumerable<IRoom> GetRoomsRelatedToAccount(Guid accountId)
     {
         // load the data
         var allRooms = _db.Rooms.ToList();
 
         // filter the data
         var result = allRooms.Where(room => room.AccountId == accountId);
-
         return result;
+    }
+
+    private async Task SaveChangesAsync()
+    {
+        await _db.SaveChangesAsync();
     }
 }

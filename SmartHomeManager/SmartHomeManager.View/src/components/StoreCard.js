@@ -35,32 +35,42 @@ function PriceButton({ price }) {
 	)
 }
 
-function StoreCard({ imageURL, name, price }) {
+function StoreCard({ imageURL, name, price, description }) {
 	return (
 		<Flex w="full" alignItems="center" justifyContent="center" h="auto">
 			<Flex
 				bg={useColorModeValue('white', 'gray.800')}
 				maxW="sm"
-				h="320px"
+				h="auto"
 				borderWidth="1px"
 				direction={'column'}
 				rounded="lg"
 				shadow="lg"
 			>
-				<Image
-					src={imageURL}
-					alt={`Picture of ${name}`}
-					roundedTop="lg"
-					w="full"
-					h="160px"
-					objectFit="cover"
-				/>
+				<Flex w="100%" h="160px">
+					<Image
+						src={imageURL}
+						alt={`Picture of ${name}`}
+						roundedTop="lg"
+						w="100%"
+						h="100%"
+						objectFit="cover"
+					/>
+				</Flex>
 
 				<Flex direction={{ base: 'row', md: 'column' }} p="4" h={'full'}>
 					<Flex mt="1" justifyContent="space-between" alignContent="center">
 						<Box fontSize="lg" fontWeight="semibold">
 							{name}
 						</Box>
+					</Flex>
+					<Flex
+						mt="2"
+						fontSize="sm"
+						color={useColorModeValue('gray.600', 'gray.400')}
+						height="120px"
+					>
+						{description}
 					</Flex>
 					<Spacer />
 					<Flex justifyContent="space-between" alignContent="center">

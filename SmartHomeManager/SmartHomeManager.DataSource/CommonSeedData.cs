@@ -12,6 +12,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using SmartHomeManager.Domain.TwoDHomeDomain.Entities;
 
 namespace SmartHomeManager.DataSource
 {
