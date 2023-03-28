@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartHomeManager.Domain.DeviceStoreDomain.Entities;
 
-public class DeviceProduct
+public class DeviceProduct : IDeviceProduct
 {
     [Key]
     [Required]

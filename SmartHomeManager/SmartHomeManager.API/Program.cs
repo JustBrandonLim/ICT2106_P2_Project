@@ -46,7 +46,18 @@ using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.NotificationDomain.Entities;
 using SmartHomeManager.Domain.NotificationDomain.Interfaces;
+
 using SmartHomeManager.Domain.AccountDomain.Builder;
+using SmartHomeManager.DataSource.DeviceStoreDataSource;
+using SmartHomeManager.DataSource.TwoDHomeDataSource;
+using SmartHomeManager.Domain.DeviceStoreDomain.Entities;
+using SmartHomeManager.Domain.DeviceStoreDomain.Services;
+using SmartHomeManager.Domain.DeviceStoreDomain.Interfaces;
+using SmartHomeManager.Domain.DeviceDomain.Services;
+using SmartHomeManager.Domain.RoomDomain.Services;
+using SmartHomeManager.Domain.TwoDHomeDomain.Interfaces;
+using SmartHomeManager.Domain.TwoDHomeDomain.Mocks;
+using SmartHomeManager.Domain.TwoDHomeDomain.Services;
 
 namespace SmartHomeManager.API;
 
@@ -95,7 +106,10 @@ public class Program
         // DEVICE
         builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
         builder.Services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();
-            
+        builder.Services.AddScoped<IDeviceConfigurationLookUpRepository, DeviceConfigurationLookUpRepository>();
+        builder.Services.AddScoped<IDeviceConfigurationRepository, DeviceConfigurationRepository>();
+        builder.Services.AddScoped<IRegisterDeviceService, RegisterDeviceService>();
+        builder.Services.AddScoped<IManageDeviceService, ManageDeviceService>();
 
         // DEVICELOG
         builder.Services.AddScoped<IDeviceLogRepository, DeviceLogRepository>();
@@ -107,8 +121,20 @@ public class Program
         builder.Services.AddScoped<IGenericRepository<Account>, MockAccountRepository>();
 
         // ROOM
+        builder.Services.AddScoped<IRoomReadService, RoomReadService>();
+        builder.Services.AddScoped<IRoomWriteService, RoomWriteService>();
         builder.Services.AddScoped<IRoomRepository, RoomRepository>();
         builder.Services.AddScoped<IDeviceInformationServiceMock, DeviceRepositoryMock>();
+
+        //DEVICE PRODUCT STORE
+        builder.Services.AddScoped<IDeviceProductsRepository, DeviceProductRepository>();
+        builder.Services.AddScoped<IDeviceProductService, DeviceProductService>();
+
+        // 2DHOME
+        builder.Services.AddScoped<ITwoDHomeRepository, TwoDHomeRepository>();
+        builder.Services.AddScoped<ITwoDHomeReadService, TwoDHomeReadService>();
+        builder.Services.AddScoped<ITwoDHomeWriteService, TwoDHomeWriteService>();
+        builder.Services.AddScoped<IControlDeviceServiceMock, ControlDeviceServiceMock>();
 
         // ACCOUNT
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();

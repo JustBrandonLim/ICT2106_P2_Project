@@ -13,7 +13,7 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 
-import Notification from "components/Notification/Notification"
+import Notification from "components/Notification/Notification";
 
 export function NavBar() {
 
@@ -59,7 +59,6 @@ export function NavBar() {
             <DesktopNav />
           </Flex>
         </Flex>
-
 
         <Notification />
 
@@ -108,8 +107,26 @@ export function NavBar() {
 
           </Stack>
         }
-
-
+        
+        <Stack flex={{ base: 1, md: 0 }} justify={"flex-end"} direction={"row"} spacing={6}>
+          <Button fontSize={"sm"} fontWeight={400} variant={"link"} as={RouterLink} to="/login">
+            Sign In
+          </Button>
+          <Button
+            as={RouterLink}
+            to="/register"
+            display={{ base: "none", md: "inline-flex" }}
+            fontSize={"sm"}
+            fontWeight={600}
+            color={"white"}
+            bg={"pink.400"}
+            _hover={{
+              bg: "pink.300",
+            }}
+          >
+            Sign Up
+          </Button>
+        </Stack>
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
@@ -188,6 +205,10 @@ const NAV_ITEMS = [
     href: "/devices",
   },
   {
+    label: "Manage Devices",
+    href: "/managedevices",
+  },
+  {
     label: "Register Device",
     href: "/selectnearbydevice",
   },
@@ -205,7 +226,7 @@ const NAV_ITEMS = [
   },
   {
     label: "Device Config",
-    href: "/config"
+    href: "/config",
   },
   {
     label: "Analytics",
@@ -215,5 +236,4 @@ const NAV_ITEMS = [
     label: "Shared Platform",
     href: "/sharedplatform",
   },
-    
 ];

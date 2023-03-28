@@ -4,7 +4,7 @@ using SmartHomeManager.Domain.DeviceDomain.Interfaces;
 
 namespace SmartHomeManager.Domain.DeviceDomain.Services
 {
-    public class RegisterDeviceService
+    public class RegisterDeviceService : IRegisterDeviceService
     {
         private readonly IDeviceRepository _deviceRepository;
         private readonly IDeviceTypeRepository _deviceTypeRepository;

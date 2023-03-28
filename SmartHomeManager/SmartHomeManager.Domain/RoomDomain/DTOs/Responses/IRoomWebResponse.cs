@@ -1,6 +1,6 @@
 ﻿namespace SmartHomeManager.Domain.RoomDomain.DTOs.Responses;
 
-public class GetRoomWebResponse
+public interface IRoomWebResponse
 {
     public Guid RoomId { get; set; }
     public string Name { get; set; }
