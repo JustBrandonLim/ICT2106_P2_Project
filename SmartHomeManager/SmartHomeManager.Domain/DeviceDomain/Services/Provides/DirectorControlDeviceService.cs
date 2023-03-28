@@ -16,7 +16,7 @@ namespace SmartHomeManager.Domain.DeviceDomain.Services.Provides
             _deviceConfigurationRepository = deviceConfigurationRepository;
         }
 
-        public async Task<bool> SetDeviceTypeConfiguration(Guid accountId, string deviceTypeName, string configurationKey, int configurationValue)
+        public async Task<bool> SetDeviceTypeConfigurationAsync(Guid accountId, string deviceTypeName, string configurationKey, int configurationValue)
         {
             try
             {
