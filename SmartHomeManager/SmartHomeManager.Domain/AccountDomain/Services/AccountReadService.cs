@@ -13,7 +13,7 @@ using System.Net;
 
 namespace SmartHomeManager.Domain.AccountDomain.Services
 {
-	public class AccountReadService : IAccountReadService, IAccountPasswordHashService
+	public class AccountReadService : IAccountInfoService, IAccountReadService, IAccountPasswordHashService
 	{
 		private readonly IAccountRepository _accountRepository;
 

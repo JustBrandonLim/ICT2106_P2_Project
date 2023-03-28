@@ -139,6 +139,7 @@ public class Program
         // ACCOUNT
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
         builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+        builder.Services.AddScoped<IAccountInfoService, AccountReadService>();
         builder.Services.AddScoped<IAccountReadService, AccountReadService>();
         builder.Services.AddScoped<IAccountWriteService, AccountWriteService>();
         builder.Services.AddScoped<IAccountPasswordHashService, AccountReadService>();
