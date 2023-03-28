@@ -3,6 +3,7 @@ using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.Entities;
 using SmartHomeManager.Domain.SceneDomain.Entities;
+using SmartHomeManager.Domain.TwoDHomeDomain.Entities;
 
 
 namespace SmartHomeManager.DataSource.RulesDataSource;

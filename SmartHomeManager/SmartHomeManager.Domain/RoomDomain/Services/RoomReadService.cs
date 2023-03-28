@@ -1,13 +1,13 @@
-﻿using System.Linq.Expressions;
-using SmartHomeManager.Domain.DeviceDomain.Entities;
+﻿using SmartHomeManager.Domain.DeviceDomain.Entities;
 using SmartHomeManager.Domain.RoomDomain.DTOs.Responses;
 using SmartHomeManager.Domain.RoomDomain.Entities;
+using SmartHomeManager.Domain.RoomDomain.Factories;
 using SmartHomeManager.Domain.RoomDomain.Interfaces;
 using SmartHomeManager.Domain.RoomDomain.Mocks;
 
 namespace SmartHomeManager.Domain.RoomDomain.Services;
 
-public class RoomReadService : IRoomReadService
+public class RoomReadService : IRoomReadService, IRoomInformationService
 {
     private readonly IDeviceInformationServiceMock _deviceInformationService;
     private readonly IRoomRepository _roomRepository;
@@ -18,42 +18,25 @@ public class RoomReadService : IRoomReadService
         _deviceInformationService = deviceInformationService;
     }
 
-    public IList<Room> GetRoomsByAccountId(Guid accountId)
+    public IList<IRoom> GetRoomsByAccountId(Guid accountId)
     {
         return _roomRepository.GetRoomsRelatedToAccount(accountId).ToList();
     }
 
-    public async Task<GetRoomWebResponse?> GetRoomById(Guid roomId)
+    public async Task<IRoomWebResponse?> GetRoomById(Guid roomId)
     {
         var res = await _roomRepository.Get(roomId);
         if (res == null) return null;
-
-        var ret = new GetRoomWebResponse
-        {
-            RoomId = res.RoomId,
-            Name = res.Name,
-            AccountId = res.AccountId
-        };
-
-        return ret;
+        return RoomWebResponseFactory.CreateRoomWebResponse(res.RoomId, res.Name, res.AccountId);
     }
 
-    public async Task<IEnumerable<GetRoomWebResponse>> GetAllRooms()
+    public async Task<IEnumerable<IRoomWebResponse>> GetAllRooms()
     {
         var result = await _roomRepository.GetAll();
-        var resp = result.Select(room => new GetRoomWebResponse
-        {
-            RoomId = room.RoomId,
-            Name = room.Name,
-            AccountId = room.AccountId
-        }).ToList();
-
+        var resp = result.Select(room =>
+            RoomWebResponseFactory.CreateRoomWebResponse(room.RoomId, room.Name, room.AccountId)
+        ).ToList();
         return resp;
-    }
-
-    public IEnumerable<Room> FindRoomByCondition(Expression<Func<Room, bool>> predicate)
-    {
-        return _roomRepository.Find(predicate).ToList();
     }
 
     public IEnumerable<Device> GetDevicesInRoom(Guid roomId)
@@ -62,16 +45,12 @@ public class RoomReadService : IRoomReadService
     }
 
     // IList allows for more direct manipulation, so IEnumerable is used instead
-    public IEnumerable<GetRoomWebResponse> GetRoomsRelatedToAccount(Guid accountId)
+    public IEnumerable<IRoomWebResponse> GetRoomsRelatedToAccount(Guid accountId)
     {
         var result = _roomRepository.GetRoomsRelatedToAccount(accountId);
-        var resp = result.Select(room => new GetRoomWebResponse
-        {
-            RoomId = room.RoomId,
-            Name = room.Name,
-            AccountId = room.AccountId
-        }).ToList();
-
+        var resp = result.Select(room =>
+            RoomWebResponseFactory.CreateRoomWebResponse(room.RoomId, room.Name, room.AccountId)
+        ).ToList();
         return resp;
     }
 }

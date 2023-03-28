@@ -1,10 +1,10 @@
 ﻿using SmartHomeManager.Domain.RoomDomain.DTOs.Responses;
-using SmartHomeManager.Domain.RoomDomain.Entities;
+using SmartHomeManager.Domain.RoomDomain.Factories;
 using SmartHomeManager.Domain.RoomDomain.Interfaces;
 
 namespace SmartHomeManager.Domain.RoomDomain.Services;
 
-public class RoomWriteService
+public class RoomWriteService : IRoomWriteService
 {
     private readonly IRoomRepository _roomRepository;
 
@@ -13,45 +13,18 @@ public class RoomWriteService
         _roomRepository = roomRepository;
     }
 
-    public async Task<GetRoomWebResponse> AddRoom(string name, Guid accountId)
+    public async Task<IRoomWebResponse> AddRoom(string name, Guid accountId)
     {
-        var newRoom = new Room
-        {
-            Name = name,
-            AccountId = accountId
-        };
-
-        _roomRepository.Add(newRoom);
-        await _roomRepository.SaveChangesAsync();
-
-        var ret = new GetRoomWebResponse
-        {
-            RoomId = newRoom.RoomId,
-            Name = newRoom.Name,
-            AccountId = newRoom.AccountId
-        };
-
-        return ret;
-    }
-
-    public async Task AddRangeOfRooms(IEnumerable<Room> rooms)
-    {
-        _roomRepository.AddRange(rooms);
-        await _roomRepository.SaveChangesAsync();
+        var newRoom = RoomFactory.CreateRoom(name, accountId);
+        await _roomRepository.Add(newRoom);
+        return RoomWebResponseFactory.CreateRoomWebResponse(newRoom.RoomId, newRoom.Name, newRoom.AccountId);
     }
 
     public async Task RemoveRoom(Guid roomId)
     {
         var res = await _roomRepository.Get(roomId);
         if (res == null) return;
-        _roomRepository.Remove(res);
-        await _roomRepository.SaveChangesAsync();
-    }
-
-    public async Task RemoveRangeOfRooms(IEnumerable<Room> rooms)
-    {
-        _roomRepository.RemoveRange(rooms);
-        await _roomRepository.SaveChangesAsync();
+        await _roomRepository.Remove(res);
     }
 
     public async Task UpdateRoom(Guid roomId, string name)
@@ -59,7 +32,6 @@ public class RoomWriteService
         var res = await _roomRepository.Get(roomId);
         if (res == null) return;
         res.Name = name;
-        _roomRepository.Update(res);
-        await _roomRepository.SaveChangesAsync();
+        await _roomRepository.Update(res);
     }
 }

@@ -32,6 +32,18 @@ import TwoFactorAuthSetUp from "./pages/account/TwoFactorAuthSetUp";
 import TwoFactorAuthSetUpSuccess from "./pages/account/TwoFactorAuthSetUpSuccess";
 import TwoFactorAuthLogin from "./pages/account/TwoFactorAuthLogin";
 import SharedPlatform from "pages/SharedPlatform";
+import ProfileLanding from "./pages/profile/ProfileLanding";
+import RegisterDevice from "./pages/device/register-device/RegisterDevice";
+import SelectDevice from "pages/device/register-device/SelectDevice";
+import DeviceConfig from "./pages/DeviceConfig";
+import Report from "pages/Analytics";
+import Room2D from "pages/Room2D";
+import ManageDevices from "pages/device/manage-device/ManageDevices";
+import ManageDeviceConfiguration from "pages/device/manage-device/ManageDeviceConfiguration";
+import ManageDeviceSettings from "pages/device/manage-device/ManageDeviceSettings";
+import "/node_modules/react-grid-layout/css/styles.css";
+import "/node_modules/react-resizable/css/styles.css";
+import Store from "pages/Store"
 
 export function App() {
   return (
@@ -42,7 +54,10 @@ export function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/devices" element={<Devices />} />
+
             <Route path="/rooms" element={<Rooms />} />
+            <Route path="/room2D" element={<Room2D />} />
+						<Route path="/store" element={<Store />} />
             <Route path="/profiles" element={<Profiles />} />
             <Route path="/forgetpw" element={<ForgetPassword />} />
             <Route path="/changepw" element={<ChangePassword />} />
@@ -58,9 +73,12 @@ export function App() {
             <Route path="/two-factor-auth-login" element={<TwoFactorAuthLogin />} />
             <Route path="/sharedplatform" element={<SharedPlatform />} />
             <Route path="/onboard-devices" element={<OnboardDevice />} />
-
             <Route path="/selectnearbydevice" element={<SelectNearbyDevice />} />
+            <Route path="/selectnearbydevice" element={<SelectDevice />} />
             <Route path="/registerdevice" element={<RegisterDevice />} />
+            <Route path="/managedevices" element={<ManageDevices />} />
+            <Route path="/managedeviceconfiguration" element={<ManageDeviceConfiguration />} />
+            <Route path="/managedevicesettings" element={<ManageDeviceSettings />} />
 
             <Route path="/director" element={<Director />} />
             <Route path="/backup" element={<Backup />} />
@@ -68,18 +86,9 @@ export function App() {
             <Route path="/configuration" element={<Configuration />} />
             <Route path="/energyProfile" element={<EnergyProfile />} />
             <Route path="/scenario" element={<Scenario />} />
-            <Route
-              path="/scenario/create/action-rule"
-              element={<ActionRule />}
-            />
-            <Route
-              path="/scenario/create/time-rule"
-              element={<SchRule />}
-            />
-            <Route
-              path="/scenario/edit/:id"
-              element={<SchRule />}
-            />
+            <Route path="/scenario/create/action-rule" element={<ActionRule />} />
+            <Route path="/scenario/create/time-rule" element={<SchRule />} />
+            <Route path="/scenario/edit/:id" element={<SchRule />} />
             <Route path="/config" element={<DeviceConfig />} />
             <Route path="/analytics" element={<Report />} />
           </Routes>
@@ -88,4 +97,4 @@ export function App() {
     </>
   );
 }
-export default App;
+export default App
