@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -27,9 +28,12 @@ namespace SmartHomeManager.DataSource.ProfileDataSource
             return true;
         } 
 
-        public async Task<bool> DeleteAsync(Profile profile)
+        public bool Delete(Profile profile)
         {
-            throw new NotImplementedException();
+            _dbContext.Profiles.Remove(profile);
+            return true;
+            /*throw new NotImplementedException();*/
+
         }
 
         public async Task<bool> DeleteByIdAsync(Guid id)
@@ -39,7 +43,8 @@ namespace SmartHomeManager.DataSource.ProfileDataSource
 
         public async Task<IEnumerable<Profile>> GetAllAsync()
         {
-            return await _dbContext.Profiles.ToListAsync();
+            IEnumerable<Profile> profiles = await _dbContext.Profiles.ToListAsync();
+            return profiles;
         }
 
         public async Task<Profile?> GetByIdAsync(Guid id)
@@ -54,9 +59,12 @@ namespace SmartHomeManager.DataSource.ProfileDataSource
             return result;
         }
 
-        public async Task<bool> UpdateAsync(Profile profile)
+        public async Task<int> UpdateAsync(Profile profile)
         {
-            throw new NotImplementedException();
+            _dbContext.Entry(profile).State = EntityState.Modified;
+            return await _dbContext.SaveChangesAsync();
+
+            /*throw new NotImplementedException();*/
         }
 
         public async Task<IEnumerable<Profile>> GetProfilesByAccountId(Guid accountId)

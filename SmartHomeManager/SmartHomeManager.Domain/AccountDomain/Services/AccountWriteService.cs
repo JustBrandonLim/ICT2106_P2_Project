@@ -13,15 +13,17 @@ using System.Net;
 
 namespace SmartHomeManager.Domain.AccountDomain.Services
 {
-	public class AccountService
+	public class AccountWriteService: IAccountWriteService
 	{
 		private readonly IAccountRepository _accountRepository;
+        private readonly IAccountPasswordHashService _accountPasswordHashService;
 
-		public AccountService(IAccountRepository accountRepository)
-		{
-			_accountRepository = accountRepository;
-		}
-		public async Task<int> CreateAccount(AccountWebRequest accountWebRequest) 
+        public AccountWriteService(IAccountRepository accountRepository, IAccountPasswordHashService accountPasswordHashService)
+        {
+            _accountRepository = accountRepository;
+            _accountPasswordHashService = accountPasswordHashService;
+        }
+        public async Task<int> CreateAccount(AccountWebRequest accountWebRequest)
 		{
 			bool isEmailUnique = await _accountRepository.IsEmailUnique(accountWebRequest.Email);
 
@@ -39,16 +41,9 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             realAccount.Username = accountWebRequest.Username;
 
             //Hash the password of the user using the newly created Guid as the salt
-            string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-				password: accountWebRequest.Password,
-				salt: realAccount.AccountId.ToByteArray(),
-				prf: KeyDerivationPrf.HMACSHA256,
-				iterationCount: 100000,
-				numBytesRequested: 256 / 8));
+			realAccount.Password = _accountPasswordHashService.GetHashedPassword(realAccount.AccountId, accountWebRequest.Password);
 
-			realAccount.Password = hashedPassword;
-
-			bool addAccountResponse = await _accountRepository.AddAsync(realAccount);
+            bool addAccountResponse = await _accountRepository.AddAsync(realAccount);
 			if (addAccountResponse)
 			{
 				return await _accountRepository.SaveAsync();
@@ -61,57 +56,38 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 			}
 		}
 
-		public async Task<Account?> GetAccountByAccountId(Guid id)
-		{
-			Account? account = await _accountRepository.GetByIdAsync(id);
-
-			if (account == null)
-			{
-				return null;
-			}
-
-			return account;
-		}
-
-		public async Task<IEnumerable<Account>> GetAccounts()
-		{
-			IEnumerable<Account> accounts = await _accountRepository.GetAllAsync();
-
-			if (accounts == null)
-			{
-				return Enumerable.Empty<Account>();
-			}
-
-			return accounts;
-		}
-		
-		public async Task<Guid?> VerifyLogin(LoginWebRequest login)
-		{
-			Account? account = await _accountRepository.GetAccountByEmailAsync(login.Email);
-            //Hash the password of the user using the newly created Guid as the salt
-            
-            if (account != null)
-			{
-				login.Password = GetHashedPassword(account.AccountId, login.Password);
-
-                if (account.Password == login.Password)
-				{
-					// account exists and password is correct
-					// return 1;
-					return account.AccountId;
-				}
-			}
-
-            // account does not exist/account exists but password is wrong
-            return null;
-		}
-
-        public async Task<bool> CheckAccountExists(Guid id)
+        public async Task<bool> UpdatePassword(PasswordWebRequest passwordWebRequest)
         {
-            Account? account = await _accountRepository.GetByIdAsync(id);
+            //Get the account based on the account id
+            Account? account = await _accountRepository.GetByIdAsync(passwordWebRequest.AccountID);
             if (account != null)
             {
-                return true;
+                //Update password
+                account.Password = _accountPasswordHashService.GetHashedPassword(passwordWebRequest.AccountID, passwordWebRequest.Password);
+
+                int updateResponse = await _accountRepository.Update(account);
+                if (updateResponse == 1)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public async Task<bool> UpdateTwoFactorFlag(Guid accountId, bool twoFactorFlag)
+        {
+            //Get the account based on the account id
+            Account? account = await _accountRepository.GetByIdAsync(accountId);
+            if (account != null)
+            {
+                //Update password
+                account.TwoFactorFlag = twoFactorFlag;
+
+                int updateResponse = await _accountRepository.Update(account);
+                if (updateResponse == 1)
+                {
+                    return true;
+                }
             }
             return false;
         }
@@ -122,7 +98,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             account.Username = accountWebRequest.Username;
             account.Address = accountWebRequest.Address;
             account.Timezone = accountWebRequest.Timezone;
-            account.Password = GetHashedPassword(account.AccountId, accountWebRequest.Password);
+            account.Password = _accountPasswordHashService.GetHashedPassword(account.AccountId, accountWebRequest.Password);
             account.DevicesOnboarded = accountWebRequest.DevicesOnboarded;
 
             int updateResponse = await _accountRepository.Update(account);
@@ -144,18 +120,6 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
 			}
 
 			return false;
-        }
-
-		public string GetHashedPassword(Guid accountId, string unhashedPassword)
-		{
-			string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-				password: unhashedPassword,
-				salt: accountId.ToByteArray(),
-				prf: KeyDerivationPrf.HMACSHA256,
-				iterationCount: 100000,
-				numBytesRequested: 256 / 8));
-
-			return hashedPassword;
         }
     }
 }

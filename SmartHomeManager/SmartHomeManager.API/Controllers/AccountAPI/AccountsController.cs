@@ -24,25 +24,34 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
     {
         // dependency injection is just saying this class can use this thing
         // in this context - accounts controller can use account service
-        private readonly AccountService _accountService;
-        private readonly EmailService _emailService;
+        private readonly IAccountReadService _accountReadService;
+        private readonly IAccountWriteService _accountWriteService;
+        private readonly IAccountPasswordHashService _accountPasswordHashService;
+        private readonly IEmailService _emailService;
+        private readonly ITwoFactorAuthService _twoFactorAuthService;
 
-        public AccountsController(AccountService accountService, EmailService emailService)
+        public AccountsController(IAccountReadService accountReadService, IAccountWriteService accountWriteService, 
+            IAccountPasswordHashService accountPasswordHashService, 
+            IEmailService emailService, ITwoFactorAuthService twoFactorAuthService)
         {
-            _accountService = accountService;
+            _accountReadService = accountReadService;
+            _accountWriteService = accountWriteService;
+            _accountPasswordHashService = accountPasswordHashService;
             _emailService = emailService;
+            _twoFactorAuthService = twoFactorAuthService;
         }
 
         /* 
          * GET: api/Accounts
          * Return: 
-         * Ok(accounts) - IEnumerable of accounts
+         * Ok(accounts) - IEnumerable
+         * of accounts
          * NotFound(1) - No accounts in DB
         */
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
         {
-            IEnumerable<Account> accounts = await _accountService.GetAccounts();
+            IEnumerable<Account> accounts = await _accountReadService.GetAccounts();
 
             if (!accounts.Any())
             {
@@ -61,7 +70,7 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         [HttpGet("{accountId}")]
         public async Task<ActionResult<Account>> GetAccountByAccountId(Guid accountId)
         {
-            Account? account = await _accountService.GetAccountByAccountId(accountId);
+            Account? account = await _accountReadService.GetAccountByAccountId(accountId);
 
             if (account == null)
             {
@@ -70,7 +79,6 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
 
             return Ok(account);
         }
-
 
         /* 
          * PUT: api/Accounts/11111111-1111-1111-1111-111111111111
@@ -83,13 +91,13 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         [HttpPut("{accountId}")]
         public async Task<IActionResult> PutAccount(Guid accountId, [FromBody] AccountWebRequest accountWebRequest)
         {
-            Account? account = await _accountService.GetAccountByAccountId(accountId);
+            Account? account = await _accountReadService.GetAccountByAccountId(accountId);
             if (account == null)
             {
                 return NotFound(1);
             }
 
-            if (await _accountService.UpdateAccount(account, accountWebRequest))
+            if (await _accountWriteService.UpdateAccount(account, accountWebRequest))
             {
                 return Ok(1);
             }
@@ -111,7 +119,7 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         {
 
             // controller will invoke a service function
-            int response = await _accountService.CreateAccount(accountWebRequest);
+            int response = await _accountWriteService.CreateAccount(accountWebRequest);
 
             // if create account is successful
             if (response == 1)
@@ -143,27 +151,65 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         /*
          * POST: api/Accounts/login
          * Return:
-         * Ok(1) - Login successful
-         * BadRequest(1) - Login unsuccessful, wrong password
-         * BadRequest(2) - Login unsuccessful, account does not exist
+         * Ok(loginResponse) - Login successful
+         * BadRequest() - Login unsuccessful
          */
 
         [HttpPost("login")]
-        public async Task<ActionResult> VerifyLogin([FromBody]LoginWebRequest login)
+        public async Task<ActionResult<Account>> VerifyLogin([FromBody]LoginWebRequest login)
         {
-            Guid? accountId = await _accountService.VerifyLogin(login);
+            LoginResponse? loginResponse = await _accountReadService.VerifyLogin(login);
 
             // login successful
-            if (accountId != null)
+            if (loginResponse != null)
             {
-                return Ok(accountId);
+                return Ok(loginResponse);
             }
-
             // login unsuccessful
             return BadRequest();
-            
         }
 
+        /*
+         * POST: api/Accounts/passwordVerification
+         * Return:
+         * Ok() - Password Match
+         * BadRequest() - Password don't match
+         */
+
+        [HttpPost("passwordVerification")]
+        public async Task<ActionResult> VerifyPassword([FromBody] PasswordWebRequest passwordWebRequest)
+        {
+            bool verified = await _accountReadService.VerifyPassword(passwordWebRequest);
+
+            // password match
+            if (verified)
+            {
+                return Ok();
+            }
+
+            // password dont match
+            return BadRequest();
+
+        }
+
+        /* 
+         * PUT: api/Accounts/updatePassword/
+         * Return:
+         * Ok() - Account successfully updated
+         * BadRequest() - Account failed to update
+         * 
+        */
+        [HttpPut("updatePassword")]
+        public async Task<IActionResult> PutNewPassword([FromBody] PasswordWebRequest passwordWebRequest)
+        {
+
+            if (await _accountWriteService.UpdatePassword(passwordWebRequest))
+            {
+                return Ok();
+            }
+
+            return BadRequest();
+        }
 
         /* 
          * DELETE: api/Accounts/11111111-1111-1111-1111-111111111111
@@ -177,18 +223,90 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         public async Task<IActionResult> DeleteAccount(Guid accountId)
         {
 
-            Account? account = await _accountService.GetAccountByAccountId(accountId);
+            Account? account = await _accountReadService.GetAccountByAccountId(accountId);
             if (account == null)
             {
                 return NotFound(1);
             }
 
-            if (await _accountService.DeleteAccount(account))
+            if (await _accountWriteService.DeleteAccount(account))
             {
                 return Ok(1);
             }
 
             return BadRequest(1);
+        }
+
+
+        /* 
+         * Test Function for 2FA
+         * GET: api/Accounts/security/get-qr-response
+         * Return:
+         * Ok(list) - List containing QR auth code, QR image URL, and QR manual entry key
+         * BadRequest() - 2FA generation failed
+        */
+        [HttpGet("security/get-qr-response")]
+        public async Task<ActionResult<List<QrResponse>>> GetQRResponse(Guid accountId)
+        {
+            QrResponse response = _twoFactorAuthService.GenerateTwoFactorAuthentication(accountId);
+            List<QrResponse> list = new()
+            {
+                response
+            };
+
+            if (list.Count() != 0)
+                return Ok(list);
+            return BadRequest();
+        }
+
+        /* 
+         * POST: api/Accounts/security/validate-2fa-pin
+         * Return: 
+         * Ok(true) - 2FA Pin validated successfully
+         * BadRequest(false) - 2FA Pin is incorrect
+        */
+        [HttpPost("security/validate-2fa-pin")]
+        public async Task<ActionResult<bool>> ValidateTwoFactorPIN([FromBody] ValidatePinWebRequest validatePin)
+        {
+            bool response = _twoFactorAuthService.ValidateTwoFactorPIN(validatePin);
+
+            if (response)
+                return Ok(response);
+            return BadRequest(response);
+        }
+
+        /* 
+         * GET: api/Accounts/security/get-2fa-flag/11111111-1111-1111-1111-111111111111
+         * Return: 
+        */
+        [HttpGet("security/get-2fa-flag")]
+        public async Task<ActionResult<bool>> GetTwoFactorFlag(Guid accountId)
+        {
+            bool? response = await _accountReadService.GetTwoFactorFlag(accountId);
+
+            if (response == null)
+            {
+                return NotFound(1);
+            }
+
+            return Ok(response);
+        }
+
+        /* 
+         * PUT: api/Accounts/security/update-2fa-flag/
+         * Return: 
+        */
+        [HttpPut("security/update-2fa-flag")]
+        public async Task<ActionResult<bool>> GetTwoFactorFlag(Guid accountId, bool twoFactorFlag)
+        {
+            bool? response = await _accountWriteService.UpdateTwoFactorFlag(accountId, twoFactorFlag);
+
+            if (response == null)
+            {
+                return NotFound(1);
+            }
+
+            return Ok(response);
         }
     }
 }

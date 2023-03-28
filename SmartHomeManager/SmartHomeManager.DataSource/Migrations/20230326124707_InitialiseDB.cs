@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SmartHomeManager.DataSource.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialiseDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,7 +21,8 @@ namespace SmartHomeManager.DataSource.Migrations
                     Address = table.Column<string>(type: "TEXT", nullable: false),
                     Timezone = table.Column<int>(type: "INTEGER", nullable: false),
                     Password = table.Column<string>(type: "TEXT", nullable: false),
-                    DevicesOnboarded = table.Column<int>(type: "INTEGER", nullable: false)
+                    DevicesOnboarded = table.Column<int>(type: "INTEGER", nullable: false),
+                    TwoFactorFlag = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -236,6 +237,8 @@ namespace SmartHomeManager.DataSource.Migrations
                 {
                     ProfileId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    Pin = table.Column<int>(type: "INTEGER", nullable: true),
                     AccountId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -369,7 +372,9 @@ namespace SmartHomeManager.DataSource.Migrations
                     ScenarioId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ScenarioName = table.Column<string>(type: "TEXT", nullable: false),
                     ProfileId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    isActive = table.Column<bool>(type: "INTEGER", nullable: false)
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsShareable = table.Column<bool>(type: "INTEGER", nullable: false),
+                    ProfileName = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

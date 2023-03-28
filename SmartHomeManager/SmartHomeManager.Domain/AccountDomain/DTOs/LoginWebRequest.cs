@@ -9,10 +9,8 @@ namespace SmartHomeManager.Domain.AccountDomain.DTOs
 {
     public class LoginWebRequest
     {
-
         [Required]
         public string Email { get; set; }
-
         [Required]
         public string Password { get; set; }
     }

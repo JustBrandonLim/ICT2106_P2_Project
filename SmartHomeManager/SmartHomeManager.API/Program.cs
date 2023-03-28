@@ -46,6 +46,8 @@ using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.Common;
 using SmartHomeManager.Domain.NotificationDomain.Entities;
 using SmartHomeManager.Domain.NotificationDomain.Interfaces;
+
+using SmartHomeManager.Domain.AccountDomain.Builder;
 using SmartHomeManager.DataSource.DeviceStoreDataSource;
 using SmartHomeManager.DataSource.TwoDHomeDataSource;
 using SmartHomeManager.Domain.DeviceStoreDomain.Entities;
@@ -83,17 +85,22 @@ public class Program
         // MODULE 3
         builder.Services.AddScoped<IGenericRepository<History>, DataSource.HistoryDataSource.HistoryRepository>();
         builder.Services.AddScoped<IRuleHistoryRepository<RuleHistory>, RuleHistoryRepository>();
-        builder.Services.AddScoped<IGenericRepository<Rule>, RuleRepository>();
+        builder.Services.AddScoped<IRuleRepository<Rule>, RuleRepository>();
         builder.Services.AddScoped<IGenericRepository<EnergyProfile>, EnergyProfileRepository>();
-        builder.Services.AddScoped<IGenericRepository<Scenario>, ScenarioRepository>();
-        builder.Services.AddScoped<IGetRulesService, GetRulesServices>();
-        builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
+        builder.Services.AddScoped<IScenarioRepository<Scenario>, ScenarioRepository>();
+
+        builder.Services.AddScoped<IScenarioServices, ScenarioServices>();
         builder.Services.AddScoped<IInformDirectorServices, DirectorServices>();
         builder.Services.AddScoped<IEnergyProfileServices, EnergyProfileServices>();
         builder.Services.AddScoped<IGenericRepository<HomeSecurity>, HomeSecurityRepository>();
         builder.Services.AddScoped<IGenericRepository<HomeSecuritySetting>, HomeSecuritySettingRepository>();
         builder.Services.AddScoped<IHomeSecurityDeviceDefinitionRepository<HomeSecurityDeviceDefinition>, HomeSecurityDeviceDefinitionRepository>();
-        
+        builder.Services.AddScoped<RuleServicesMock>();
+
+        //builder.Services.AddScoped<RuleServices>();
+        //builder.Services.AddScoped<IGetRulesService, GetRulesServices>();
+        //builder.Services.AddScoped<IGetScenariosService, GetScenariosService>();
+        /*builder.Services.AddScoped<DirectorServices>();*/
         // builder.Services.AddHostedService<DirectorServices>();
 
         // DEVICE
@@ -132,10 +139,22 @@ public class Program
         // ACCOUNT
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
         builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
-        builder.Services.AddScoped<AccountService>();
-        builder.Services.AddScoped<EmailService>();
-        builder.Services.AddScoped<ProfileService>();
+        builder.Services.AddScoped<IAccountReadService, AccountReadService>();
+        builder.Services.AddScoped<IAccountWriteService, AccountWriteService>();
+        builder.Services.AddScoped<IAccountPasswordHashService, AccountReadService>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
+        builder.Services.AddScoped<IEmailPurchaseService, EmailService>();
+        builder.Services.AddScoped<IEmailRegistrationService, EmailService>();
+        builder.Services.AddScoped<IEmailBuilder, EmailBuilder>();
+        builder.Services.AddScoped<IProfileDeviceReadService, ProfileReadService>();
+        builder.Services.AddScoped<IProfileReadService, ProfileReadService>();
+        builder.Services.AddScoped<IProfileWriteService, ProfileWriteService>();
+        builder.Services.AddScoped<ITwoFactorAuthService,TwoFactorAuthService>();
         #endregion DEPENDENCY INJECTIONS
+
+        #region AUTHENTICATION
+
+        #endregion
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
@@ -154,6 +173,7 @@ public class Program
 
         app.UseCors();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();

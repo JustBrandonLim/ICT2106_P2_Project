@@ -12,8 +12,8 @@ namespace SmartHomeManager.Domain.AccountDomain.Interfaces
         public Task<bool> AddAsync(Profile profile);
         public Task<Profile?> GetByIdAsync(Guid id);
         public Task<IEnumerable<Profile>> GetAllAsync();
-        public Task<bool> UpdateAsync(Profile profile);
-        public Task<bool> DeleteAsync(Profile profile);
+        public Task<int> UpdateAsync(Profile profile);
+        public bool Delete(Profile profile);
         public Task<bool> DeleteByIdAsync(Guid id);
         public Task<IEnumerable<Profile>> GetProfilesByAccountId(Guid accountId);
         public Task<IEnumerable<Guid>> GetDevicesByProfileId(Guid profileId);

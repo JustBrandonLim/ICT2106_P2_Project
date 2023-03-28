@@ -94,6 +94,9 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.Property<int>("Timezone")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("TwoFactorFlag")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -127,9 +130,16 @@ namespace SmartHomeManager.DataSource.Migrations
                     b.Property<Guid>("AccountId")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("Pin")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("ProfileId");
 
@@ -742,15 +752,22 @@ namespace SmartHomeManager.DataSource.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsShareable")
+                        .HasColumnType("INTEGER");
+
                     b.Property<Guid>("ProfileId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProfileName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ScenarioName")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("ScenarioId");
 

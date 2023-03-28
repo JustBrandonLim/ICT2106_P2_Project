@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import {
     Flex,
@@ -27,6 +27,28 @@ export default function Login() {
     const [passwordInput, updatePasswordInput] = useState("")
     const [errorMsg, updateErrorMsg] = useState("")
     const [errorStatus, updateErrorStatus] = useState(false)
+    const [accountDetails, updateAccountDetails] = useState([])
+    useEffect(() => {
+        const checkAccountDetails = () => {
+            // check if 2fa flag enabled first
+            // if enabled, navigate to /two-factor-auth-login
+            // // if not, navigate to /
+
+            if (accountDetails.length != 0) {
+                setAccountDetails()
+                
+                if(accountDetails['twoFactorFlag'])
+                    navigate("/two-factor-auth-login", { replace: true })
+                else {
+                    // navigate("/", { replace: true }) 
+                    navigate("/onboard-devices", { replace: true })  
+                    location.reload() 
+
+                }    
+            }        
+        }
+        checkAccountDetails()
+    }, [accountDetails]);
 
     //Function to verify email
     const checkEmailInput = (emailInput) => {
@@ -52,12 +74,11 @@ export default function Login() {
                 },
             })
             .then(async response => {
-                const msg = await response.text();
+                const msg = await response.json();
                 /* Ok(1) - Login Successful */
                 if (response.ok) {
                     updateErrorStatus(false);
-                    navigate("/", { replace: true });
-                    localStorage.setItem('accountId', msg);
+                    updateAccountDetails(msg)
                 } else {
                     /*  BadRequest(1) - Login Unsuccessful, wrong password
                     *   BadRequest(2) - Login Unsuccessful, account does not exist
@@ -75,6 +96,14 @@ export default function Login() {
         }
     }
 
+    const setAccountDetails = () => {
+        if (accountDetails.length != 0) {
+            localStorage.setItem('accountId', accountDetails['accountId']);
+            localStorage.setItem('email', accountDetails['email']);
+            localStorage.setItem('username', accountDetails['username']);
+            localStorage.setItem('twoFactorFlag', accountDetails['twoFactorFlag']);
+        }
+    }
 
     return (
         <Flex

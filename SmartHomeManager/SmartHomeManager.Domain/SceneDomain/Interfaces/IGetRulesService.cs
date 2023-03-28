@@ -7,10 +7,7 @@ namespace SmartHomeManager.Domain.SceneDomain.Interfaces
         // get all rules on startup
         Task<IEnumerable<Rule>> GetAllRules();
 
-        Task<Rule> GetRuleById(Guid id);
-
-        // refresh all rules of a scenario when director is informed of a change
-        Task<IEnumerable<Rule?>> GetAllRulesByScenarioId(Guid ScenarioId); 
+        Task<Rule?> GetRuleById(Guid id);
     }
 }
 

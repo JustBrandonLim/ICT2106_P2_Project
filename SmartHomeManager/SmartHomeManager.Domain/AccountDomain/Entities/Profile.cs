@@ -17,6 +17,9 @@ namespace SmartHomeManager.Domain.AccountDomain.Entities
 
         [Required]
         public string Name { get; set; }
+        [Required]
+        public string Description { get; set; }
+        public int? Pin { get; set; }
 
         [Required]
         public Guid AccountId { get; set; }

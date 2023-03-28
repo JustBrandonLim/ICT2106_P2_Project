@@ -10,36 +10,32 @@ using System.Diagnostics;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.AccountDomain.DTOs;
-
-
+using SmartHomeManager.Domain.AccountDomain.Product;
 
 namespace SmartHomeManager.Domain.AccountDomain.Services
 {
-    public class EmailService
+    public class EmailService : IEmailService, IEmailPurchaseService, IEmailRegistrationService
     {
-        private const string From = "1004companyemail@gmail.com";
-        private const string GoogleAppPassword = "alirejlqrkfqisji";
-        private const string Subject = "Test email";
-
         private readonly IAccountRepository _accountRepository;
+        private readonly IEmailBuilder _emailBuilder;
 
-        public EmailService(IAccountRepository accountRepository)
+        public EmailService(IAccountRepository accountRepository, IEmailBuilder emailBuilder)
         {
             _accountRepository = accountRepository;
+            _emailBuilder = emailBuilder;
         }
 
-
-        
         public bool SendRegistrationEmail(string username, string recipient)
         {
-            string messageBody = $"<div><h2>Hello {username},</h2>  <h2>Thank you for registering an account with Company, we hope you enjoy your experience.</h2></div>";
+            string messageBody = $"<div><h2>Hello {username},</h2>  <h2>Thank you for registering an account with Smart Home Manager, we hope you enjoy your experience.</h2></div>";
+            string subject = "Company Account Registration";
 
-            var smtpClient = setupClient();
-            var mailMessage = setupMessage(messageBody, recipient);
+            _emailBuilder.BuildEmailProduct(messageBody, recipient, subject);
+            EmailProduct emailProduct = _emailBuilder.GetProduct();
 
             try
             {
-                smtpClient.Send(mailMessage);
+                emailProduct.Client.Send(emailProduct.Message);
                 return true;
             }
 
@@ -52,7 +48,7 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
         public async Task<bool> SendPurchaseEmailConfirmation(Guid accountId)
         {
 
-            Account account = await _accountRepository.GetByIdAsync(accountId);
+            Account? account = await _accountRepository.GetByIdAsync(accountId);
 
             string messageBody = "You have purchased device xxx";
 
@@ -63,14 +59,12 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
             }
             else
             {
-
                 try
                 {
-                    var smtpClient = setupClient();
-                    string recipient = account.Email.ToString();
-                    var mailMessage = setupMessage(messageBody, recipient);
+                    _emailBuilder.BuildEmailProduct(messageBody, account.Email.ToString(), "Purchase Confirmation");
+                    EmailProduct emailProduct = _emailBuilder.GetProduct();
 
-                    smtpClient.Send(mailMessage);
+                    emailProduct.Client.Send(emailProduct.Message);
                     return true;
                 }
 
@@ -79,36 +73,8 @@ namespace SmartHomeManager.Domain.AccountDomain.Services
                     Debug.WriteLine(e);
                     return false;
                 }
-            } 
+            }
         }
-        public SmtpClient setupClient()
-        {
-            var smtpClient = new SmtpClient("smtp.gmail.com")
-            {
-                Port = 587,
-                Credentials = new NetworkCredential(From, GoogleAppPassword),
-                EnableSsl = true,
-            };
-
-            return smtpClient;
-        }
-
-        public MailMessage setupMessage(string givenBody, string recipient)
-        {
-            var mailMessage = new MailMessage
-            {
-                From = new MailAddress(From),
-                Subject = Subject,
-                Body = givenBody,
-                IsBodyHtml = true,
-            };
-
-            mailMessage.To.Add(new MailAddress(recipient));
-
-            return mailMessage;
-        }
-
-     
     }
 }
 

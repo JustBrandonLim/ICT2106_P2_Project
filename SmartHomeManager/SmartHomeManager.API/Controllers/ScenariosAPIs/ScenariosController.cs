@@ -5,6 +5,9 @@ using SmartHomeManager.Domain.SceneDomain.Services;
 using SmartHomeManager.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeManager.DataSource;
+using SmartHomeManager.Domain.SceneDomain.Interfaces;
+using Microsoft.Identity.Client;
+using SmartHomeManager.Domain.AccountDomain.Entities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,7 +20,7 @@ namespace SmartHomeManager.API.Controllers.ScenariosAPIs
         private readonly ScenarioServices _scenarioServices;
         //private readonly GetScenarioService _getScenarioService;
 
-        public ScenariosController(IGenericRepository<Scenario> scenarioRepository)
+        public ScenariosController(IScenarioRepository<Scenario> scenarioRepository)
         {
             _scenarioServices = new(scenarioRepository);
             //_getScenarioService = new(scenarioRepository);
@@ -38,11 +41,37 @@ namespace SmartHomeManager.API.Controllers.ScenariosAPIs
             return resp;
         }
 
+        // GET: api/Scenarios/GetAllScenariosWithShareable
+        [HttpGet("GetAllScenariosWithShareable")]
+        public async Task<ActionResult<IEnumerable<Scenario>>> GetAllScenariosWithShareable()
+        {
+            var scenarios = await _scenarioServices.GetScenariosByShareable();
+            if (!scenarios.Any()) 
+            {
+                return NotFound(1);
+            }
+
+            return Ok(scenarios);
+        }
+
         // GET api/Scenarios/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Scenario>> GetScenario([FromBody] Guid id)
         {
             return null;
+        }
+
+        // GET Scenario by profileId
+        [HttpGet("profileId")]
+        public async Task<ActionResult<IEnumerable<Scenario?>>> GetScenarioByProfileId(Guid profileId)
+        {
+            //TODO
+             IEnumerable<Scenario?> scenario = await _scenarioServices.GetScenarioByIdAsync(profileId);
+
+            if (scenario == null)
+                return NotFound(1);
+
+            return Ok(scenario);
         }
 
         // POST api/Scenarios
@@ -51,13 +80,13 @@ namespace SmartHomeManager.API.Controllers.ScenariosAPIs
         {
             return null;
         }
-
+/*
         // PUT api/Scenarios/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
 
-        }
+        }*/
 
         // DELETE api/Scenarios/1
         [HttpDelete("{id}")]
@@ -65,6 +94,32 @@ namespace SmartHomeManager.API.Controllers.ScenariosAPIs
         {
             return null;
         }
+
+        /* 
+          * PUT: api/Scenarios/2222222-2222-2222-2222-2222222222222
+          * Return:
+          * Ok(1) - Profile successfully updated to shareable
+          * BadRequest(1) - Profile failed to update to shareable
+          * NotFound(1) - Profile does not exist
+          * 
+         */
+        [HttpPut("{profileId}")]
+        public async Task<IActionResult> PutProfile(Guid profileId)
+        {
+            Scenario? scenario = await _scenarioServices.GetScenarioByProfileId(profileId);
+            if (scenario == null)
+            {
+                return NotFound(1);
+            }
+
+            if (await _scenarioServices.UpdateScenarioByProfileId(profileId))
+            {
+                return Ok(1);
+            }
+
+            return BadRequest(1);
+        }
     }
+
 }
 
