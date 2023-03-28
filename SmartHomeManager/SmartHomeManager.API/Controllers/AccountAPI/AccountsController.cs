@@ -26,17 +26,14 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         // in this context - accounts controller can use account service
         private readonly IAccountReadService _accountReadService;
         private readonly IAccountWriteService _accountWriteService;
-        private readonly IAccountPasswordHashService _accountPasswordHashService;
         private readonly IEmailService _emailService;
         private readonly ITwoFactorAuthService _twoFactorAuthService;
 
         public AccountsController(IAccountReadService accountReadService, IAccountWriteService accountWriteService, 
-            IAccountPasswordHashService accountPasswordHashService, 
             IEmailService emailService, ITwoFactorAuthService twoFactorAuthService)
         {
             _accountReadService = accountReadService;
             _accountWriteService = accountWriteService;
-            _accountPasswordHashService = accountPasswordHashService;
             _emailService = emailService;
             _twoFactorAuthService = twoFactorAuthService;
         }
