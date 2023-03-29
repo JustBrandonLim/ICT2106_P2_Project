@@ -14,7 +14,10 @@ using SmartHomeManager.Domain.AccountDomain.DTOs;
 using SmartHomeManager.Domain.AccountDomain.Entities;
 using SmartHomeManager.Domain.AccountDomain.Interfaces;
 using SmartHomeManager.Domain.AccountDomain.Services;
-
+using SmartHomeManager.Domain.DeviceDomain.Entities;
+using SmartHomeManager.Domain.DeviceDomain.Interfaces.Provides;
+using SmartHomeManager.Domain.RoomDomain.Entities;
+using SmartHomeManager.Domain.RoomDomain.Interfaces;
 
 namespace SmartHomeManager.API.Controllers.AccountAPI
 {
@@ -28,14 +31,19 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
         private readonly IAccountWriteService _accountWriteService;
         private readonly IEmailService _emailService;
         private readonly ITwoFactorAuthService _twoFactorAuthService;
+        private readonly IDeviceInformationService _deviceInformationService;
+        private readonly IRoomInformationService _roomInformationService;
 
         public AccountsController(IAccountReadService accountReadService, IAccountWriteService accountWriteService, 
-            IEmailService emailService, ITwoFactorAuthService twoFactorAuthService)
+            IEmailService emailService, ITwoFactorAuthService twoFactorAuthService, 
+            IDeviceInformationService deviceInformationService, IRoomInformationService roomInformationService)
         {
             _accountReadService = accountReadService;
             _accountWriteService = accountWriteService;
             _emailService = emailService;
             _twoFactorAuthService = twoFactorAuthService;
+            _deviceInformationService = deviceInformationService;
+            _roomInformationService = roomInformationService;
         }
 
         /* 
@@ -75,6 +83,32 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
             }
 
             return Ok(account);
+        }
+
+        [HttpGet("{accountIdDevice}")]
+        public async Task<ActionResult<IEnumerable<Device>>> GetDevicesByAccountId(Guid accountIdDevice)
+        {
+            IEnumerable<Device> devices = await _deviceInformationService.GetAllDevicesByAccountAsync(accountIdDevice);
+
+            if (!devices.Any())
+            {
+                return NotFound(1);
+            }
+
+            return Ok(devices);
+        }
+
+        [HttpGet("{accountIdDevice}")]
+        public async Task<ActionResult<IEnumerable<Room>>> GetRoomsByAccountId(Guid accountIdRoom)
+        {
+            IList<IRoom> rooms = _roomInformationService.GetRoomsByAccountId(accountIdRoom);
+
+            if (!rooms.Any())
+            {
+                return NotFound(1);
+            }
+
+            return Ok(rooms);
         }
 
         /* 
