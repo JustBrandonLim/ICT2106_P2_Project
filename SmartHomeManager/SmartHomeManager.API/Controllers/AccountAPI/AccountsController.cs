@@ -98,7 +98,7 @@ namespace SmartHomeManager.API.Controllers.AccountAPI
             return Ok(devices);
         }
 
-        [HttpGet("{accountIdDevice}")]
+        [HttpGet("{accountIdRoom}")]
         public async Task<ActionResult<IEnumerable<Room>>> GetRoomsByAccountId(Guid accountIdRoom)
         {
             IList<IRoom> rooms = _roomInformationService.GetRoomsByAccountId(accountIdRoom);
